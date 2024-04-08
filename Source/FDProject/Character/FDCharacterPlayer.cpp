@@ -52,7 +52,15 @@ AFDCharacterPlayer::AFDCharacterPlayer()
 		QuaterMoveAction = InputActionQuaterMoveRef.Object;
 	}
 
-	CurrentCharacterControlType = ECharacterControlType::Quater;
+	static ConstructorHelpers::FObjectFinder<UInputAction> InputActionAttackRef(TEXT("/Script/EnhancedInput.InputAction'/Game/FDProject/Input/Actions/IA_Attack.IA_Attack'"));
+	if (nullptr != InputActionAttackRef.Object)
+	{
+		AttackAction = InputActionAttackRef.Object;
+	}
+	//SetInputActionByObjectFinder(AttackAction, TEXT("/Script/EnhancedInput.InputAction'/Game/FDProject/Input/Actions/IA_Attack.IA_Attack'"));
+
+
+	CurrentCharacterControlType = ECharacterControlType::Shoulder;
 }
 
 void AFDCharacterPlayer::BeginPlay()
@@ -74,6 +82,8 @@ void AFDCharacterPlayer::SetupPlayerInputComponent(class UInputComponent* Player
 	EnhancedInputComponent->BindAction(ShoulderMoveAction, ETriggerEvent::Triggered, this, &AFDCharacterPlayer::ShoulderMove);
 	EnhancedInputComponent->BindAction(ShoulderLookAction, ETriggerEvent::Triggered, this, &AFDCharacterPlayer::ShoulderLook);
 	EnhancedInputComponent->BindAction(QuaterMoveAction, ETriggerEvent::Triggered, this, &AFDCharacterPlayer::QuaterMove);
+	EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &AFDCharacterPlayer::Attack);
+
 }
 
 void AFDCharacterPlayer::ChangeCharacterControl()
@@ -124,6 +134,15 @@ void AFDCharacterPlayer::SetCharacterControlData(const UFDCharacterControlData* 
 	CameraBoom->bDoCollisionTest = CharacterControlData->bDoCollisionTest;
 }
 
+//void AFDCharacterPlayer::SetInputActionByObjectFinder(TObjectPtr<class UInputAction> action, const TCHAR* ref)
+//{
+//	static ConstructorHelpers::FObjectFinder<UInputAction> InputActionRef(ref);
+//	if (nullptr != InputActionRef.Object)
+//	{
+//		action = InputActionRef.Object;
+//	}
+//}
+
 void AFDCharacterPlayer::ShoulderMove(const FInputActionValue& Value)
 {
 	FVector2D MovementVector = Value.Get<FVector2D>();
@@ -166,4 +185,9 @@ void AFDCharacterPlayer::QuaterMove(const FInputActionValue& Value)
 	FVector MoveDirection = FVector(MovementVector.X, MovementVector.Y, 0.0f);
 	GetController()->SetControlRotation(FRotationMatrix::MakeFromX(MoveDirection).Rotator());
 	AddMovementInput(MoveDirection, MovementVectorSize);
+}
+
+void AFDCharacterPlayer::Attack()
+{
+	ProcessComboCommand();
 }
