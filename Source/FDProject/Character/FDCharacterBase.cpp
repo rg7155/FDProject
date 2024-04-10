@@ -7,6 +7,8 @@
 #include "FDCharacterControlData.h"
 #include "Animation/AnimMontage.h"
 #include "FDComboActionData.h"
+#include "Physics/FDCollision.h"
+#include "Engine/DamageEvents.h"
 
 // Sets default values
 AFDCharacterBase::AFDCharacterBase()
@@ -18,7 +20,7 @@ AFDCharacterBase::AFDCharacterBase()
 
 	// Capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
-	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Pawn"));
+	GetCapsuleComponent()->SetCollisionProfileName(CPROFILE_FDCAPSULE);
 
 	// Movement
 	GetCharacterMovement()->bOrientRotationToMovement = true;
@@ -32,7 +34,7 @@ AFDCharacterBase::AFDCharacterBase()
 	// Mesh
 	GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -100.0f), FRotator(0.0f, -90.0f, 0.0f));
 	GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
-	GetMesh()->SetCollisionProfileName(TEXT("CharacterMesh"));
+	GetMesh()->SetCollisionProfileName(TEXT("NoCollision"));
 
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> CharacterMeshRef(TEXT("/Script/Engine.SkeletalMesh'/Game/InfinityBladeWarriors/Character/CompleteCharacters/SK_CharM_Ragged0.SK_CharM_Ragged0'"));
 	if (CharacterMeshRef.Object)
@@ -56,6 +58,12 @@ AFDCharacterBase::AFDCharacterBase()
 	if (QuaterDataRef.Object)
 	{
 		CharacterControlManager.Add(ECharacterControlType::Quater, QuaterDataRef.Object);
+	}
+
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> DeadMontageRef(TEXT("/Script/Engine.AnimMontage'/Game/FDProject/Animation/AM_Dead.AM_Dead'"));
+	if (DeadMontageRef.Object)
+	{
+		DeadMontage = DeadMontageRef.Object;
 	}
 }
 
@@ -143,6 +151,63 @@ void AFDCharacterBase::ComboCheck()
 		SetComboCheckTimer();
 		HasNextComboCommand = false;
 	}
+}
+
+void AFDCharacterBase::AttackHitCheck()
+{
+	FHitResult OutHitResult;
+	//1.엔진 제공 기능 tag 추가 2.복잡한 충돌체 감지 옵션 3.자기 자신만 무시
+	FCollisionQueryParams Params(SCENE_QUERY_STAT(Attack), false, this);
+
+	const float AttackRange = 40.0f;
+	const float AttackRadius = 50.0f;
+	const float AttackDamage = 30.0f;
+	//정면에 있는 캡슐의 위치
+	const FVector Start = GetActorLocation() + GetActorForwardVector() * GetCapsuleComponent()->GetScaledCapsuleRadius();
+	const FVector End = Start + GetActorForwardVector() * AttackRange;
+
+	//월드가 제공하는 기능임
+	bool HitDetected = GetWorld()->SweepSingleByChannel(OutHitResult, Start, End, FQuat::Identity, CCHANNEL_FDACTION, FCollisionShape::MakeSphere(AttackRadius), Params);
+	if (HitDetected)
+	{
+		//26:30
+		FDamageEvent DamageEvent;
+		OutHitResult.GetActor()->TakeDamage(AttackDamage, DamageEvent, GetController(), this);
+	}
+
+#if ENABLE_DRAW_DEBUG
+
+	FVector CapsuleOrigin = Start + (End - Start) * 0.5f;
+	float CapsuleHalfHeight = AttackRange * 0.5f;
+	FColor DrawColor = HitDetected ? FColor::Green : FColor::Red;
+
+	DrawDebugCapsule(GetWorld(), CapsuleOrigin, CapsuleHalfHeight, AttackRadius, FRotationMatrix::MakeFromZ(GetActorForwardVector()).ToQuat(), DrawColor, false, 5.0f);
+
+#endif
+}
+
+float AFDCharacterBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+
+	SetDead();
+
+	return DamageAmount;
+}
+
+void AFDCharacterBase::SetDead()
+{
+	//이동 제한
+	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
+	PlayDeadAnimation();
+	SetActorEnableCollision(false);
+}
+
+void AFDCharacterBase::PlayDeadAnimation()
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	AnimInstance->StopAllMontages(0.0f);
+	AnimInstance->Montage_Play(DeadMontage, 1.0f); //DeadMontage는 생성자에서 몽타주 애셋 가져온 거
 }
 
 
