@@ -5,3 +5,4 @@
 
 IMPLEMENT_PRIMARY_GAME_MODULE( FDefaultGameModuleImpl, FDProject, "FDProject" );
  
+DEFINE_LOG_CATEGORY(LogFDProject);

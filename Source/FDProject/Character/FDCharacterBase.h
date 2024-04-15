@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Interface/FDAnimationAttackInterface.h"
+#include "Interface/FDCharacterWidgetInterface.h"
 #include "FDCharacterBase.generated.h"
 
 UENUM()
@@ -15,13 +16,14 @@ enum class ECharacterControlType : uint8
 };
 
 UCLASS()
-class FDPROJECT_API AFDCharacterBase : public ACharacter, public IFDAnimationAttackInterface
+class FDPROJECT_API AFDCharacterBase : public ACharacter, public IFDAnimationAttackInterface, public IFDCharacterWidgetInterface
 {
 	GENERATED_BODY()
 
 public:
 	AFDCharacterBase();
 
+	virtual void PostInitializeComponents() override;
 protected:
 	virtual void SetCharacterControlData(const class UFDCharacterControlData* CharacterControlData);
 
@@ -62,5 +64,16 @@ protected:
 	void PlayDeadAnimation();
 
 	float DeadEventDelayTime = 5.0f;
+	// Stat Section
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Stat, Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UFDCharacterStatComponent> Stat;
+
+	// UI Widget Section
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Widget, Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UFDWidgetComponent> HpBar;
+
+	virtual void SetupCharacterWidget(class UFDUserWidget* InUserWidget) override;
 
 };

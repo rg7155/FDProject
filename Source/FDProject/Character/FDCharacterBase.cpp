@@ -9,6 +9,10 @@
 #include "FDComboActionData.h"
 #include "Physics/FDCollision.h"
 #include "Engine/DamageEvents.h"
+#include "FDCharacterStatComponent.h"
+#include "UI/FDWidgetComponent.h"
+#include "UI/FDHpBarWidget.h"
+#include "FDProject.h"
 
 // Sets default values
 AFDCharacterBase::AFDCharacterBase()
@@ -65,6 +69,29 @@ AFDCharacterBase::AFDCharacterBase()
 	{
 		DeadMontage = DeadMontageRef.Object;
 	}
+
+	// Stat Component 
+	Stat = CreateDefaultSubobject<UFDCharacterStatComponent>(TEXT("Stat"));
+
+	// Widget Component 
+	HpBar = CreateDefaultSubobject<UFDWidgetComponent>(TEXT("Widget"));
+	HpBar->SetupAttachment(GetMesh());
+	HpBar->SetRelativeLocation(FVector(0.0f, 0.0f, 180.0f));
+	static ConstructorHelpers::FClassFinder<UUserWidget> HpBarWidgetRef(TEXT("/Game/FDProject/UI/WBP_HpBar.WBP_HpBar_C"));
+	if (HpBarWidgetRef.Class)
+	{
+		HpBar->SetWidgetClass(HpBarWidgetRef.Class);
+		HpBar->SetWidgetSpace(EWidgetSpace::Screen);
+		HpBar->SetDrawSize(FVector2D(150.0f, 15.0f));
+		HpBar->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
+}
+
+void AFDCharacterBase::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	Stat->OnHpZero.AddUObject(this, &AFDCharacterBase::SetDead);
 }
 
 void AFDCharacterBase::SetCharacterControlData(const UFDCharacterControlData* CharacterControlData)
@@ -190,7 +217,7 @@ float AFDCharacterBase::TakeDamage(float DamageAmount, FDamageEvent const& Damag
 {
 	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
-	SetDead();
+	Stat->ApplyDamage(DamageAmount);
 
 	return DamageAmount;
 }
@@ -201,6 +228,7 @@ void AFDCharacterBase::SetDead()
 	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
 	PlayDeadAnimation();
 	SetActorEnableCollision(false);
+	HpBar->SetHiddenInGame(true);
 }
 
 void AFDCharacterBase::PlayDeadAnimation()
@@ -210,4 +238,15 @@ void AFDCharacterBase::PlayDeadAnimation()
 	AnimInstance->Montage_Play(DeadMontage, 1.0f); //DeadMontage는 생성자에서 몽타주 애셋 가져온 거
 }
 
+void AFDCharacterBase::SetupCharacterWidget(UFDUserWidget* InUserWidget)
+{
+	UFDHpBarWidget* HpBarWidget = Cast<UFDHpBarWidget>(InUserWidget);
+	if (HpBarWidget)
+	{
+		//FD_LOG(LogFDProject, Log, TEXT("%s"));
 
+		HpBarWidget->SetMaxHp(Stat->GetMaxHp());
+		HpBarWidget->UpdateHpBar(Stat->GetCurrentHp());
+		Stat->OnHpChanged.AddUObject(HpBarWidget, &UFDHpBarWidget::UpdateHpBar);
+	}
+}
