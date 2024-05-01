@@ -13,6 +13,7 @@
 #include "UI/FDWidgetComponent.h"
 #include "UI/FDHpBarWidget.h"
 #include "FDProject.h"
+#include "Item/FDWeaponItemData.h"
 
 // Sets default values
 AFDCharacterBase::AFDCharacterBase()
@@ -85,6 +86,16 @@ AFDCharacterBase::AFDCharacterBase()
 		HpBar->SetDrawSize(FVector2D(150.0f, 15.0f));
 		HpBar->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
+
+	// Item Actions
+	TakeItemActions.Add(FTakeItemDelegateWrapper(FOnTakeItemDelegate::CreateUObject(this, &AFDCharacterBase::EquipWeapon)));
+	TakeItemActions.Add(FTakeItemDelegateWrapper(FOnTakeItemDelegate::CreateUObject(this, &AFDCharacterBase::DrinkPotion)));
+	TakeItemActions.Add(FTakeItemDelegateWrapper(FOnTakeItemDelegate::CreateUObject(this, &AFDCharacterBase::ReadScroll)));
+
+
+	// Weapon Component
+	Weapon = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Weapon"));
+	Weapon->SetupAttachment(GetMesh(), TEXT("hand_rSocket"));
 }
 
 void AFDCharacterBase::PostInitializeComponents()
@@ -249,4 +260,37 @@ void AFDCharacterBase::SetupCharacterWidget(UFDUserWidget* InUserWidget)
 		HpBarWidget->UpdateHpBar(Stat->GetCurrentHp());
 		Stat->OnHpChanged.AddUObject(HpBarWidget, &UFDHpBarWidget::UpdateHpBar);
 	}
+}
+
+void AFDCharacterBase::TakeItem(UFDItemData* InItemData)
+{
+	if (InItemData)
+	{
+		TakeItemActions[(uint8)InItemData->Type].ItemDelegate.ExecuteIfBound(InItemData);
+	}
+}
+void AFDCharacterBase::DrinkPotion(UFDItemData* InItemData)
+{
+	//UE_LOG(LogABCharacter, Log, TEXT("Drink Potion"));
+}
+
+void AFDCharacterBase::EquipWeapon(UFDItemData* InItemData)
+{
+	UFDWeaponItemData* WeaponItemData = Cast<UFDWeaponItemData>(InItemData);
+	if (WeaponItemData)
+	{
+		//로딩이 안돼있으면
+		if (WeaponItemData->WeaponMesh.IsPending())
+		{
+			//로딩함
+			WeaponItemData->WeaponMesh.LoadSynchronous();
+		}
+		//Get으로 얻어옴
+		Weapon->SetSkeletalMesh(WeaponItemData->WeaponMesh.Get());
+	}
+}
+
+void AFDCharacterBase::ReadScroll(UFDItemData* InItemData)
+{
+	//UE_LOG(LogABCharacter, Log, TEXT("Read Scroll"));
 }
