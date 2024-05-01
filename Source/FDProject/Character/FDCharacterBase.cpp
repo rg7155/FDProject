@@ -197,9 +197,9 @@ void AFDCharacterBase::AttackHitCheck()
 	//1.엔진 제공 기능 tag 추가 2.복잡한 충돌체 감지 옵션 3.자기 자신만 무시
 	FCollisionQueryParams Params(SCENE_QUERY_STAT(Attack), false, this);
 
-	const float AttackRange = 40.0f;
+	const float AttackRange = Stat->GetTotalStat().AttackRange;
 	const float AttackRadius = 50.0f;
-	const float AttackDamage = 30.0f;
+	const float AttackDamage = Stat->GetTotalStat().Attack;
 	//정면에 있는 캡슐의 위치
 	const FVector Start = GetActorLocation() + GetActorForwardVector() * GetCapsuleComponent()->GetScaledCapsuleRadius();
 	const FVector End = Start + GetActorForwardVector() * AttackRange;
@@ -256,7 +256,7 @@ void AFDCharacterBase::SetupCharacterWidget(UFDUserWidget* InUserWidget)
 	{
 		//FD_LOG(LogFDProject, Log, TEXT("%s"));
 
-		HpBarWidget->SetMaxHp(Stat->GetMaxHp());
+		HpBarWidget->SetMaxHp(Stat->GetTotalStat().MaxHp);
 		HpBarWidget->UpdateHpBar(Stat->GetCurrentHp());
 		Stat->OnHpChanged.AddUObject(HpBarWidget, &UFDHpBarWidget::UpdateHpBar);
 	}
@@ -293,4 +293,14 @@ void AFDCharacterBase::EquipWeapon(UFDItemData* InItemData)
 void AFDCharacterBase::ReadScroll(UFDItemData* InItemData)
 {
 	//UE_LOG(LogABCharacter, Log, TEXT("Read Scroll"));
+}
+
+int32 AFDCharacterBase::GetLevel()
+{
+	return Stat->GetCurrentLevel();
+}
+
+void AFDCharacterBase::SetLevel(int32 InNewLevel)
+{
+	Stat->SetLevelStat(InNewLevel);
 }

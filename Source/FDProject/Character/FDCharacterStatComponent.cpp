@@ -2,12 +2,11 @@
 
 
 #include "Character/FDCharacterStatComponent.h"
-#include "FDProject.h"
+#include "GameData/FDGameSingleton.h"
 // Sets default values
 UFDCharacterStatComponent::UFDCharacterStatComponent()
 {
-	MaxHp = 200.0f;
-	CurrentHp = MaxHp;
+	CurrentLevel = 1;
 }
 
 // Called when the game starts or when spawned
@@ -15,7 +14,15 @@ void UFDCharacterStatComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SetHp(MaxHp);
+	SetLevelStat(CurrentLevel);
+	SetHp(BaseStat.MaxHp);
+}
+
+void UFDCharacterStatComponent::SetLevelStat(int32 InNewLevel)
+{
+	CurrentLevel = FMath::Clamp(InNewLevel, 1, UFDGameSingleton::Get().CharacterMaxLevel);
+	BaseStat = UFDGameSingleton::Get().GetCharacterStat(CurrentLevel);
+	check(BaseStat.MaxHp > 0.0f);
 }
 
 float UFDCharacterStatComponent::ApplyDamage(float InDamage)
@@ -34,9 +41,7 @@ float UFDCharacterStatComponent::ApplyDamage(float InDamage)
 
 void UFDCharacterStatComponent::SetHp(float NewHp)
 {
-	//FD_LOG(LogFDProject, Log, TEXT("%s"));
-
-	CurrentHp = FMath::Clamp<float>(NewHp, 0.0f, MaxHp);
+	CurrentHp = FMath::Clamp<float>(NewHp, 0.0f, BaseStat.MaxHp);
 
 	OnHpChanged.Broadcast(CurrentHp);
 }
