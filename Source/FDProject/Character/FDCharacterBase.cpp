@@ -160,6 +160,12 @@ void AFDCharacterBase::ComboActionEnd(UAnimMontage* TargetMontage, bool IsProper
 	ensure(CurrentCombo != 0);
 	CurrentCombo = 0;
 	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+
+	NotifyComboActionEnd();
+}
+
+void AFDCharacterBase::NotifyComboActionEnd()
+{
 }
 
 void AFDCharacterBase::SetComboCheckTimer()

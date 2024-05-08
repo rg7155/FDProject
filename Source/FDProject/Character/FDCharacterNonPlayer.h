@@ -4,13 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "Character/FDCharacterBase.h"
+#include "Interface/FDCharacterAIInterface.h"
 #include "FDCharacterNonPlayer.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class FDPROJECT_API AFDCharacterNonPlayer : public AFDCharacterBase
+class FDPROJECT_API AFDCharacterNonPlayer : public AFDCharacterBase , public IFDCharacterAIInterface
 {
 	GENERATED_BODY()
 public:
@@ -18,4 +19,18 @@ public:
 
 protected:
 	void SetDead() override;
+
+	// AI Section
+protected:
+	virtual float GetAIPatrolRadius() override;
+	virtual float GetAIDetectRange() override;
+	virtual float GetAIAttackRange() override;
+	virtual float GetAITurnSpeed() override;
+
+	virtual void SetAIAttackDelegate(const FAICharacterAttackFinished& InOnAttackFinished) override;
+	virtual void AttackByAI() override;
+
+	FAICharacterAttackFinished OnAttackFinished;
+
+	virtual void NotifyComboActionEnd() override;
 };
