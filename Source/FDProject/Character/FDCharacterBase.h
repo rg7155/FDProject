@@ -7,6 +7,7 @@
 #include "Interface/FDAnimationAttackInterface.h"
 #include "Interface/FDCharacterWidgetInterface.h"
 #include "Interface/FDCharacterItemInterface.h"
+#include "GameData/FDCharacterStat.h"
 #include "FDCharacterBase.generated.h"
 
 UENUM()
@@ -106,4 +107,6 @@ protected:
 public:
 	int32 GetLevel();
 	void SetLevel(int32 InNewLevel);
+	void ApplyStat(const FFDCharacterStat& BaseStat, const FFDCharacterStat& ModifierStat);
+
 };

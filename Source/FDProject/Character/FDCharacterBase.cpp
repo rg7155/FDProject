@@ -103,6 +103,7 @@ void AFDCharacterBase::PostInitializeComponents()
 	Super::PostInitializeComponents();
 
 	Stat->OnHpZero.AddUObject(this, &AFDCharacterBase::SetDead);
+	//Stat->OnStatChanged.AddUObject(this, &AFDCharacterBase::ApplyStat);
 }
 
 void AFDCharacterBase::SetCharacterControlData(const UFDCharacterControlData* CharacterControlData)
@@ -309,4 +310,10 @@ int32 AFDCharacterBase::GetLevel()
 void AFDCharacterBase::SetLevel(int32 InNewLevel)
 {
 	Stat->SetLevelStat(InNewLevel);
+}
+
+void AFDCharacterBase::ApplyStat(const FFDCharacterStat& BaseStat, const FFDCharacterStat& ModifierStat)
+{
+	float MovementSpeed = (BaseStat + ModifierStat).MovementSpeed;
+	GetCharacterMovement()->MaxWalkSpeed = MovementSpeed;
 }
