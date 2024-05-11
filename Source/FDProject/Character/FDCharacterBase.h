@@ -55,14 +55,20 @@ protected:
 	void ProcessComboCommand();
 
 	void ComboActionBegin();
-	void ComboActionEnd(class UAnimMontage* TargetMontage, bool IsProperlyEnded);
+	void OnComboActionEnd(class UAnimMontage* TargetMontage, bool IsProperlyEnded);
+	void ComboActionEnd();
 	virtual void NotifyComboActionEnd();
 	void SetComboCheckTimer();
-	void ComboCheck();
+	void OnComboCheck();
+	void SetAttackAfterMovementTimer();
+	void OnAttackAfterMoveable();
+	void OnCheckAttackAfterMoveable();
 
 	int32 CurrentCombo = 0;
 	FTimerHandle ComboTimerHandle;
 	bool HasNextComboCommand = false;
+	FTimerHandle AttackAfterMoveableTimerHandle;
+	bool isAttackAfterMoveable = false;
 
 	// Attack Hit Section
 protected:

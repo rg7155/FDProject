@@ -10,6 +10,7 @@
 #include "FDCharacterControlData.h"
 #include "UI/FDHUDWidget.h"
 #include "FDCharacterStatComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 AFDCharacterPlayer::AFDCharacterPlayer()
 {
@@ -95,12 +96,18 @@ void AFDCharacterPlayer::SetupPlayerInputComponent(class UInputComponent* Player
 
 	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent);
 
+	//EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &AFDCharacterBase::OnCheckAttackAfterMoveable);
 	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);
 	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
+
 	EnhancedInputComponent->BindAction(ChangeControlAction, ETriggerEvent::Triggered, this, &AFDCharacterPlayer::ChangeCharacterControl);
+
+	//EnhancedInputComponent->BindAction(ShoulderMoveAction, ETriggerEvent::Triggered, this, &AFDCharacterBase::OnCheckAttackAfterMoveable);
 	EnhancedInputComponent->BindAction(ShoulderMoveAction, ETriggerEvent::Triggered, this, &AFDCharacterPlayer::ShoulderMove);
 	EnhancedInputComponent->BindAction(ShoulderLookAction, ETriggerEvent::Triggered, this, &AFDCharacterPlayer::ShoulderLook);
+
 	EnhancedInputComponent->BindAction(QuaterMoveAction, ETriggerEvent::Triggered, this, &AFDCharacterPlayer::QuaterMove);
+
 	EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &AFDCharacterPlayer::Attack);
 
 }
@@ -162,8 +169,17 @@ void AFDCharacterPlayer::SetCharacterControlData(const UFDCharacterControlData* 
 //	}
 //}
 
+void AFDCharacterPlayer::Jump()
+{
+	OnCheckAttackAfterMoveable();
+
+	Super::Jump();
+}
+
 void AFDCharacterPlayer::ShoulderMove(const FInputActionValue& Value)
 {
+	OnCheckAttackAfterMoveable();
+
 	FVector2D MovementVector = Value.Get<FVector2D>();
 
 	const FRotator Rotation = Controller->GetControlRotation();
@@ -208,7 +224,8 @@ void AFDCharacterPlayer::QuaterMove(const FInputActionValue& Value)
 
 void AFDCharacterPlayer::Attack()
 {
-	ProcessComboCommand();
+	if(GetCharacterMovement()->MovementMode ==  EMovementMode::MOVE_Walking)
+		ProcessComboCommand();
 }
 
 void AFDCharacterPlayer::SetupHUDWidget(UFDHUDWidget* InHUDWidget)
