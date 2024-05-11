@@ -5,13 +5,14 @@
 #include "CoreMinimal.h"
 #include "Character/FDCharacterBase.h"
 #include "InputActionValue.h"
+#include "Interface/FDCharacterHUDInterface.h"
 #include "FDCharacterPlayer.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class FDPROJECT_API AFDCharacterPlayer : public AFDCharacterBase
+class FDPROJECT_API AFDCharacterPlayer : public AFDCharacterBase, public IFDCharacterHUDInterface
 {
 	GENERATED_BODY()
 	
@@ -69,4 +70,8 @@ protected:
 	ECharacterControlType CurrentCharacterControlType;
 
 	void Attack();
+
+	// UI Section
+protected:
+	virtual void SetupHUDWidget(class UFDHUDWidget* InHUDWidget) override;
 };

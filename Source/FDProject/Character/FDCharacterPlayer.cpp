@@ -8,6 +8,8 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "FDCharacterControlData.h"
+#include "UI/FDHUDWidget.h"
+#include "FDCharacterStatComponent.h"
 
 AFDCharacterPlayer::AFDCharacterPlayer()
 {
@@ -190,4 +192,18 @@ void AFDCharacterPlayer::QuaterMove(const FInputActionValue& Value)
 void AFDCharacterPlayer::Attack()
 {
 	ProcessComboCommand();
+}
+
+void AFDCharacterPlayer::SetupHUDWidget(UFDHUDWidget* InHUDWidget)
+{
+	if (InHUDWidget)
+	{
+		//초기 정보 보여주기 위해 업데이트
+		InHUDWidget->UpdateStat(Stat->GetBaseStat(), Stat->GetModifierStat());
+		InHUDWidget->UpdateHpBar(Stat->GetCurrentHp());
+
+		//스텟에 있는 델리게이트에 위젯의 함수 연동
+		Stat->OnStatChanged.AddUObject(InHUDWidget, &UFDHUDWidget::UpdateStat);
+		Stat->OnHpChanged.AddUObject(InHUDWidget, &UFDHUDWidget::UpdateHpBar);
+	}
 }

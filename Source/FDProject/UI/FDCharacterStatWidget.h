@@ -15,6 +15,16 @@ class FDPROJECT_API UFDCharacterStatWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
+protected:
+	virtual void NativeConstruct() override;
+
 public:
 	void UpdateStat(const FFDCharacterStat& BaseStat, const FFDCharacterStat& ModifierStat);
+
+private:
+	UPROPERTY()
+	TMap<FName, class UTextBlock*> BaseLookup;
+
+	UPROPERTY()
+	TMap<FName, class UTextBlock*> ModifierLookup;
 };

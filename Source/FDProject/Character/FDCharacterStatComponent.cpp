@@ -22,7 +22,7 @@ void UFDCharacterStatComponent::BeginPlay()
 void UFDCharacterStatComponent::SetLevelStat(int32 InNewLevel)
 {
 	CurrentLevel = FMath::Clamp(InNewLevel, 1, UFDGameSingleton::Get().CharacterMaxLevel);
-	BaseStat = UFDGameSingleton::Get().GetCharacterStat(CurrentLevel);
+	SetBaseStat(UFDGameSingleton::Get().GetCharacterStat(CurrentLevel));
 	check(BaseStat.MaxHp > 0.0f);
 }
 

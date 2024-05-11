@@ -9,6 +9,7 @@
 
 DECLARE_MULTICAST_DELEGATE(FOnHpZeroDelegate);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnHpChangedDelegate, float /*CurrentHp*/);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnStatChangedDelegate, const FFDCharacterStat& /*BaseStat*/, const FFDCharacterStat& /*ModifierStat*/);
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class FDPROJECT_API UFDCharacterStatComponent : public UActorComponent
@@ -26,15 +27,20 @@ protected:
 public:
 	FOnHpZeroDelegate OnHpZero;
 	FOnHpChangedDelegate OnHpChanged;
+	FOnStatChangedDelegate OnStatChanged;
 
 	void SetLevelStat(int32 InNewLevel);
-	FORCEINLINE float GetCurrentLevel() const { return CurrentLevel; }
 	FORCEINLINE void SetModifierStat(const FFDCharacterStat& InModifierStat) { ModifierStat = InModifierStat; }
+	FORCEINLINE void SetBaseStat(const FFDCharacterStat& InBaseStat) { BaseStat = InBaseStat; OnStatChanged.Broadcast(GetBaseStat(), GetModifierStat()); }
+
+	FORCEINLINE const FFDCharacterStat& GetBaseStat() const { return BaseStat; }
+	FORCEINLINE const FFDCharacterStat& GetModifierStat() const { return ModifierStat; }
+	FORCEINLINE float GetCurrentLevel() const { return CurrentLevel; }
 	FORCEINLINE FFDCharacterStat GetTotalStat() const { return BaseStat + ModifierStat; }
 	FORCEINLINE float GetCurrentHp() const { return CurrentHp; }
 	FORCEINLINE float GetAttackRadius() const { return AttackRadius; }
-	float ApplyDamage(float InDamage);
 
+	float ApplyDamage(float InDamage);
 protected:
 	void SetHp(float NewHp);
 
