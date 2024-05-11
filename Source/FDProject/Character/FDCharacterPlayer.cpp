@@ -69,7 +69,24 @@ void AFDCharacterPlayer::BeginPlay()
 {
 	Super::BeginPlay();
 
+	APlayerController* PlayerController = Cast<APlayerController>(GetController());
+	if (PlayerController)
+	{
+		EnableInput(PlayerController);
+	}
+
 	SetCharacterControl(CurrentCharacterControlType);
+}
+
+void AFDCharacterPlayer::SetDead()
+{
+	Super::SetDead();
+
+	APlayerController* PlayerController = Cast<APlayerController>(GetController());
+	if (PlayerController)
+	{
+		DisableInput(PlayerController);
+	}
 }
 
 void AFDCharacterPlayer::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)

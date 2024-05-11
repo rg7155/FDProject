@@ -103,7 +103,7 @@ void AFDCharacterBase::PostInitializeComponents()
 	Super::PostInitializeComponents();
 
 	Stat->OnHpZero.AddUObject(this, &AFDCharacterBase::SetDead);
-	//Stat->OnStatChanged.AddUObject(this, &AFDCharacterBase::ApplyStat);
+	Stat->OnStatChanged.AddUObject(this, &AFDCharacterBase::ApplyStat);
 }
 
 void AFDCharacterBase::SetCharacterControlData(const UFDCharacterControlData* CharacterControlData)
@@ -258,14 +258,14 @@ void AFDCharacterBase::PlayDeadAnimation()
 
 void AFDCharacterBase::SetupCharacterWidget(UFDUserWidget* InUserWidget)
 {
+	//이 함수는 사실상 HpBarWidget 전용임
 	UFDHpBarWidget* HpBarWidget = Cast<UFDHpBarWidget>(InUserWidget);
 	if (HpBarWidget)
 	{
-		//FD_LOG(LogFDProject, Log, TEXT("%s"));
-
-		HpBarWidget->SetMaxHp(Stat->GetTotalStat().MaxHp);
+		HpBarWidget->UpdateStat(Stat->GetBaseStat(), Stat->GetModifierStat());
 		HpBarWidget->UpdateHpBar(Stat->GetCurrentHp());
 		Stat->OnHpChanged.AddUObject(HpBarWidget, &UFDHpBarWidget::UpdateHpBar);
+		Stat->OnStatChanged.AddUObject(HpBarWidget, &UFDHpBarWidget::UpdateStat);
 	}
 }
 

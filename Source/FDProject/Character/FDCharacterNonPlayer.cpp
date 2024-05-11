@@ -15,6 +15,12 @@ void AFDCharacterNonPlayer::SetDead()
 {
 	Super::SetDead();
 
+	AFDAIController* FDAIController = Cast<AFDAIController>(GetController());
+	if (FDAIController)
+	{
+		FDAIController->StopAI();
+	}
+
 	FTimerHandle DeadTimerHandle;
 	GetWorld()->GetTimerManager().SetTimer(DeadTimerHandle, FTimerDelegate::CreateLambda(
 		[&]()

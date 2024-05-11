@@ -2,15 +2,14 @@
 
 
 #include "UI/FDHUDWidget.h"
-//#include "Interface/FDCharacterHUDInterface.h"
+#include "Interface/FDCharacterHUDInterface.h"
 #include "FDHpBarWidget.h"
 #include "FDCharacterStatWidget.h"
 
 void UFDHUDWidget::UpdateStat(const FFDCharacterStat& BaseStat, const FFDCharacterStat& ModifierStat)
 {
 	FFDCharacterStat TotalStat = BaseStat + ModifierStat;
-	HpBar->SetMaxHp(TotalStat.MaxHp);
-
+	HpBar->UpdateStat(BaseStat, ModifierStat);
 	CharacterStat->UpdateStat(BaseStat, ModifierStat);
 }
 
@@ -31,10 +30,10 @@ void UFDHUDWidget::NativeConstruct()
 	CharacterStat = Cast<UFDCharacterStatWidget>(GetWidgetFromName(TEXT("WidgetCharacterStat")));
 	ensure(CharacterStat);
 
-	//IFDCharacterHUDInterface* HUDPawn = Cast<IFDCharacterHUDInterface>(GetOwningPlayerPawn());
-	//if (HUDPawn)
-	//{
-	//	HUDPawn->SetupHUDWidget(this);
-	//}
+	IFDCharacterHUDInterface* HUDPawn = Cast<IFDCharacterHUDInterface>(GetOwningPlayerPawn());
+	if (HUDPawn)
+	{
+		HUDPawn->SetupHUDWidget(this);
+	}
 
 }
