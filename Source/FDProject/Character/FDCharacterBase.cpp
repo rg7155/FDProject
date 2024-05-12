@@ -14,6 +14,7 @@
 #include "UI/FDHpBarWidget.h"
 #include "FDProject.h"
 #include "Item/FDWeaponItemData.h"
+#include "Actor/FDDamage.h"
 
 // Sets default values
 AFDCharacterBase::AFDCharacterBase()
@@ -165,6 +166,7 @@ void AFDCharacterBase::OnComboActionEnd(UAnimMontage* TargetMontage, bool IsProp
 
 void AFDCharacterBase::ComboActionEnd()
 {
+	//TODO : 이동에서도 0만들고 몽타주 엔드 바인딩 에서도 0만들어줌
 	ensure(CurrentCombo != 0);
 	CurrentCombo = 0;
 	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
@@ -291,6 +293,19 @@ float AFDCharacterBase::TakeDamage(float DamageAmount, FDamageEvent const& Damag
 	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
 	Stat->ApplyDamage(DamageAmount);
+
+	FVector SpawnLocation = GetActorLocation() + FVector(0.0f, 0.0f, 100.0f);
+	AActor* DamageActor = GetWorld()->SpawnActor(AFDDamage::StaticClass(), &SpawnLocation, &FRotator::ZeroRotator);
+	AFDDamage* FDDamageActor = Cast<AFDDamage>(DamageActor);
+
+	//const FTransform SpawnTransform(GetActorLocation() + FVector::UpVector * 100);
+	//AFDDamage* FDDamageActor = GetWorld()->SpawnActorDeferred<AFDDamage>(AFDDamage::StaticClass(), SpawnTransform);
+
+	if (FDDamageActor)
+	{
+		FDDamageActor->SetDamage(DamageAmount);
+		//FDDamageActor->FinishSpawning(SpawnTransform);
+	}
 
 	return DamageAmount;
 }

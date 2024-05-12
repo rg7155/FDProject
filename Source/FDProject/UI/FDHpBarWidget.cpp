@@ -21,7 +21,7 @@ void UFDHpBarWidget::NativeConstruct()
 	ensure(HpProgressBar);
 
 	HpStat = Cast<UTextBlock>(GetWidgetFromName(TEXT("TxtHpStat")));
-	ensure(HpProgressBar);
+	ensure(HpStat);
 
 	IFDCharacterWidgetInterface* CharacterWidget = Cast<IFDCharacterWidgetInterface>(OwningActor);
 	if (CharacterWidget)
@@ -50,7 +50,7 @@ void UFDHpBarWidget::UpdateHpBar(float NewCurrentHp)
 {
 	CurrentHp = NewCurrentHp; 
 
-	ensure(MaxHp > 0.0f);
+	//ensure(MaxHp > 0.0f);
 	if (HpProgressBar)
 	{
 		//이건 UMG 모듈에서 제공하므로 빌드설정에 "UMG" 추가 필수

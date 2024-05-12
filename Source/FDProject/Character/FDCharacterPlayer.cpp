@@ -224,7 +224,7 @@ void AFDCharacterPlayer::QuaterMove(const FInputActionValue& Value)
 
 void AFDCharacterPlayer::Attack()
 {
-	if(GetCharacterMovement()->MovementMode ==  EMovementMode::MOVE_Walking)
+	if(GetCharacterMovement()->MovementMode ==  EMovementMode::MOVE_Walking || CurrentCombo > 0)
 		ProcessComboCommand();
 }
 
