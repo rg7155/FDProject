@@ -17,6 +17,9 @@ public:
 	AFDPlayerController();
 protected:
 	virtual void BeginPlay() override;
+
+public:
+	void ToggleMouseCursor(bool isShowCursor);
 	// HUD Section
 protected:
 	//생성할 위젯 클래스 정보

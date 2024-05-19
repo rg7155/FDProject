@@ -18,6 +18,7 @@ void UFDItemInShopWidget::NativeConstruct()
 
 void UFDItemInShopWidget::OnButtonPressed()
 {
+	//델리게이트 설정 시 바인딩 함수 UFUNCTION
 	UE_LOG(LogFDProject, Log, TEXT("OnButtonPressed - %d"), ItemData->Type);
 	//
 	/*IFDCharacterItemInterface* Pawn = Cast<IFDCharacterItemInterface>(OtherActor);

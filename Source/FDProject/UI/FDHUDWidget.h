@@ -20,7 +20,7 @@ public:
 	void UpdateHpBar(float NewCurrentHp);
 	void UpdateGold(int Gold);
 
-	void SetShopVisible();
+	void SetShopVisible(bool isVisible);
 
 protected:
 	virtual void NativeConstruct() override;

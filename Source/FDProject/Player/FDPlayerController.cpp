@@ -26,3 +26,17 @@ void AFDPlayerController::BeginPlay()
 		FDHUDWidget->AddToViewport();
 	}
 }
+
+void AFDPlayerController::ToggleMouseCursor(bool isShowCursor)
+{
+	if (isShowCursor)
+	{
+		bShowMouseCursor = true;
+		SetInputMode(FInputModeGameAndUI());
+	}
+	else
+	{
+		bShowMouseCursor = false;
+		SetInputMode(FInputModeGameOnly());
+	}
+}

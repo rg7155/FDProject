@@ -167,7 +167,7 @@ void AFDCharacterBase::OnComboActionEnd(UAnimMontage* TargetMontage, bool IsProp
 void AFDCharacterBase::ComboActionEnd()
 {
 	//TODO : 이동에서도 0만들고 몽타주 엔드 바인딩 에서도 0만들어줌
-	ensure(CurrentCombo != 0);
+	//ensure(CurrentCombo != 0);
 	CurrentCombo = 0;
 	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
 
@@ -189,7 +189,6 @@ void AFDCharacterBase::SetComboCheckTimer()
 
 	const float AttackSpeedRate = 1.0f;
 	float ComboEffectiveTime = (ComboActionData->EffectiveFrameCount[ComboIndex] / ComboActionData->FrameRate) / AttackSpeedRate;
-	//UE_LOG(LogFDProject, Log, TEXT("ComboEffectiveTime : %f"), ComboEffectiveTime);
 	if (ComboEffectiveTime > 0.0f)
 	{
 		GetWorld()->GetTimerManager().SetTimer(ComboTimerHandle, this, &AFDCharacterBase::OnComboCheck, ComboEffectiveTime, false);
@@ -204,7 +203,6 @@ void AFDCharacterBase::SetAttackAfterMovementTimer()
 	const float AttackSpeedRate = 1.0f;
 	//공격 판정 이후 대략 5프레임 이후
 	float AttackAfterMovementTime = ((ComboActionData->EffectiveFrameCount[ComboIndex] + 10) / ComboActionData->FrameRate) / AttackSpeedRate;
-	UE_LOG(LogFDProject, Log, TEXT("SetAttackAfterMovementTimer : %f"), AttackAfterMovementTime);
 	if (AttackAfterMovementTime > 0.0f)
 	{
 		GetWorld()->GetTimerManager().SetTimer(AttackAfterMoveableTimerHandle, this, &AFDCharacterBase::OnAttackAfterMoveable, AttackAfterMovementTime, false);
@@ -214,7 +212,6 @@ void AFDCharacterBase::SetAttackAfterMovementTimer()
 void AFDCharacterBase::OnAttackAfterMoveable()
 {
 	//해당 함수 호출이후/ 공격 중이고 이동 입력이 들어왔다면 / 콤보타이머 해제하고 워킹상태
-	UE_LOG(LogFDProject, Log, TEXT("OnAttackAfterMoveable"));
 	isAttackAfterMoveable = true;
 }
 
@@ -223,8 +220,6 @@ void AFDCharacterBase::OnCheckAttackAfterMoveable()
 	//움직임에 바인딩되거나 같이 호출되는 함수
 	if (isAttackAfterMoveable)
 	{
-		UE_LOG(LogFDProject, Log, TEXT("OnCheckAttackAfterMoveable"));
-
 		ComboTimerHandle.Invalidate();
 		AttackAfterMoveableTimerHandle.Invalidate();
 

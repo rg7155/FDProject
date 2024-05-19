@@ -17,6 +17,7 @@ class FDPROJECT_API UFDItemInShopWidget : public UFDUserWidget
 protected:
 	virtual void NativeConstruct() override;
 	
+	UFUNCTION()
 	void OnButtonPressed();
 
 protected:

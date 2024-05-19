@@ -24,9 +24,17 @@ void UFDHUDWidget::UpdateGold(int _Gold)
 	Gold->UpdateGoldText(_Gold);
 }
 
-void UFDHUDWidget::SetShopVisible()
+void UFDHUDWidget::SetShopVisible(bool isVisible)
 {
-	Shop->SetVisibility(Shop->GetVisibility() == ESlateVisibility::Visible ? ESlateVisibility::Hidden : ESlateVisibility::Visible);
+	if (isVisible)
+	{
+		Shop->SetVisibility(ESlateVisibility::Visible);
+	}
+	else
+	{
+		Shop->SetVisibility(ESlateVisibility::Hidden);
+	}
+	//Shop->SetVisibility(Shop->GetVisibility() == ESlateVisibility::Visible ? ESlateVisibility::Hidden : ESlateVisibility::Visible);
 }
 
 void UFDHUDWidget::NativeConstruct()
@@ -46,6 +54,7 @@ void UFDHUDWidget::NativeConstruct()
 
 	Shop = Cast<UFDUserWidget>(GetWidgetFromName(TEXT("WidgetShop")));
 	ensure(Shop);
+	SetShopVisible(false);
 
 	IFDCharacterHUDInterface* HUDPawn = Cast<IFDCharacterHUDInterface>(GetOwningPlayerPawn());
 	if (HUDPawn)

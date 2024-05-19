@@ -14,6 +14,7 @@
 
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
+#include "Player/FDPlayerController.h"
 
 AFDCharacterPlayer::AFDCharacterPlayer()
 {
@@ -63,8 +64,12 @@ AFDCharacterPlayer::AFDCharacterPlayer()
 	{
 		AttackAction = InputActionAttackRef.Object;
 	}
-	//SetInputActionByObjectFinder(AttackAction, TEXT("/Script/EnhancedInput.InputAction'/Game/FDProject/Input/Actions/IA_Attack.IA_Attack'"));
-
+	static ConstructorHelpers::FObjectFinder<UInputAction> InputActionInteractionRef(TEXT("/Script/EnhancedInput.InputAction'/Game/FDProject/Input/Actions/IA_Interaction.IA_Interaction'"));
+	if (nullptr != InputActionInteractionRef.Object)
+	{
+		InteractionAction = InputActionInteractionRef.Object;
+	}
+	isShopVisible = false;
 
 	CurrentCharacterControlType = ECharacterControlType::Shoulder;
 }
@@ -113,6 +118,7 @@ void AFDCharacterPlayer::SetupPlayerInputComponent(class UInputComponent* Player
 
 	EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &AFDCharacterPlayer::Attack);
 
+	EnhancedInputComponent->BindAction(InteractionAction, ETriggerEvent::Triggered, this, &AFDCharacterPlayer::Interaction);
 }
 
 void AFDCharacterPlayer::ChangeCharacterControl()
@@ -233,10 +239,24 @@ void AFDCharacterPlayer::Attack()
 	//UGameplayStatics::OpenLevel(GetWorld(), FName("Stage0"));
 }
 
+void AFDCharacterPlayer::Interaction()
+{
+	AFDPlayerController* PlayerController = Cast<AFDPlayerController>(GetController());
+	if (PlayerController)
+	{
+		isShopVisible = !isShopVisible;
+		PlayerController->ToggleMouseCursor(isShopVisible);
+		HUDWidget->SetShopVisible(isShopVisible);
+	}
+}
+
 void AFDCharacterPlayer::SetupHUDWidget(UFDHUDWidget* InHUDWidget)
 {
-	if (InHUDWidget)
+	HUDWidget = InHUDWidget;
+	ensure(HUDWidget);
+	if (HUDWidget)
 	{
+
 		//초기 정보 보여주기 위해 업데이트
 		InHUDWidget->UpdateStat(Stat->GetBaseStat(), Stat->GetModifierStat());
 		InHUDWidget->UpdateHpBar(Stat->GetCurrentHp());

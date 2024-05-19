@@ -61,19 +61,25 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UInputAction> AttackAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UInputAction> InteractionAction;
+
 	//void SetInputActionByObjectFinder(TObjectPtr<class UInputAction>& action, const TCHAR* ref);
 
 	virtual void Jump() override;
 	void ShoulderMove(const FInputActionValue& Value);
 	void ShoulderLook(const FInputActionValue& Value);
-
 	void QuaterMove(const FInputActionValue& Value);
+	void Attack();
+	void Interaction();
 
 	ECharacterControlType CurrentCharacterControlType;
-
-	void Attack();
+	bool isShopVisible = false;
 
 	// UI Section
 protected:
 	virtual void SetupHUDWidget(class UFDHUDWidget* InHUDWidget) override;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Widget, Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UFDHUDWidget> HUDWidget;
 };
