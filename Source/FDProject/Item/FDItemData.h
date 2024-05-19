@@ -24,6 +24,12 @@ class FDPROJECT_API UFDItemData : public UPrimaryDataAsset
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Type)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data)
 	EItemType Type;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data)
+	int	Gold;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data)
+	FString Name;
 };

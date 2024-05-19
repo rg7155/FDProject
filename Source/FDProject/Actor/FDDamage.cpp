@@ -47,11 +47,9 @@ void AFDDamage::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	// Up 벡터와 Right 벡터의 오프셋을 계산합니다.
 	FVector UpOffset = GetActorUpVector() * RandomUpOffset * DeltaTime;
 	FVector RightOffset = GetActorRightVector() * RandomRightOffset * DeltaTime;
 
-	// 새로운 위치를 계산하여 Actor를 이동시킵니다.
 	FVector NewLocation = GetActorLocation() + UpOffset + RightOffset;
 	SetActorLocation(NewLocation);
 }

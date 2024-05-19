@@ -18,6 +18,9 @@ public:
 	void UpdateStat(const FFDCharacterStat& BaseStat, const FFDCharacterStat& ModifierStat);
 	//ABHpBar와 동일함
 	void UpdateHpBar(float NewCurrentHp);
+	void UpdateGold(int Gold);
+
+	void SetShopVisible();
 
 protected:
 	virtual void NativeConstruct() override;
@@ -28,4 +31,10 @@ protected:
 
 	UPROPERTY()
 	TObjectPtr<class UFDCharacterStatWidget> CharacterStat;
+
+	UPROPERTY()
+	TObjectPtr<class UFDGoldWidget> Gold;
+
+	UPROPERTY()
+	TObjectPtr<class UFDUserWidget> Shop;
 };

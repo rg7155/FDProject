@@ -12,6 +12,9 @@
 #include "FDCharacterStatComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
+#include "Engine/World.h"
+#include "Kismet/GameplayStatics.h"
+
 AFDCharacterPlayer::AFDCharacterPlayer()
 {
 	// Camera
@@ -226,6 +229,8 @@ void AFDCharacterPlayer::Attack()
 {
 	if(GetCharacterMovement()->MovementMode ==  EMovementMode::MOVE_Walking || CurrentCombo > 0)
 		ProcessComboCommand();
+
+	//UGameplayStatics::OpenLevel(GetWorld(), FName("Stage0"));
 }
 
 void AFDCharacterPlayer::SetupHUDWidget(UFDHUDWidget* InHUDWidget)
@@ -235,6 +240,7 @@ void AFDCharacterPlayer::SetupHUDWidget(UFDHUDWidget* InHUDWidget)
 		//초기 정보 보여주기 위해 업데이트
 		InHUDWidget->UpdateStat(Stat->GetBaseStat(), Stat->GetModifierStat());
 		InHUDWidget->UpdateHpBar(Stat->GetCurrentHp());
+		InHUDWidget->UpdateGold(Stat->GetGold());
 
 		//스텟에 있는 델리게이트에 위젯의 함수 연동
 		Stat->OnStatChanged.AddUObject(InHUDWidget, &UFDHUDWidget::UpdateStat);

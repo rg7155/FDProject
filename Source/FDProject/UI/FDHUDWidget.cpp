@@ -5,6 +5,7 @@
 #include "Interface/FDCharacterHUDInterface.h"
 #include "FDHpBarWidget.h"
 #include "FDCharacterStatWidget.h"
+#include "FDGoldWidget.h"
 
 void UFDHUDWidget::UpdateStat(const FFDCharacterStat& BaseStat, const FFDCharacterStat& ModifierStat)
 {
@@ -18,6 +19,16 @@ void UFDHUDWidget::UpdateHpBar(float NewCurrentHp)
 	HpBar->UpdateHpBar(NewCurrentHp);
 }
 
+void UFDHUDWidget::UpdateGold(int _Gold)
+{
+	Gold->UpdateGoldText(_Gold);
+}
+
+void UFDHUDWidget::SetShopVisible()
+{
+	Shop->SetVisibility(Shop->GetVisibility() == ESlateVisibility::Visible ? ESlateVisibility::Hidden : ESlateVisibility::Visible);
+}
+
 void UFDHUDWidget::NativeConstruct()
 {
 	// 플레이어 컨트롤러 비긴플레이에서 AddToViewport 함수를 통해 실행됨
@@ -29,6 +40,12 @@ void UFDHUDWidget::NativeConstruct()
 
 	CharacterStat = Cast<UFDCharacterStatWidget>(GetWidgetFromName(TEXT("WidgetCharacterStat")));
 	ensure(CharacterStat);
+
+	Gold = Cast<UFDGoldWidget>(GetWidgetFromName(TEXT("WidgetGold")));
+	ensure(Gold);
+
+	Shop = Cast<UFDUserWidget>(GetWidgetFromName(TEXT("WidgetShop")));
+	ensure(Shop);
 
 	IFDCharacterHUDInterface* HUDPawn = Cast<IFDCharacterHUDInterface>(GetOwningPlayerPawn());
 	if (HUDPawn)

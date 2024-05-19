@@ -39,6 +39,7 @@ public:
 	FORCEINLINE FFDCharacterStat GetTotalStat() const { return BaseStat + ModifierStat; }
 	FORCEINLINE float GetCurrentHp() const { return CurrentHp; }
 	FORCEINLINE float GetAttackRadius() const { return AttackRadius; }
+	FORCEINLINE float GetGold() const { return Gold; }
 
 	float ApplyDamage(float InDamage);
 protected:
@@ -46,6 +47,9 @@ protected:
 
 	//Transient 디스크에 저장하지 않음
 	//VisibleInstanceOnly 배치된 캐릭마다 다른 값 사용가능		
+	UPROPERTY(Transient, VisibleInstanceOnly, Category = Stat)
+	float Gold;
+
 	UPROPERTY(Transient, VisibleInstanceOnly, Category = Stat)
 	float CurrentHp;
 
