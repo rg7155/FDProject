@@ -11,10 +11,11 @@
 #include "UI/FDHUDWidget.h"
 #include "FDCharacterStatComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
 #include "Player/FDPlayerController.h"
+#include "Item/FDWeaponItemData.h"
+#include "FDProject.h"
 
 AFDCharacterPlayer::AFDCharacterPlayer()
 {
@@ -72,6 +73,11 @@ AFDCharacterPlayer::AFDCharacterPlayer()
 	isShopVisible = false;
 
 	CurrentCharacterControlType = ECharacterControlType::Shoulder;
+
+	// Item Actions
+	TakeItemActions.Add(FTakeItemDelegateWrapper(FOnTakeItemDelegate::CreateUObject(this, &AFDCharacterPlayer::EquipWeapon)));
+	TakeItemActions.Add(FTakeItemDelegateWrapper(FOnTakeItemDelegate::CreateUObject(this, &AFDCharacterPlayer::DrinkPotion)));
+	TakeItemActions.Add(FTakeItemDelegateWrapper(FOnTakeItemDelegate::CreateUObject(this, &AFDCharacterPlayer::ReadScroll)));
 }
 
 void AFDCharacterPlayer::BeginPlay()
@@ -233,7 +239,7 @@ void AFDCharacterPlayer::QuaterMove(const FInputActionValue& Value)
 
 void AFDCharacterPlayer::Attack()
 {
-	if(GetCharacterMovement()->MovementMode ==  EMovementMode::MOVE_Walking || CurrentCombo > 0)
+	if(!isShopVisible && (GetCharacterMovement()->MovementMode ==  EMovementMode::MOVE_Walking || CurrentCombo > 0))
 		ProcessComboCommand();
 
 	//UGameplayStatics::OpenLevel(GetWorld(), FName("Stage0"));
@@ -256,7 +262,6 @@ void AFDCharacterPlayer::SetupHUDWidget(UFDHUDWidget* InHUDWidget)
 	ensure(HUDWidget);
 	if (HUDWidget)
 	{
-
 		//초기 정보 보여주기 위해 업데이트
 		InHUDWidget->UpdateStat(Stat->GetBaseStat(), Stat->GetModifierStat());
 		InHUDWidget->UpdateHpBar(Stat->GetCurrentHp());
@@ -266,4 +271,38 @@ void AFDCharacterPlayer::SetupHUDWidget(UFDHUDWidget* InHUDWidget)
 		Stat->OnStatChanged.AddUObject(InHUDWidget, &UFDHUDWidget::UpdateStat);
 		Stat->OnHpChanged.AddUObject(InHUDWidget, &UFDHUDWidget::UpdateHpBar);
 	}
+}
+
+void AFDCharacterPlayer::TakeItem(UFDItemData* InItemData)
+{
+	if (InItemData)
+	{
+		TakeItemActions[(uint8)InItemData->Type].ItemDelegate.ExecuteIfBound(InItemData);
+	}
+}
+void AFDCharacterPlayer::DrinkPotion(UFDItemData* InItemData)
+{
+	//TODO 돈 정보 가져와서 판단
+	UE_LOG(LogFDProject, Log, TEXT("DrinkPotion"));
+}
+
+void AFDCharacterPlayer::EquipWeapon(UFDItemData* InItemData)
+{
+	UFDWeaponItemData* WeaponItemData = Cast<UFDWeaponItemData>(InItemData);
+	if (WeaponItemData)
+	{
+		//로딩이 안돼있으면
+		if (WeaponItemData->WeaponMesh.IsPending())
+		{
+			//로딩함
+			WeaponItemData->WeaponMesh.LoadSynchronous();
+		}
+		//Get으로 얻어옴
+		Weapon->SetSkeletalMesh(WeaponItemData->WeaponMesh.Get());
+	}
+}
+
+void AFDCharacterPlayer::ReadScroll(UFDItemData* InItemData)
+{
+	UE_LOG(LogFDProject, Log, TEXT("ReadScroll"));
 }

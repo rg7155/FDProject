@@ -32,11 +32,11 @@ void AFDPlayerController::ToggleMouseCursor(bool isShowCursor)
 	if (isShowCursor)
 	{
 		bShowMouseCursor = true;
-		SetInputMode(FInputModeGameAndUI());
+		//SetInputMode(FInputModeGameAndUI());
 	}
 	else
 	{
 		bShowMouseCursor = false;
-		SetInputMode(FInputModeGameOnly());
+		//SetInputMode(FInputModeGameOnly());
 	}
 }

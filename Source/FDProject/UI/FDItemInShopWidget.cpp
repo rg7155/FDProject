@@ -13,17 +13,16 @@ void UFDItemInShopWidget::NativeConstruct()
 
 	ItemButton = Cast<UButton>(GetWidgetFromName(TEXT("BtnItem")));
 	ensure(ItemButton);
+	//델리게이트 설정 시 바인딩 함수 UFUNCTION 이여야 함
 	ItemButton->OnPressed.AddDynamic(this, &UFDItemInShopWidget::OnButtonPressed);
 }
 
 void UFDItemInShopWidget::OnButtonPressed()
 {
-	//델리게이트 설정 시 바인딩 함수 UFUNCTION
 	UE_LOG(LogFDProject, Log, TEXT("OnButtonPressed - %d"), ItemData->Type);
-	//
-	/*IFDCharacterItemInterface* Pawn = Cast<IFDCharacterItemInterface>(OtherActor);
+	IFDCharacterItemInterface* Pawn = Cast<IFDCharacterItemInterface>(GetOwningPlayerPawn());
 	if (Pawn)
 	{
 		Pawn->TakeItem(ItemData);
-	}*/
+	}
 }

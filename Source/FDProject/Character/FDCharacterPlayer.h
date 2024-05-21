@@ -6,13 +6,26 @@
 #include "Character/FDCharacterBase.h"
 #include "InputActionValue.h"
 #include "Interface/FDCharacterHUDInterface.h"
+#include "Interface/FDCharacterItemInterface.h"
 #include "FDCharacterPlayer.generated.h"
+
+
+//인자를 배열로 관리하기 위해 구조체 선언
+DECLARE_DELEGATE_OneParam(FOnTakeItemDelegate, class UFDItemData* /*InItemData*/);
+USTRUCT(BlueprintType)
+struct FTakeItemDelegateWrapper
+{
+	GENERATED_BODY()
+	FTakeItemDelegateWrapper() {}
+	FTakeItemDelegateWrapper(const FOnTakeItemDelegate& InItemDelegate) : ItemDelegate(InItemDelegate) {}
+	FOnTakeItemDelegate ItemDelegate;
+};
 
 /**
  * 
  */
 UCLASS()
-class FDPROJECT_API AFDCharacterPlayer : public AFDCharacterBase, public IFDCharacterHUDInterface
+class FDPROJECT_API AFDCharacterPlayer : public AFDCharacterBase, public IFDCharacterHUDInterface, public IFDCharacterItemInterface
 {
 	GENERATED_BODY()
 	
@@ -82,4 +95,14 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Widget, Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UFDHUDWidget> HUDWidget;
+
+	// Item Section
+protected:
+	UPROPERTY()
+	TArray<FTakeItemDelegateWrapper> TakeItemActions;
+
+	virtual void TakeItem(class UFDItemData* InItemData) override;
+	virtual void DrinkPotion(class UFDItemData* InItemData);
+	virtual void EquipWeapon(class UFDItemData* InItemData);
+	virtual void ReadScroll(class UFDItemData* InItemData);
 };
