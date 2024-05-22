@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "Item/FDItemData.h"
 #include "GameData/FDCharacterStat.h"
-
 #include "FDScrollItemData.generated.h"
 
 /**

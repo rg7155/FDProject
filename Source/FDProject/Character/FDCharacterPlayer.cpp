@@ -14,6 +14,8 @@
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
 #include "Player/FDPlayerController.h"
+#include "Item/FDPotionItemData.h"
+#include "Item/FDScrollItemData.h"
 #include "Item/FDWeaponItemData.h"
 #include "FDProject.h"
 
@@ -275,15 +277,20 @@ void AFDCharacterPlayer::SetupHUDWidget(UFDHUDWidget* InHUDWidget)
 
 void AFDCharacterPlayer::TakeItem(UFDItemData* InItemData)
 {
-	if (InItemData)
+	if (InItemData && Stat->GetGold() >= InItemData->Gold)
 	{
 		TakeItemActions[(uint8)InItemData->Type].ItemDelegate.ExecuteIfBound(InItemData);
+		Stat->SetGold(Stat->GetGold() - InItemData->Gold);
+		HUDWidget->UpdateGold(Stat->GetGold());
 	}
 }
 void AFDCharacterPlayer::DrinkPotion(UFDItemData* InItemData)
 {
-	//TODO 돈 정보 가져와서 판단
-	UE_LOG(LogFDProject, Log, TEXT("DrinkPotion"));
+	UFDPotionItemData* PotionItemData = Cast<UFDPotionItemData>(InItemData);
+	if (PotionItemData)
+	{
+		Stat->HealHp(PotionItemData->HealAmount);
+	}
 }
 
 void AFDCharacterPlayer::EquipWeapon(UFDItemData* InItemData)
@@ -299,10 +306,16 @@ void AFDCharacterPlayer::EquipWeapon(UFDItemData* InItemData)
 		}
 		//Get으로 얻어옴
 		Weapon->SetSkeletalMesh(WeaponItemData->WeaponMesh.Get());
+
+		Stat->AddBaseStat(WeaponItemData->BaseStat);
 	}
 }
 
 void AFDCharacterPlayer::ReadScroll(UFDItemData* InItemData)
 {
-	UE_LOG(LogFDProject, Log, TEXT("ReadScroll"));
+	UFDScrollItemData* ScrollItemData = Cast<UFDScrollItemData>(InItemData);
+	if (ScrollItemData)
+	{
+		Stat->AddBaseStat(ScrollItemData->BaseStat);
+	}
 }

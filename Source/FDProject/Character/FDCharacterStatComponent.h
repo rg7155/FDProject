@@ -32,6 +32,9 @@ public:
 	void SetLevelStat(int32 InNewLevel);
 	FORCEINLINE void SetModifierStat(const FFDCharacterStat& InModifierStat) { ModifierStat = InModifierStat; }
 	FORCEINLINE void SetBaseStat(const FFDCharacterStat& InBaseStat) { BaseStat = InBaseStat; OnStatChanged.Broadcast(GetBaseStat(), GetModifierStat()); }
+	FORCEINLINE void SetGold(float _Gold) { Gold = _Gold; }
+	FORCEINLINE void HealHp(float InHealAmount) { CurrentHp = FMath::Clamp(CurrentHp + InHealAmount, 0, GetTotalStat().MaxHp); OnHpChanged.Broadcast(CurrentHp); }
+	FORCEINLINE void AddBaseStat(const FFDCharacterStat& InAddBaseStat) { BaseStat = BaseStat + InAddBaseStat; OnStatChanged.Broadcast(GetBaseStat(), GetModifierStat()); }
 
 	FORCEINLINE const FFDCharacterStat& GetBaseStat() const { return BaseStat; }
 	FORCEINLINE const FFDCharacterStat& GetModifierStat() const { return ModifierStat; }

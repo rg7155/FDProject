@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Item/FDItemData.h"
+#include "GameData/FDCharacterStat.h"
 #include "FDWeaponItemData.generated.h"
 
 /**
@@ -17,4 +18,7 @@ class FDPROJECT_API UFDWeaponItemData : public UFDItemData
 public:
 	UPROPERTY(EditAnywhere, Category = Weapon)
 	TSoftObjectPtr<USkeletalMesh> WeaponMesh;
+
+	UPROPERTY(EditAnywhere, Category = Weapon)
+	FFDCharacterStat BaseStat;
 };

@@ -8,7 +8,7 @@ UFDCharacterStatComponent::UFDCharacterStatComponent()
 {
 	CurrentLevel = 1;
 	AttackRadius = 50.0f;
-	Gold = 1000;
+	Gold = 100000;
 }
 
 // Called when the game starts or when spawned
