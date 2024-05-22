@@ -22,7 +22,11 @@ UCLASS()
 class FDPROJECT_API UFDItemData : public UPrimaryDataAsset
 {
 	GENERATED_BODY()
-
+public:
+	FPrimaryAssetId GetPrimaryAssetId() const override
+	{
+		return FPrimaryAssetId("FDItemData", GetFName());
+	}
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data)
 	EItemType Type;
