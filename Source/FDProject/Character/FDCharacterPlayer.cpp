@@ -31,6 +31,19 @@ AFDCharacterPlayer::AFDCharacterPlayer()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
 
+	// Mesh
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh> CharacterMeshRef(TEXT("/Script/Engine.SkeletalMesh'/Game/ParagonGreystone/Characters/Heroes/Greystone/Meshes/Greystone.Greystone'"));
+	if (CharacterMeshRef.Object)
+	{
+		GetMesh()->SetSkeletalMesh(CharacterMeshRef.Object);
+	}
+	// AnimInstance
+	static ConstructorHelpers::FClassFinder<UAnimInstance> AnimInstanceClassRef(TEXT("/Game/FDProject/Animation/ABP_FDPlayer.ABP_FDPlayer_C"));
+	if (AnimInstanceClassRef.Class)
+	{
+		GetMesh()->SetAnimInstanceClass(AnimInstanceClassRef.Class);
+	}
+
 	// Input
 	static ConstructorHelpers::FObjectFinder<UInputAction> InputActionJumpRef(TEXT("/Script/EnhancedInput.InputAction'/Game/FDProject/Input/Actions/IA_Jump.IA_Jump'"));
 	if (nullptr != InputActionJumpRef.Object)

@@ -48,6 +48,7 @@ AFDCharacterBase::AFDCharacterBase()
 		GetMesh()->SetSkeletalMesh(CharacterMeshRef.Object);
 	}
 
+	// AnimInstance
 	static ConstructorHelpers::FClassFinder<UAnimInstance> AnimInstanceClassRef(TEXT("/Game/FDProject/Animation/ABP_FDCharacter.ABP_FDCharacter_C"));
 	if (AnimInstanceClassRef.Class)
 	{
@@ -115,6 +116,7 @@ void AFDCharacterBase::SetCharacterControlData(const UFDCharacterControlData* Ch
 
 void AFDCharacterBase::ProcessComboCommand()
 {
+	UE_LOG(LogFDProject, Log, TEXT("ProcessComboCommand"));
 	if (CurrentCombo == 0)
 	{
 		ComboActionBegin();
@@ -184,6 +186,7 @@ void AFDCharacterBase::SetComboCheckTimer()
 
 	const float AttackSpeedRate = 1.0f;
 	float ComboEffectiveTime = (ComboActionData->EffectiveFrameCount[ComboIndex] / ComboActionData->FrameRate) / AttackSpeedRate;
+	UE_LOG(LogFDProject, Log, TEXT("Timer : %f"), ComboEffectiveTime);
 	if (ComboEffectiveTime > 0.0f)
 	{
 		GetWorld()->GetTimerManager().SetTimer(ComboTimerHandle, this, &AFDCharacterBase::OnComboCheck, ComboEffectiveTime, false);
@@ -228,6 +231,8 @@ void AFDCharacterBase::OnCheckAttackAfterMoveable()
 void AFDCharacterBase::OnComboCheck()
 {
 	//ComboEffectiveTime 이후에 함수 호출됨. 이때 입력이 들어왔었다면
+	//TODO 디버그
+	UE_LOG(LogFDProject, Log, TEXT("OnComboCheck"), CurrentCombo);
 	ComboTimerHandle.Invalidate();
 	if (HasNextComboCommand)
 	{
