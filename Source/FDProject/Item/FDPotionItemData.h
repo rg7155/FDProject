@@ -16,6 +16,11 @@ class FDPROJECT_API UFDPotionItemData : public UFDItemData
 public:
 	UFDPotionItemData();
 public:
+	FPrimaryAssetId GetPrimaryAssetId() const override
+	{
+		return FPrimaryAssetId("FDItemData", GetFName());
+	}
+public:
 	UPROPERTY(EditAnywhere, Category = Hp)
 	float HealAmount;
 };

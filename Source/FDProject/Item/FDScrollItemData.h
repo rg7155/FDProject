@@ -17,6 +17,11 @@ class FDPROJECT_API UFDScrollItemData : public UFDItemData
 public:
 	UFDScrollItemData();
 public:
+	FPrimaryAssetId GetPrimaryAssetId() const override
+	{
+		return FPrimaryAssetId("FDItemData", GetFName());
+	}
+public:
 	UPROPERTY(EditAnywhere, Category = Stat)
 	FFDCharacterStat BaseStat;
 };

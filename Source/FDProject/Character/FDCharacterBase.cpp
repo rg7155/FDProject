@@ -232,7 +232,6 @@ void AFDCharacterBase::OnComboCheck()
 {
 	//ComboEffectiveTime 이후에 함수 호출됨. 이때 입력이 들어왔었다면
 	//TODO 디버그
-	UE_LOG(LogFDProject, Log, TEXT("OnComboCheck"), CurrentCombo);
 	ComboTimerHandle.Invalidate();
 	if (HasNextComboCommand)
 	{

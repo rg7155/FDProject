@@ -14,7 +14,11 @@ UCLASS()
 class FDPROJECT_API UFDWeaponItemData : public UFDItemData
 {
 	GENERATED_BODY()
-	
+public:
+	FPrimaryAssetId GetPrimaryAssetId() const override
+	{
+		return FPrimaryAssetId("FDItemData", GetFName());
+	}
 public:
 	UPROPERTY(EditAnywhere, Category = Weapon)
 	TSoftObjectPtr<USkeletalMesh> WeaponMesh;

@@ -35,5 +35,5 @@ public:
 	int	Gold;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data)
-	FString Name;
+	FString ItemName;
 };
