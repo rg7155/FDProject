@@ -77,6 +77,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UInputAction> InteractionAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UInputAction> ShieldAction;
+
 	//void SetInputActionByObjectFinder(TObjectPtr<class UInputAction>& action, const TCHAR* ref);
 
 	virtual void Jump() override;
@@ -85,6 +88,7 @@ protected:
 	void QuaterMove(const FInputActionValue& Value);
 	void Attack();
 	void Interaction();
+	void Shield();
 
 	ECharacterControlType CurrentCharacterControlType;
 	bool isShopVisible = false;
@@ -105,4 +109,12 @@ protected:
 	virtual void DrinkPotion(class UFDItemData* InItemData);
 	virtual void EquipWeapon(class UFDItemData* InItemData);
 	virtual void ReadScroll(class UFDItemData* InItemData);
+
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation, Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UAnimMontage> ShieldMontage;
+	bool isShield = false;
+
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+
 };

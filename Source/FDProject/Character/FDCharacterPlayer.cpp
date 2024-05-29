@@ -18,6 +18,7 @@
 #include "Item/FDScrollItemData.h"
 #include "Item/FDWeaponItemData.h"
 #include "FDProject.h"
+#include "Animation/FDAnimInstance.h"
 
 AFDCharacterPlayer::AFDCharacterPlayer()
 {
@@ -85,7 +86,21 @@ AFDCharacterPlayer::AFDCharacterPlayer()
 	{
 		InteractionAction = InputActionInteractionRef.Object;
 	}
+	static ConstructorHelpers::FObjectFinder<UInputAction> ShieldActionRef(TEXT("/Script/EnhancedInput.InputAction'/Game/FDProject/Input/Actions/IA_Shield.IA_Shield'"));
+	if (nullptr != ShieldActionRef.Object)
+	{
+		ShieldAction = ShieldActionRef.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> ShieldMontageRef(TEXT("/Script/Engine.AnimMontage'/Game/FDProject/Animation/AM_PlayerShield.AM_PlayerShield'"));
+	if (ShieldMontageRef.Object)
+	{
+		ShieldMontage = ShieldMontageRef.Object;
+	}
+	
+
 	isShopVisible = false;
+	isShield = false;
 
 	CurrentCharacterControlType = ECharacterControlType::Shoulder;
 
@@ -140,6 +155,8 @@ void AFDCharacterPlayer::SetupPlayerInputComponent(class UInputComponent* Player
 	EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &AFDCharacterPlayer::Attack);
 
 	EnhancedInputComponent->BindAction(InteractionAction, ETriggerEvent::Triggered, this, &AFDCharacterPlayer::Interaction);
+	EnhancedInputComponent->BindAction(ShieldAction, ETriggerEvent::Triggered, this, &AFDCharacterPlayer::Shield);
+
 }
 
 void AFDCharacterPlayer::ChangeCharacterControl()
@@ -254,7 +271,7 @@ void AFDCharacterPlayer::QuaterMove(const FInputActionValue& Value)
 
 void AFDCharacterPlayer::Attack()
 {
-	if(!isShopVisible && (GetCharacterMovement()->MovementMode ==  EMovementMode::MOVE_Walking || CurrentCombo > 0))
+	if(!isShield && !isShopVisible && (GetCharacterMovement()->MovementMode ==  EMovementMode::MOVE_Walking || CurrentCombo > 0))
 		ProcessComboCommand();
 
 	//UGameplayStatics::OpenLevel(GetWorld(), FName("Stage0"));
@@ -268,6 +285,24 @@ void AFDCharacterPlayer::Interaction()
 		isShopVisible = !isShopVisible;
 		PlayerController->ToggleMouseCursor(isShopVisible);
 		HUDWidget->SetShopVisible(isShopVisible);
+	}
+}
+
+void AFDCharacterPlayer::Shield()
+{
+	isShield = !isShield;
+	UFDAnimInstance* AnimInstance = Cast<UFDAnimInstance>(GetMesh()->GetAnimInstance());
+	if (isShield)
+	{
+		AnimInstance->SetShield(true);
+		GetCharacterMovement()->MaxWalkSpeed = 0.5f * (Stat->GetBaseStat().MovementSpeed + Stat->GetModifierStat().MovementSpeed);
+		AnimInstance->Montage_Play(ShieldMontage, 1.3f);
+	}
+	else
+	{
+		AnimInstance->SetShield(false);
+		GetCharacterMovement()->MaxWalkSpeed = Stat->GetBaseStat().MovementSpeed + Stat->GetModifierStat().MovementSpeed;
+		AnimInstance->Montage_Stop(0.2f, ShieldMontage);
 	}
 }
 
@@ -331,4 +366,14 @@ void AFDCharacterPlayer::ReadScroll(UFDItemData* InItemData)
 	{
 		Stat->AddBaseStat(ScrollItemData->BaseStat);
 	}
+}
+
+float AFDCharacterPlayer::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	if (isShield)
+		DamageAmount *= 0.5f;
+
+	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+
+	return DamageAmount;
 }

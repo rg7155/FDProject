@@ -14,7 +14,7 @@ void UFDDamageWidget::NativeConstruct()
 	DamageText = Cast<UTextBlock>(GetWidgetFromName(TEXT("TxtDamage")));
 	ensure(DamageText);
 
-	DamageText->SetText(FText::AsNumber(Damage));
+	DamageText->SetText(FText::AsNumber(FMath::FloorToInt(Damage)));
 
 	//UWidgetAnimation* Anim = AnimationCallbacks[0].Animation;
 	//PlayAnimation(Anim);

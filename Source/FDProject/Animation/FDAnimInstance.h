@@ -17,6 +17,8 @@ class FDPROJECT_API UFDAnimInstance : public UAnimInstance
 public:
 	UFDAnimInstance();
 
+	FORCEINLINE void SetShield(bool _bIsShield) { bIsShield = _bIsShield; }
+
 protected:
 	virtual void NativeInitializeAnimation() override;
 
@@ -48,4 +50,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Character)
 	float JumpingThreshould;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Character)
+	uint8 bIsShield : 1;
 };

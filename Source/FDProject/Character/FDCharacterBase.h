@@ -66,7 +66,7 @@ protected:
 
 	// Dead Section
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Stat, Meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation, Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UAnimMontage> DeadMontage;
 
 	virtual void SetDead();

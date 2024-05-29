@@ -222,7 +222,7 @@ void AFDCharacterBase::OnCheckAttackAfterMoveable()
 		AttackAfterMoveableTimerHandle.Invalidate();
 
 		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-		AnimInstance->StopAllMontages(0.0f);
+		AnimInstance->StopAllMontages(0.2f);
 
 		ComboActionEnd();
 	}
@@ -266,7 +266,6 @@ void AFDCharacterBase::AttackHitCheck()
 	bool HitDetected = GetWorld()->SweepSingleByChannel(OutHitResult, Start, End, FQuat::Identity, CCHANNEL_FDACTION, FCollisionShape::MakeSphere(AttackRadius), Params);
 	if (HitDetected)
 	{
-		//26:30
 		FDamageEvent DamageEvent;
 		OutHitResult.GetActor()->TakeDamage(AttackDamage, DamageEvent, GetController(), this);
 	}
