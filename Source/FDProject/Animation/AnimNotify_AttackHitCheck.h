@@ -13,8 +13,12 @@ UCLASS()
 class FDPROJECT_API UAnimNotify_AttackHitCheck : public UAnimNotify
 {
 	GENERATED_BODY()
+public:
+	UAnimNotify_AttackHitCheck();
 
 protected:
 	virtual void Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference) override;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Notify")
+	float AttackMultiplier;
 };

@@ -249,7 +249,7 @@ void AFDCharacterBase::OnComboCheck()
 	}
 }
 
-void AFDCharacterBase::AttackHitCheck()
+void AFDCharacterBase::AttackHitCheck(float AttackMultiplier)
 {
 	FHitResult OutHitResult;
 	//1.엔진 제공 기능 tag 추가 2.복잡한 충돌체 감지 옵션 3.자기 자신만 무시
@@ -257,7 +257,8 @@ void AFDCharacterBase::AttackHitCheck()
 
 	const float AttackRange = Stat->GetTotalStat().AttackRange;
 	const float AttackRadius = Stat->GetAttackRadius();
-	const float AttackDamage = Stat->GetTotalStat().Attack;
+	const float AttackDamage = Stat->GetTotalStat().Attack * AttackMultiplier * FMath::FRandRange(0.8f, 1.2f);
+	
 	//정면에 있는 캡슐의 위치
 	const FVector Start = GetActorLocation() + GetActorForwardVector() * GetCapsuleComponent()->GetScaledCapsuleRadius();
 	const FVector End = Start + GetActorForwardVector() * AttackRange;

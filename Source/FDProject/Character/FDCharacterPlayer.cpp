@@ -290,6 +290,9 @@ void AFDCharacterPlayer::Interaction()
 
 void AFDCharacterPlayer::Shield()
 {
+	if (CurrentCombo > 0)
+		return;
+
 	isShield = !isShield;
 	UFDAnimInstance* AnimInstance = Cast<UFDAnimInstance>(GetMesh()->GetAnimInstance());
 	if (isShield)

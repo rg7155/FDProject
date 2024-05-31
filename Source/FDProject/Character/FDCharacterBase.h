@@ -61,7 +61,7 @@ protected:
 
 	// Attack Hit Section
 protected:
-	virtual void AttackHitCheck() override;
+	virtual void AttackHitCheck(float AttackMultiplier) override;
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
 	// Dead Section
