@@ -48,11 +48,29 @@ protected:
 
 // Camera Section
 protected:
+	void UpdateZoom();
+	void ZoomIn();
+	void ZoomOut();
+
+	UPROPERTY(EditDefaultsOnly, Category = Camera, Meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<class UCameraShakeBase> CameraShakeClass;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class USpringArmComponent> CameraBoom;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UCameraComponent> FollowCamera;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera, Meta = (AllowPrivateAccess = "true"))
+	float TargetArmLength;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera, Meta = (AllowPrivateAccess = "true"))
+	float ZoomStep = 10.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera, Meta = (AllowPrivateAccess = "true"))
+	float MinZoom = 200.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera, Meta = (AllowPrivateAccess = "true"))
+	float MaxZoom = 400.f;
+
+	FTimerHandle ZoomTimerHandle;
 
 	// Input Section
 protected:
@@ -79,6 +97,11 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UInputAction> ShieldAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UInputAction> ZoomInAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UInputAction> ZoomOutAction;
 
 	//void SetInputActionByObjectFinder(TObjectPtr<class UInputAction>& action, const TCHAR* ref);
 
@@ -89,6 +112,7 @@ protected:
 	void Attack();
 	void Interaction();
 	void Shield();
+	
 
 	ECharacterControlType CurrentCharacterControlType;
 	bool isShopVisible = false;
@@ -117,4 +141,6 @@ protected:
 
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
+protected:
+	virtual void CameraShake() override;
 };

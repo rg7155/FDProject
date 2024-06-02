@@ -143,7 +143,7 @@ void AFDCharacterBase::ComboActionBegin()
 	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
 
 	// Animation Setting
-	const float AttackSpeedRate = 1.0f;
+	const float AttackSpeedRate = 1.5f;
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	AnimInstance->Montage_Play(ComboActionMontage, AttackSpeedRate);
 
@@ -154,6 +154,8 @@ void AFDCharacterBase::ComboActionBegin()
 	//타이머 무효화
 	ComboTimerHandle.Invalidate();
 	SetComboCheckTimer();
+
+	CameraShake();
 }
 
 void AFDCharacterBase::OnComboActionEnd(UAnimMontage* TargetMontage, bool IsProperlyEnded)
@@ -184,7 +186,7 @@ void AFDCharacterBase::SetComboCheckTimer()
 	int32 ComboIndex = CurrentCombo - 1;
 	ensure(ComboActionData->EffectiveFrameCount.IsValidIndex(ComboIndex));
 
-	const float AttackSpeedRate = 1.0f;
+	const float AttackSpeedRate = 1.5f;
 	float ComboEffectiveTime = (ComboActionData->EffectiveFrameCount[ComboIndex] / ComboActionData->FrameRate) / AttackSpeedRate;
 	UE_LOG(LogFDProject, Log, TEXT("Timer : %f"), ComboEffectiveTime);
 	if (ComboEffectiveTime > 0.0f)
@@ -198,7 +200,7 @@ void AFDCharacterBase::SetAttackAfterMovementTimer()
 	int32 ComboIndex = CurrentCombo - 1;
 	ensure(ComboActionData->EffectiveFrameCount.IsValidIndex(ComboIndex));
 
-	const float AttackSpeedRate = 1.0f;
+	const float AttackSpeedRate = 1.5f;
 	//공격 판정 이후 대략 5프레임 이후
 	float AttackAfterMovementTime = ((ComboActionData->EffectiveFrameCount[ComboIndex] + 10) / ComboActionData->FrameRate) / AttackSpeedRate;
 	if (AttackAfterMovementTime > 0.0f)
@@ -244,6 +246,8 @@ void AFDCharacterBase::OnComboCheck()
 			FName NextSection = *FString::Printf(TEXT("%s%d"), *ComboActionData->MontageSectionNamePrefix, CurrentCombo);
 			AnimInstance->Montage_JumpToSection(NextSection, ComboActionMontage);
 			SetComboCheckTimer();
+
+			CameraShake();
 		}
 		HasNextComboCommand = false;
 	}

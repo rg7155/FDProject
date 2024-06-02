@@ -19,13 +19,15 @@
 #include "Item/FDWeaponItemData.h"
 #include "FDProject.h"
 #include "Animation/FDAnimInstance.h"
+#include "Camera/FDSpringArmComponent.h"
 
 AFDCharacterPlayer::AFDCharacterPlayer()
 {
 	// Camera
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->TargetArmLength = 400.0f;
+	TargetArmLength = 400.f;
+	CameraBoom->TargetArmLength = TargetArmLength;
 	CameraBoom->bUsePawnControlRotation = true;
 
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
@@ -38,11 +40,17 @@ AFDCharacterPlayer::AFDCharacterPlayer()
 	{
 		GetMesh()->SetSkeletalMesh(CharacterMeshRef.Object);
 	}
-	// AnimInstance
+
+	// Anim
 	static ConstructorHelpers::FClassFinder<UAnimInstance> AnimInstanceClassRef(TEXT("/Game/FDProject/Animation/ABP_FDPlayer.ABP_FDPlayer_C"));
 	if (AnimInstanceClassRef.Class)
 	{
 		GetMesh()->SetAnimInstanceClass(AnimInstanceClassRef.Class);
+	}
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> ShieldMontageRef(TEXT("/Script/Engine.AnimMontage'/Game/FDProject/Animation/AM_PlayerShield.AM_PlayerShield'"));
+	if (ShieldMontageRef.Object)
+	{
+		ShieldMontage = ShieldMontageRef.Object;
 	}
 
 	// Input
@@ -51,25 +59,21 @@ AFDCharacterPlayer::AFDCharacterPlayer()
 	{
 		JumpAction = InputActionJumpRef.Object;
 	}
-
 	static ConstructorHelpers::FObjectFinder<UInputAction> InputChangeActionControlRef(TEXT("/Script/EnhancedInput.InputAction'/Game/FDProject/Input/Actions/IA_ChangeControl.IA_ChangeControl'"));
 	if (nullptr != InputChangeActionControlRef.Object)
 	{
 		ChangeControlAction = InputChangeActionControlRef.Object;
 	}
-
 	static ConstructorHelpers::FObjectFinder<UInputAction> InputActionShoulderMoveRef(TEXT("/Script/EnhancedInput.InputAction'/Game/FDProject/Input/Actions/IA_ShoulderMove.IA_ShoulderMove'"));
 	if (nullptr != InputActionShoulderMoveRef.Object)
 	{
 		ShoulderMoveAction = InputActionShoulderMoveRef.Object;
 	}
-
 	static ConstructorHelpers::FObjectFinder<UInputAction> InputActionShoulderLookRef(TEXT("/Script/EnhancedInput.InputAction'/Game/FDProject/Input/Actions/IA_ShoulderLook.IA_ShoulderLook'"));
 	if (nullptr != InputActionShoulderLookRef.Object)
 	{
 		ShoulderLookAction = InputActionShoulderLookRef.Object;
 	}
-
 	static ConstructorHelpers::FObjectFinder<UInputAction> InputActionQuaterMoveRef(TEXT("/Script/EnhancedInput.InputAction'/Game/FDProject/Input/Actions/IA_QuaterMove.IA_QuaterMove'"));
 	if (nullptr != InputActionQuaterMoveRef.Object)
 	{
@@ -91,11 +95,15 @@ AFDCharacterPlayer::AFDCharacterPlayer()
 	{
 		ShieldAction = ShieldActionRef.Object;
 	}
-
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> ShieldMontageRef(TEXT("/Script/Engine.AnimMontage'/Game/FDProject/Animation/AM_PlayerShield.AM_PlayerShield'"));
-	if (ShieldMontageRef.Object)
+	static ConstructorHelpers::FObjectFinder<UInputAction> ZoomInActionRef(TEXT("/Script/EnhancedInput.InputAction'/Game/FDProject/Input/Actions/IA_ZoomIn.IA_ZoomIn'"));
+	if (nullptr != ZoomInActionRef.Object)
 	{
-		ShieldMontage = ShieldMontageRef.Object;
+		ZoomInAction = ZoomInActionRef.Object;
+	}
+	static ConstructorHelpers::FObjectFinder<UInputAction> ZoomOutActionRef(TEXT("/Script/EnhancedInput.InputAction'/Game/FDProject/Input/Actions/IA_ZoomOut.IA_ZoomOut'"));
+	if (nullptr != ZoomOutActionRef.Object)
+	{
+		ZoomOutAction = ZoomOutActionRef.Object;
 	}
 	
 
@@ -157,6 +165,8 @@ void AFDCharacterPlayer::SetupPlayerInputComponent(class UInputComponent* Player
 	EnhancedInputComponent->BindAction(InteractionAction, ETriggerEvent::Triggered, this, &AFDCharacterPlayer::Interaction);
 	EnhancedInputComponent->BindAction(ShieldAction, ETriggerEvent::Triggered, this, &AFDCharacterPlayer::Shield);
 
+	EnhancedInputComponent->BindAction(ZoomInAction, ETriggerEvent::Triggered, this, &AFDCharacterPlayer::ZoomIn);
+	EnhancedInputComponent->BindAction(ZoomOutAction, ETriggerEvent::Triggered, this, &AFDCharacterPlayer::ZoomOut);
 }
 
 void AFDCharacterPlayer::ChangeCharacterControl()
@@ -205,6 +215,30 @@ void AFDCharacterPlayer::SetCharacterControlData(const UFDCharacterControlData* 
 	CameraBoom->bInheritYaw = CharacterControlData->bInheritYaw;
 	CameraBoom->bInheritRoll = CharacterControlData->bInheritRoll;
 	CameraBoom->bDoCollisionTest = CharacterControlData->bDoCollisionTest;
+}
+
+void AFDCharacterPlayer::UpdateZoom()
+{
+	CameraBoom->TargetArmLength = FMath::FInterpTo(CameraBoom->TargetArmLength, TargetArmLength, GetWorld()->GetDeltaSeconds(), 5.f);
+
+	// Debug log to check the updated arm length
+	//UE_LOG(LogTemp, Warning, TEXT("Updating Zoom: New TargetArmLength = %f"), SpringArm->TargetArmLength);
+
+	if (FMath::IsNearlyEqual(CameraBoom->TargetArmLength, TargetArmLength, 1.0f))
+	{
+		GetWorld()->GetTimerManager().ClearTimer(ZoomTimerHandle);
+	}
+}
+void AFDCharacterPlayer::ZoomIn()
+{
+	TargetArmLength = FMath::Clamp(CameraBoom->TargetArmLength - ZoomStep, 200, 400);
+	GetWorld()->GetTimerManager().SetTimer(ZoomTimerHandle, this, &AFDCharacterPlayer::UpdateZoom, GetWorld()->GetDeltaSeconds(), true);
+}
+
+void AFDCharacterPlayer::ZoomOut()
+{
+	TargetArmLength = FMath::Clamp(CameraBoom->TargetArmLength + ZoomStep, 200, 400);
+	GetWorld()->GetTimerManager().SetTimer(ZoomTimerHandle, this, &AFDCharacterPlayer::UpdateZoom, GetWorld()->GetDeltaSeconds(), true);
 }
 
 //void AFDCharacterPlayer::SetInputActionByObjectFinder(TObjectPtr<class UInputAction> action, const TCHAR* ref)
@@ -305,7 +339,8 @@ void AFDCharacterPlayer::Shield()
 	{
 		AnimInstance->SetShield(false);
 		GetCharacterMovement()->MaxWalkSpeed = Stat->GetBaseStat().MovementSpeed + Stat->GetModifierStat().MovementSpeed;
-		AnimInstance->Montage_Stop(0.2f, ShieldMontage);
+		//AnimInstance->Montage_Stop(0.2f, ShieldMontage);
+		AnimInstance->StopAllMontages(0.2f);
 	}
 }
 
@@ -379,4 +414,14 @@ float AFDCharacterPlayer::TakeDamage(float DamageAmount, FDamageEvent const& Dam
 	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
 	return DamageAmount;
+}
+
+void AFDCharacterPlayer::CameraShake()
+{
+	APlayerController* PlayerController = Cast<APlayerController>(GetController());
+	if (PlayerController && CameraShakeClass)
+	{
+		PlayerController->ClientStopCameraShake(CameraShakeClass);
+		PlayerController->ClientStartCameraShake(CameraShakeClass);
+	}
 }
