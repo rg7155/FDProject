@@ -14,6 +14,16 @@
 				"CoreUObject",
 				"AIModule"
 			]
+		},
+		{
+			"Name": "FDProjectGAS",
+			"Type": "Runtime",
+			"LoadingPhase": "PostDefault",
+			"AdditionalDependencies": [
+				"Engine",
+				"GameplayAbilities",
+				"FDProject"
+			]
 		}
 	],
 	"Plugins": [
