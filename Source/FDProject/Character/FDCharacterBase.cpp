@@ -181,7 +181,7 @@ void AFDCharacterBase::NotifyComboActionEnd()
 
 void AFDCharacterBase::SetComboCheckTimer()
 {
-	SetAttackAfterMovementTimer();
+	//SetAttackAfterMovementTimer();
 
 	int32 ComboIndex = CurrentCombo - 1;
 	ensure(ComboActionData->EffectiveFrameCount.IsValidIndex(ComboIndex));

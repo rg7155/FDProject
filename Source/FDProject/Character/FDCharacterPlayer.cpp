@@ -148,13 +148,11 @@ void AFDCharacterPlayer::SetupPlayerInputComponent(class UInputComponent* Player
 
 	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent);
 
-	//EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &AFDCharacterBase::OnCheckAttackAfterMoveable);
 	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);
 	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
 
 	EnhancedInputComponent->BindAction(ChangeControlAction, ETriggerEvent::Triggered, this, &AFDCharacterPlayer::ChangeCharacterControl);
 
-	//EnhancedInputComponent->BindAction(ShoulderMoveAction, ETriggerEvent::Triggered, this, &AFDCharacterBase::OnCheckAttackAfterMoveable);
 	EnhancedInputComponent->BindAction(ShoulderMoveAction, ETriggerEvent::Triggered, this, &AFDCharacterPlayer::ShoulderMove);
 	EnhancedInputComponent->BindAction(ShoulderLookAction, ETriggerEvent::Triggered, this, &AFDCharacterPlayer::ShoulderLook);
 
@@ -252,14 +250,14 @@ void AFDCharacterPlayer::ZoomOut()
 
 void AFDCharacterPlayer::Jump()
 {
-	OnCheckAttackAfterMoveable();
+	//OnCheckAttackAfterMoveable();
 
 	Super::Jump();
 }
 
 void AFDCharacterPlayer::ShoulderMove(const FInputActionValue& Value)
 {
-	OnCheckAttackAfterMoveable();
+	//OnCheckAttackAfterMoveable();
 
 	FVector2D MovementVector = Value.Get<FVector2D>();
 
