@@ -25,6 +25,11 @@ class FDPROJECT_API AFDCharacterBase : public ACharacter, public IFDAnimationAtt
 public:
 	AFDCharacterBase();
 
+public:
+	FORCEINLINE virtual class UAnimMontage* GetComboActionMontage() const { return ComboActionMontage; }
+	FORCEINLINE class UFDComboActionData* GetComboActionData() const { return ComboActionData; }
+	FORCEINLINE class UAnimMontage* GetDeadMontage() const { return DeadMontage; }
+
 	virtual void PostInitializeComponents() override;
 protected:
 	virtual void SetCharacterControlData(const class UFDCharacterControlData* CharacterControlData);
