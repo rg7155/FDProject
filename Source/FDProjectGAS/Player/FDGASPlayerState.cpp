@@ -8,6 +8,7 @@ AFDGASPlayerState::AFDGASPlayerState()
 {
 	ASC = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("ASC"));
 	//ASC->SetIsReplicated(true);
+	AttributeSet = CreateDefaultSubobject<UFDCharacterAttributeSet>(TEXT("AttributeSet"));
 }
 
 UAbilitySystemComponent* AFDGASPlayerState::GetAbilitySystemComponent() const

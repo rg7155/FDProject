@@ -9,11 +9,11 @@ AFDGASCharacterPlayer::AFDGASCharacterPlayer()
 {
 	ASC = nullptr;
 
-	//static ConstructorHelpers::FObjectFinder<UAnimMontage> ComboActionMontageRef(TEXT("/Script/Engine.AnimMontage'/Game/ArenaBattleGAS/Animation/AM_ComboAttack.AM_ComboAttack'"));
-	//if (ComboActionMontageRef.Object)
-	//{
-	//	ComboActionMontage = ComboActionMontageRef.Object;
-	//}
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> ComboActionMontageRef(TEXT("/Script/Engine.AnimMontage'/Game/FDPorjectGAS/Animation/AM_GASPlayerComboAttack.AM_GASPlayerComboAttack'"));
+	if (ComboActionMontageRef.Object)
+	{
+		ComboActionMontage = ComboActionMontageRef.Object;
+	}
 }
 
 UAbilitySystemComponent* AFDGASCharacterPlayer::GetAbilitySystemComponent() const
