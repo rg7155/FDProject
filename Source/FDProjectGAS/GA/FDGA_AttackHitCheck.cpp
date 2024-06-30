@@ -7,6 +7,7 @@
 #include "GA/TA/FDTA_Trace.h"
 #include "Attribute/FDCharacterAttributeSet.h"
 #include "FDProjectGAS.h"
+#include "Tag/FDGameplayTag.h"
 
 UFDGA_AttackHitCheck::UFDGA_AttackHitCheck()
 {
@@ -29,15 +30,15 @@ void UFDGA_AttackHitCheck::OnTraceResultCallback(const FGameplayAbilityTargetDat
 		//ABGAS_LOG(LogABGAS, Log, TEXT("Target %s Detected"), *(HitResult.GetActor()->GetName()));
 
 		UAbilitySystemComponent* SourceASC = GetAbilitySystemComponentFromActorInfo_Checked();
-		UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(HitResult.GetActor());
+		/*UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(HitResult.GetActor());
 		if (!SourceASC || !TargetASC)
 		{
 			FDGAS_LOG(LogFDGAS, Error, TEXT("ASC not found!"));
 			return;
-		}
+		}*/
 
 		const UFDCharacterAttributeSet* SourceAttribute = SourceASC->GetSet<UFDCharacterAttributeSet>();
-		UFDCharacterAttributeSet* TargetAttribute = const_cast<UFDCharacterAttributeSet*>(TargetASC->GetSet<UFDCharacterAttributeSet>());
+		/*UFDCharacterAttributeSet* TargetAttribute = const_cast<UFDCharacterAttributeSet*>(TargetASC->GetSet<UFDCharacterAttributeSet>());
 		if (!SourceAttribute || !TargetAttribute)
 		{
 			FDGAS_LOG(LogFDGAS, Error, TEXT("ASC not found!"));
@@ -45,7 +46,17 @@ void UFDGA_AttackHitCheck::OnTraceResultCallback(const FGameplayAbilityTargetDat
 		}
 
 		const float AttackDamage = SourceAttribute->GetAttackRate();
-		TargetAttribute->SetHealth(TargetAttribute->GetHealth() - AttackDamage);
+		TargetAttribute->SetHealth(TargetAttribute->GetHealth() - AttackDamage);*/
+
+		//FGameplayEffectSpecHandle EffectSpecHandle = MakeOutgoingGameplayEffectSpec(AttackDamageEffect, CurrentLevel);
+		FGameplayEffectSpecHandle EffectSpecHandle = MakeOutgoingGameplayEffectSpec(AttackDamageEffect);
+
+		if (EffectSpecHandle.IsValid())
+		{
+			EffectSpecHandle.Data->SetSetByCallerMagnitude(FDTAG_DATA_DAMAGE, -SourceAttribute->GetAttackRate());
+			//1.현재 어빌 스펙 핸들 4.이펙트 핸들 5.콜백으로 받은 타겟 데이터 핸들
+			ApplyGameplayEffectSpecToTarget(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, EffectSpecHandle, TargetDataHandle);
+		}
 	}
 
 	//TODO

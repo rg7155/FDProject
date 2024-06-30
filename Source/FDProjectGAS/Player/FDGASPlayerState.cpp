@@ -3,6 +3,7 @@
 
 #include "Player/FDGASPlayerState.h"
 #include "AbilitySystemComponent.h"
+#include "Attribute/FDCharacterAttributeSet.h"
 
 AFDGASPlayerState::AFDGASPlayerState()
 {
