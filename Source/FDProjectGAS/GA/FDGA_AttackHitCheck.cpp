@@ -18,6 +18,8 @@ void UFDGA_AttackHitCheck::ActivateAbility(const FGameplayAbilitySpecHandle Hand
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
+	CurrentLevel = TriggerEventData->EventMagnitude;
+
 	UFDAT_Trace* AttackTraceTask = UFDAT_Trace::CreateTask(this, AFDTA_Trace::StaticClass());
 	AttackTraceTask->OnComplete.AddDynamic(this, &UFDGA_AttackHitCheck::OnTraceResultCallback);
 	AttackTraceTask->ReadyForActivation();
@@ -48,8 +50,7 @@ void UFDGA_AttackHitCheck::OnTraceResultCallback(const FGameplayAbilityTargetDat
 		const float AttackDamage = SourceAttribute->GetAttackRate();
 		TargetAttribute->SetHealth(TargetAttribute->GetHealth() - AttackDamage);*/
 
-		//FGameplayEffectSpecHandle EffectSpecHandle = MakeOutgoingGameplayEffectSpec(AttackDamageEffect, CurrentLevel);
-		FGameplayEffectSpecHandle EffectSpecHandle = MakeOutgoingGameplayEffectSpec(AttackDamageEffect);
+		FGameplayEffectSpecHandle EffectSpecHandle = MakeOutgoingGameplayEffectSpec(AttackDamageEffect, CurrentLevel);
 
 		if (EffectSpecHandle.IsValid())
 		{

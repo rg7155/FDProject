@@ -32,11 +32,15 @@ public:
 	ATTRIBUTE_ACCESSORS(UFDCharacterAttributeSet, MaxAttackRate);
 	ATTRIBUTE_ACCESSORS(UFDCharacterAttributeSet, Health);
 	ATTRIBUTE_ACCESSORS(UFDCharacterAttributeSet, MaxHealth);
+	ATTRIBUTE_ACCESSORS(UFDCharacterAttributeSet, Damage);
 
 	//바꾸기 전 Value 인자값을 변경할 수 있는
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
 	//바꾸고 난 후 로그용 
-	virtual void PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue) override;
+	//virtual void PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue) override;
+public:
+	//이펙트로부터 어트리뷰트 변경될 때
+	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
 
 
 protected:
@@ -56,4 +60,6 @@ protected:
 	FGameplayAttributeData Health;
 	UPROPERTY(BlueprintReadOnly, Category = "Attack", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxHealth;
+	UPROPERTY(BlueprintReadOnly, Category = "Attack", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData Damage;
 };

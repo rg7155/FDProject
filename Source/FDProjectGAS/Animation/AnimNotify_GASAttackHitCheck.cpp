@@ -6,6 +6,7 @@
 
 UAnimNotify_GASAttackHitCheck::UAnimNotify_GASAttackHitCheck()
 {
+	ComboAttackLevel = 1.0f;
 }
 
 FString UAnimNotify_GASAttackHitCheck::GetNotifyName_Implementation() const
@@ -23,6 +24,9 @@ void UAnimNotify_GASAttackHitCheck::Notify(USkeletalMeshComponent* MeshComp, UAn
 		if (OwnerActor)
 		{
 			FGameplayEventData PayloadData;
+			//GameplayEvent 보낼 때 데이터에 레벨 정보 추가함
+			//GA_AttackHitCheck 의 ActivateAbility() 인자인 FGameplayEventData로 넘어감
+			PayloadData.EventMagnitude = ComboAttackLevel;
 			UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(OwnerActor, TriggerGameplayTag, PayloadData);
 		}
 	}

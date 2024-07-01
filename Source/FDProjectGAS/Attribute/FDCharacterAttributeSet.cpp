@@ -3,6 +3,7 @@
 
 #include "Attribute/FDCharacterAttributeSet.h"
 #include "FDProjectGAS.h"
+#include "GameplayEffectExtension.h"
 
 UFDCharacterAttributeSet::UFDCharacterAttributeSet() :
 	AttackRange(100.0f),
@@ -18,16 +19,31 @@ UFDCharacterAttributeSet::UFDCharacterAttributeSet() :
 
 void UFDCharacterAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
 {
-	if (Attribute == GetHealthAttribute())
+	//if (Attribute == GetHealthAttribute())
+	//{
+	//	NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxHealth());
+	//}
+	if (Attribute == GetDamageAttribute())
 	{
-		NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxHealth());
+		NewValue = NewValue < 0.0f ? 0.0f : NewValue;
 	}
 }
 
-void UFDCharacterAttributeSet::PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue)
+void UFDCharacterAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
-	if (Attribute == GetHealthAttribute())
+	Super::PostGameplayEffectExecute(Data);
+
+	float MinimumHealth = 0.0f;
+
+	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
 	{
-		FDGAS_LOG(LogFDGAS, Log, TEXT("Health : %f -> %f"), OldValue, NewValue);
+		//ABGAS_LOG(LogABGAS, Warning, TEXT("Direct Health Access : %f"), GetHealth());
+		SetHealth(FMath::Clamp(GetHealth(), MinimumHealth, GetMaxHealth()));
+	}
+	else if (Data.EvaluatedData.Attribute == GetDamageAttribute())
+	{
+		//ABGAS_LOG(LogABGAS, Log, TEXT("Damage : %f"), GetDamage());
+		SetHealth(FMath::Clamp(GetHealth() - GetDamage(), MinimumHealth, GetMaxHealth()));
+		SetDamage(0.0f);
 	}
 }
