@@ -12,7 +12,8 @@ UFDCharacterAttributeSet::UFDCharacterAttributeSet() :
 	MaxAttackRange(300.0f),
 	MaxAttackRadius(150.0f),
 	MaxAttackRate(100.0f),
-	MaxHealth(100.0f)
+	MaxHealth(100.0f),
+	Damage(0.0f)
 {
 	InitHealth(GetMaxHealth());
 }
@@ -42,7 +43,7 @@ void UFDCharacterAttributeSet::PostGameplayEffectExecute(const FGameplayEffectMo
 	}
 	else if (Data.EvaluatedData.Attribute == GetDamageAttribute())
 	{
-		//ABGAS_LOG(LogABGAS, Log, TEXT("Damage : %f"), GetDamage());
+		FDGAS_LOG(LogFDGAS, Log, TEXT("Damage : %f"), GetDamage());
 		SetHealth(FMath::Clamp(GetHealth() - GetDamage(), MinimumHealth, GetMaxHealth()));
 		SetDamage(0.0f);
 	}
