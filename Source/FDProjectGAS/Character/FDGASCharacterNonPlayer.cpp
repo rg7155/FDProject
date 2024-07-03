@@ -45,10 +45,10 @@ void AFDGASCharacterNonPlayer::PossessedBy(AController* NewController)
 		ASC->GiveAbility(StartSpec);
 	}
 
-	//컨텍스트 핸들 생성
+	//컨텍스트 핸들 생성(가해자, 가해수단, 판정정보)
 	FGameplayEffectContextHandle EffectContextHandle = ASC->MakeEffectContext();
 	EffectContextHandle.AddSourceObject(this);
-	//스펙 핸들 생성(컨텍스트 핸들도 설정)
+	//스펙 핸들 생성(스펙이 컨텍스트를 관리함)
 	FGameplayEffectSpecHandle EffectSpecHandle = ASC->MakeOutgoingSpec(InitStatEffect, Level, EffectContextHandle);
 	if (EffectSpecHandle.IsValid())
 	{

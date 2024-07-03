@@ -37,13 +37,19 @@ void UFDGA_AttackHitCheck::OnTraceResultCallback(const FGameplayAbilityTargetDat
 		FGameplayEffectSpecHandle EffectSpecHandle = MakeOutgoingGameplayEffectSpec(AttackDamageEffect, CurrentLevel);
 		if (EffectSpecHandle.IsValid())
 		{
-			EffectSpecHandle.Data->SetSetByCallerMagnitude(FDTAG_DATA_DAMAGE, -SourceAttribute->GetAttackRate());
 			//1.현재 어빌 스펙 핸들 4.이펙트 핸들 5.콜백으로 받은 타겟 데이터 핸들
 			ApplyGameplayEffectSpecToTarget(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, EffectSpecHandle, TargetDataHandle);
+
+
+		/*	FGameplayEffectContextHandle CueContextHandle = UAbilitySystemBlueprintLibrary::GetEffectContext(EffectSpecHandle);
+			CueContextHandle.AddHitResult(HitResult);
+			FGameplayCueParameters CueParam;
+			CueParam.EffectContext = CueContextHandle;*/
 		}
+
+		//TArray<AActor*> TargetActors = UAbilitySystemBlueprintLibrary::GetActorsFromTargetData()
 	}
 
-	//TODO
 
 	bool bReplicatedEndAbility = true;
 	bool bWasCancelled = false;

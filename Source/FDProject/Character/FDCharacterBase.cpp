@@ -290,7 +290,7 @@ float AFDCharacterBase::TakeDamage(float DamageAmount, FDamageEvent const& Damag
 {
 	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
-	Stat->ApplyDamage(DamageAmount);
+	//Stat->ApplyDamage(DamageAmount);
 
 	FVector SpawnLocation = GetActorLocation() + FVector(0.0f, 0.0f, 100.0f);
 	AActor* DamageActor = GetWorld()->SpawnActor(AFDDamage::StaticClass(), &SpawnLocation, &FRotator::ZeroRotator);

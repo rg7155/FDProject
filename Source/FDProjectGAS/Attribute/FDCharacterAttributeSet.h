@@ -47,6 +47,9 @@ public:
 	mutable FOutOfHealthDelegate OnOutOfHealth;
 
 protected:
+	void CreateDamageFont(const AActor* TargetActor);
+
+protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Attack", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData AttackRange;
 	UPROPERTY(BlueprintReadOnly, Category = "Attack", Meta = (AllowPrivateAccess = true))
