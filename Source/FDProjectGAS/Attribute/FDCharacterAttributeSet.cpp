@@ -4,13 +4,14 @@
 #include "Attribute/FDCharacterAttributeSet.h"
 #include "FDProjectGAS.h"
 #include "GameplayEffectExtension.h"
+#include "Tag/FDGameplayTag.h"	
 
 UFDCharacterAttributeSet::UFDCharacterAttributeSet() :
 	AttackRange(100.0f),
-	AttackRadius(50.f),
-	AttackRate(30.0f),
 	MaxAttackRange(300.0f),
+	AttackRadius(50.f),
 	MaxAttackRadius(150.0f),
+	AttackRate(30.0f),
 	MaxAttackRate(100.0f),
 	MaxHealth(100.0f),
 	Damage(0.0f)
@@ -47,4 +48,11 @@ void UFDCharacterAttributeSet::PostGameplayEffectExecute(const FGameplayEffectMo
 		SetHealth(FMath::Clamp(GetHealth() - GetDamage(), MinimumHealth, GetMaxHealth()));
 		SetDamage(0.0f);
 	}
+
+	if ((GetHealth() <= 0.0f) && !bOutOfHealth)
+	{
+		Data.Target.AddLooseGameplayTag(FDTAG_CHARACTER_ISDEAD);
+		OnOutOfHealth.Broadcast();
+	}
+	bOutOfHealth = (GetHealth() <= 0.0f);
 }

@@ -22,7 +22,8 @@
 			"AdditionalDependencies": [
 				"Engine",
 				"GameplayAbilities",
-				"FDProject"
+				"FDProject",
+				"UMG"
 			]
 		}
 	],
