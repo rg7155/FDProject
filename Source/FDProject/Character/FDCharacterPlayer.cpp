@@ -330,13 +330,13 @@ void AFDCharacterPlayer::Shield()
 	if (isShield)
 	{
 		AnimInstance->SetShield(true);
-		GetCharacterMovement()->MaxWalkSpeed = 0.5f * (Stat->GetBaseStat().MovementSpeed + Stat->GetModifierStat().MovementSpeed);
+		//GetCharacterMovement()->MaxWalkSpeed = 0.5f * (Stat->GetBaseStat().MovementSpeed + Stat->GetModifierStat().MovementSpeed);
 		AnimInstance->Montage_Play(ShieldMontage, 1.3f);
 	}
 	else
 	{
 		AnimInstance->SetShield(false);
-		GetCharacterMovement()->MaxWalkSpeed = Stat->GetBaseStat().MovementSpeed + Stat->GetModifierStat().MovementSpeed;
+		//GetCharacterMovement()->MaxWalkSpeed = Stat->GetBaseStat().MovementSpeed + Stat->GetModifierStat().MovementSpeed;
 		//AnimInstance->Montage_Stop(0.2f, ShieldMontage);
 		AnimInstance->StopAllMontages(0.2f);
 	}
@@ -348,25 +348,25 @@ void AFDCharacterPlayer::SetupHUDWidget(UFDHUDWidget* InHUDWidget)
 	ensure(HUDWidget);
 	if (HUDWidget)
 	{
-		//초기 정보 보여주기 위해 업데이트
-		InHUDWidget->UpdateStat(Stat->GetBaseStat(), Stat->GetModifierStat());
-		InHUDWidget->UpdateHpBar(Stat->GetCurrentHp());
-		InHUDWidget->UpdateGold(Stat->GetGold());
+		////초기 정보 보여주기 위해 업데이트
+		//InHUDWidget->UpdateStat(Stat->GetBaseStat(), Stat->GetModifierStat());
+		//InHUDWidget->UpdateHpBar(Stat->GetCurrentHp());
+		//InHUDWidget->UpdateGold(Stat->GetGold());
 
-		//스텟에 있는 델리게이트에 위젯의 함수 연동
-		Stat->OnStatChanged.AddUObject(InHUDWidget, &UFDHUDWidget::UpdateStat);
-		Stat->OnHpChanged.AddUObject(InHUDWidget, &UFDHUDWidget::UpdateHpBar);
+		////스텟에 있는 델리게이트에 위젯의 함수 연동
+		//Stat->OnStatChanged.AddUObject(InHUDWidget, &UFDHUDWidget::UpdateStat);
+		//Stat->OnHpChanged.AddUObject(InHUDWidget, &UFDHUDWidget::UpdateHpBar);
 	}
 }
 
 void AFDCharacterPlayer::TakeItem(UFDItemData* InItemData)
 {
-	if (InItemData && Stat->GetGold() >= InItemData->Gold)
-	{
-		TakeItemActions[(uint8)InItemData->Type].ItemDelegate.ExecuteIfBound(InItemData);
-		Stat->SetGold(Stat->GetGold() - InItemData->Gold);
-		HUDWidget->UpdateGold(Stat->GetGold());
-	}
+	//if (InItemData && Stat->GetGold() >= InItemData->Gold)
+	//{
+	//	TakeItemActions[(uint8)InItemData->Type].ItemDelegate.ExecuteIfBound(InItemData);
+	//	Stat->SetGold(Stat->GetGold() - InItemData->Gold);
+	//	HUDWidget->UpdateGold(Stat->GetGold());
+	//}
 }
 void AFDCharacterPlayer::DrinkPotion(UFDItemData* InItemData)
 {

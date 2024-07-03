@@ -40,7 +40,8 @@ float AFDCharacterNonPlayer::GetAIDetectRange()
 float AFDCharacterNonPlayer::GetAIAttackRange()
 {
 	//이를 위해 추후 Stat에 추가
-	return Stat->GetTotalStat().AttackRange + Stat->GetAttackRadius() * 2;
+	return 200.0f;
+	//return Stat->GetTotalStat().AttackRange + Stat->GetAttackRadius() * 2;
 }
 float AFDCharacterNonPlayer::GetAITurnSpeed()
 {
@@ -67,15 +68,6 @@ void AFDCharacterNonPlayer::NotifyComboActionEnd()
 float AFDCharacterNonPlayer::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
-
-	//FVector SpawnLocation = GetActorLocation() + FVector(0.0f, 0.0f, 100.0f);
-	//AActor* DamageActor = GetWorld()->SpawnActor(AFDDamage::StaticClass(), &SpawnLocation, &FRotator::ZeroRotator);
-	//AFDDamage* FDDamageActor = Cast<AFDDamage>(DamageActor);
-	//if (FDDamageActor)
-	//{
-	//	FDDamageActor->SetDamage(DamageAmount);
-	//	//FDDamageActor->OnDestroyed.AddDynamic(this, &AABStageGimmick::OnOpponentDestroyed);
-	//}
 
 	return DamageAmount;
 }

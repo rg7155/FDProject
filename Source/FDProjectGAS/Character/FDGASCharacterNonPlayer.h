@@ -23,6 +23,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = GAS)
 	TObjectPtr<class UAbilitySystemComponent> ASC;
 
+	UPROPERTY(EditAnywhere, Category = GAS)
+	TArray<TSubclassOf<class UGameplayAbility>> StartAbilities;
+
 	UPROPERTY()
 	TObjectPtr<class UFDCharacterAttributeSet> AttributeSet;
 

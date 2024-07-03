@@ -74,7 +74,7 @@ AFDCharacterBase::AFDCharacterBase()
 	}
 
 	// Stat Component 
-	Stat = CreateDefaultSubobject<UFDCharacterStatComponent>(TEXT("Stat"));
+	//Stat = CreateDefaultSubobject<UFDCharacterStatComponent>(TEXT("Stat"));
 
 	// Widget Component 
 	HpBar = CreateDefaultSubobject<UFDWidgetComponent>(TEXT("Widget"));
@@ -99,8 +99,8 @@ void AFDCharacterBase::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
-	Stat->OnHpZero.AddUObject(this, &AFDCharacterBase::SetDead);
-	Stat->OnStatChanged.AddUObject(this, &AFDCharacterBase::ApplyStat);
+	//Stat->OnHpZero.AddUObject(this, &AFDCharacterBase::SetDead);
+	//Stat->OnStatChanged.AddUObject(this, &AFDCharacterBase::ApplyStat);
 }
 
 void AFDCharacterBase::SetCharacterControlData(const UFDCharacterControlData* CharacterControlData)
@@ -330,22 +330,23 @@ void AFDCharacterBase::SetupCharacterWidget(UFDUserWidget* InUserWidget)
 	UFDHpBarWidget* HpBarWidget = Cast<UFDHpBarWidget>(InUserWidget);
 	if (HpBarWidget)
 	{
-		HpBarWidget->UpdateStat(Stat->GetBaseStat(), Stat->GetModifierStat());
-		HpBarWidget->UpdateHpBar(Stat->GetCurrentHp());
-		Stat->OnHpChanged.AddUObject(HpBarWidget, &UFDHpBarWidget::UpdateHpBar);
-		Stat->OnStatChanged.AddUObject(HpBarWidget, &UFDHpBarWidget::UpdateStat);
+		//HpBarWidget->UpdateStat(Stat->GetBaseStat(), Stat->GetModifierStat());
+		//HpBarWidget->UpdateHpBar(Stat->GetCurrentHp());
+		//Stat->OnHpChanged.AddUObject(HpBarWidget, &UFDHpBarWidget::UpdateHpBar);
+		//Stat->OnStatChanged.AddUObject(HpBarWidget, &UFDHpBarWidget::UpdateStat);
 	}
 }
 
 
 int32 AFDCharacterBase::GetLevel()
 {
-	return Stat->GetCurrentLevel();
+	return 0;
+	//return Stat->GetCurrentLevel();
 }
 
 void AFDCharacterBase::SetLevel(int32 InNewLevel)
 {
-	Stat->SetLevelStat(InNewLevel);
+	//Stat->SetLevelStat(InNewLevel);
 }
 
 void AFDCharacterBase::ApplyStat(const FFDCharacterStat& BaseStat, const FFDCharacterStat& ModifierStat)

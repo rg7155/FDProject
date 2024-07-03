@@ -5,6 +5,9 @@
 #include "AbilitySystemComponent.h"
 #include "Player/FDGASPlayerState.h"
 #include "EnhancedInputComponent.h"
+#include "Character/FDCharacterStatComponent.h"
+#include "Attribute/FDCharacterAttributeSet.h"
+
 AFDGASCharacterPlayer::AFDGASCharacterPlayer()
 {
 	ASC = nullptr;
@@ -48,6 +51,11 @@ void AFDGASCharacterPlayer::PossessedBy(AController* NewController)
 
 		APlayerController* PlayerController = CastChecked<APlayerController>(NewController);
 		PlayerController->ConsoleCommand(TEXT("showdebug abilitysystem"));
+
+		//Stat
+		const UFDCharacterAttributeSet* AS = ASC->GetSet<UFDCharacterAttributeSet>();
+		//Stat->GetBaseStat().
+		//Stat->
 	}
 }
 

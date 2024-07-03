@@ -16,8 +16,8 @@ void UFDCharacterStatComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SetLevelStat(CurrentLevel);
-	SetHp(BaseStat.MaxHp);
+	//SetLevelStat(CurrentLevel);
+	//SetHp(BaseStat.MaxHp);
 }
 
 void UFDCharacterStatComponent::SetLevelStat(int32 InNewLevel)

@@ -24,6 +24,12 @@ void AFDGASCharacterNonPlayer::PossessedBy(AController* NewController)
 
 	ASC->InitAbilityActorInfo(this, this);
 
+	for (const auto& StartAbility : StartAbilities)
+	{
+		FGameplayAbilitySpec StartSpec(StartAbility);
+		ASC->GiveAbility(StartSpec);
+	}
+
 	//컨텍스트 핸들 생성
 	FGameplayEffectContextHandle EffectContextHandle = ASC->MakeEffectContext();
 	EffectContextHandle.AddSourceObject(this);

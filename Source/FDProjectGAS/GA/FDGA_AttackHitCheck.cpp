@@ -24,34 +24,17 @@ void UFDGA_AttackHitCheck::ActivateAbility(const FGameplayAbilitySpecHandle Hand
 	AttackTraceTask->OnComplete.AddDynamic(this, &UFDGA_AttackHitCheck::OnTraceResultCallback);
 	AttackTraceTask->ReadyForActivation();
 }
+
 void UFDGA_AttackHitCheck::OnTraceResultCallback(const FGameplayAbilityTargetDataHandle& TargetDataHandle)
 {
 	if (UAbilitySystemBlueprintLibrary::TargetDataHasHitResult(TargetDataHandle, 0))
 	{
 		FHitResult HitResult = UAbilitySystemBlueprintLibrary::GetHitResultFromTargetData(TargetDataHandle, 0);
-		//ABGAS_LOG(LogABGAS, Log, TEXT("Target %s Detected"), *(HitResult.GetActor()->GetName()));
 
 		UAbilitySystemComponent* SourceASC = GetAbilitySystemComponentFromActorInfo_Checked();
-		/*UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(HitResult.GetActor());
-		if (!SourceASC || !TargetASC)
-		{
-			FDGAS_LOG(LogFDGAS, Error, TEXT("ASC not found!"));
-			return;
-		}*/
-
 		const UFDCharacterAttributeSet* SourceAttribute = SourceASC->GetSet<UFDCharacterAttributeSet>();
-		/*UFDCharacterAttributeSet* TargetAttribute = const_cast<UFDCharacterAttributeSet*>(TargetASC->GetSet<UFDCharacterAttributeSet>());
-		if (!SourceAttribute || !TargetAttribute)
-		{
-			FDGAS_LOG(LogFDGAS, Error, TEXT("ASC not found!"));
-			return;
-		}
-
-		const float AttackDamage = SourceAttribute->GetAttackRate();
-		TargetAttribute->SetHealth(TargetAttribute->GetHealth() - AttackDamage);*/
 
 		FGameplayEffectSpecHandle EffectSpecHandle = MakeOutgoingGameplayEffectSpec(AttackDamageEffect, CurrentLevel);
-
 		if (EffectSpecHandle.IsValid())
 		{
 			EffectSpecHandle.Data->SetSetByCallerMagnitude(FDTAG_DATA_DAMAGE, -SourceAttribute->GetAttackRate());
