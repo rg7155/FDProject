@@ -45,10 +45,11 @@ void UFDCharacterAttributeSet::PostGameplayEffectExecute(const FGameplayEffectMo
 	}
 	else if (Data.EvaluatedData.Attribute == GetDamageAttribute())
 	{
-		FDGAS_LOG(LogFDGAS, Log, TEXT("Damage : %f"), GetDamage());
+		//FDGAS_LOG(LogFDGAS, Log, TEXT("Damage : %f"), GetDamage());
 		SetHealth(FMath::Clamp(GetHealth() - GetDamage(), MinimumHealth, GetMaxHealth()));
 
-		CreateDamageFont(Data.Target.GetOwner());
+		AActor* AvatarActor = Data.Target.GetAvatarActor();
+		CreateDamageFont(AvatarActor);
 
 		SetDamage(0.0f);
 	}
@@ -66,7 +67,7 @@ void UFDCharacterAttributeSet::CreateDamageFont(const AActor* TargetActor)
 	//AActor* TargetActor = Data.Target.GetOwner();
 	if (TargetActor)
 	{
-		//TODO 플레이어 위치 이상함
+		//TODO 플레이어 위치 이상함(오너는 플레이어 스테이트라서?)
 
 		FVector SpawnLocation = TargetActor->GetActorLocation() + FVector(0.0f, 0.0f, 100.0f);
 		AActor* DamageActor = GetWorld()->SpawnActor(AFDDamage::StaticClass(), &SpawnLocation, &FRotator::ZeroRotator);
@@ -75,6 +76,7 @@ void UFDCharacterAttributeSet::CreateDamageFont(const AActor* TargetActor)
 		if (FDDamageActor)
 		{
 			FDDamageActor->SetDamage(GetDamage());
+			FDGAS_LOG(LogFDGAS, Log, TEXT("Damage Location : %s"), *SpawnLocation.ToString());//* FString을 const TCHAR*로 변환
 		}
 	}
 	else
