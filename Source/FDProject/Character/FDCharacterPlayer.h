@@ -32,6 +32,8 @@ class FDPROJECT_API AFDCharacterPlayer : public AFDCharacterBase, public IFDChar
 public:
 	AFDCharacterPlayer();
 
+public:
+	FORCEINLINE class UAnimMontage* GetShieldMontage() const { return ShieldMontage; }
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetDead() override;

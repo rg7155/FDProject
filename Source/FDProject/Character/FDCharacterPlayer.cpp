@@ -161,7 +161,7 @@ void AFDCharacterPlayer::SetupPlayerInputComponent(class UInputComponent* Player
 	//EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &AFDCharacterPlayer::Attack);
 
 	EnhancedInputComponent->BindAction(InteractionAction, ETriggerEvent::Triggered, this, &AFDCharacterPlayer::Interaction);
-	EnhancedInputComponent->BindAction(ShieldAction, ETriggerEvent::Triggered, this, &AFDCharacterPlayer::Shield);
+	//EnhancedInputComponent->BindAction(ShieldAction, ETriggerEvent::Triggered, this, &AFDCharacterPlayer::Shield);
 
 	EnhancedInputComponent->BindAction(ZoomInAction, ETriggerEvent::Triggered, this, &AFDCharacterPlayer::ZoomIn);
 	EnhancedInputComponent->BindAction(ZoomOutAction, ETriggerEvent::Triggered, this, &AFDCharacterPlayer::ZoomOut);

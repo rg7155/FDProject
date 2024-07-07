@@ -6,6 +6,8 @@
 #include "GameplayEffectExtension.h"
 #include "Tag/FDGameplayTag.h"	
 #include "Actor/FDDamage.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/Character.h"
 
 UFDCharacterAttributeSet::UFDCharacterAttributeSet() :
 	AttackRange(100.0f),
@@ -15,9 +17,12 @@ UFDCharacterAttributeSet::UFDCharacterAttributeSet() :
 	AttackRate(30.0f),
 	MaxAttackRate(100.0f),
 	MaxHealth(100.0f),
-	Damage(0.0f)
+	Damage(0.0f),
+	MovementSpeed(400.0f),
+	MaxMovementSpeed(600.0f)
 {
 	InitHealth(GetMaxHealth());
+	InitMovementSpeed(GetMaxMovementSpeed());
 }
 
 void UFDCharacterAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
@@ -40,8 +45,16 @@ void UFDCharacterAttributeSet::PostGameplayEffectExecute(const FGameplayEffectMo
 
 	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
 	{
-		//ABGAS_LOG(LogABGAS, Warning, TEXT("Direct Health Access : %f"), GetHealth());
 		SetHealth(FMath::Clamp(GetHealth(), MinimumHealth, GetMaxHealth()));
+	}
+	else if (Data.EvaluatedData.Attribute == GetMovementSpeedAttribute())
+	{
+		//SetHealth(FMath::Clamp(GetHealth(), MinimumHealth, GetMaxHealth()));
+		ACharacter* CharacterActor = Cast<ACharacter>(Data.Target.GetAvatarActor());
+		if (CharacterActor)
+		{
+			CharacterActor->GetCharacterMovement()->MaxWalkSpeed = GetMovementSpeed();
+		}
 	}
 	else if (Data.EvaluatedData.Attribute == GetDamageAttribute())
 	{

@@ -35,6 +35,8 @@ public:
 	ATTRIBUTE_ACCESSORS(UFDCharacterAttributeSet, Health);
 	ATTRIBUTE_ACCESSORS(UFDCharacterAttributeSet, MaxHealth);
 	ATTRIBUTE_ACCESSORS(UFDCharacterAttributeSet, Damage);
+	ATTRIBUTE_ACCESSORS(UFDCharacterAttributeSet, MovementSpeed);
+	ATTRIBUTE_ACCESSORS(UFDCharacterAttributeSet, MaxMovementSpeed);
 
 	//바꾸기 전 Value 인자값을 변경할 수 있는
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
@@ -68,6 +70,10 @@ protected:
 	FGameplayAttributeData MaxHealth;
 	UPROPERTY(BlueprintReadOnly, Category = "Attack", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData Damage;
+	UPROPERTY(BlueprintReadOnly, Category = "Attack", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData MovementSpeed;
+	UPROPERTY(BlueprintReadOnly, Category = "Attack", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData MaxMovementSpeed;
 
 	bool bOutOfHealth = false;
 };
