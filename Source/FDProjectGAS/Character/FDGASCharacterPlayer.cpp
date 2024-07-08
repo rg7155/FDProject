@@ -17,6 +17,12 @@ AFDGASCharacterPlayer::AFDGASCharacterPlayer()
 	{
 		ComboActionMontage = ComboActionMontageRef.Object;
 	}
+
+	/*static ConstructorHelpers::FObjectFinder<UAnimMontage> SKillActionMontageRef(TEXT("/Script/Engine.AnimMontage'/Game/FDPorjectGAS/Animation/AM_SkillAttack.AM_SkillAttack'"));
+	if (SKillActionMontageRef.Object)
+	{
+		SkillActionMontage = SKillActionMontageRef.Object;
+	}*/
 }
 
 UAbilitySystemComponent* AFDGASCharacterPlayer::GetAbilitySystemComponent() const
@@ -77,6 +83,7 @@ void AFDGASCharacterPlayer::SetupGASInputComponent()
 		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &AFDGASCharacterPlayer::GASInputPressed, 1);
 		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &AFDGASCharacterPlayer::GASInputPressed, 1);
 		EnhancedInputComponent->BindAction(ShieldAction, ETriggerEvent::Triggered, this, &AFDGASCharacterPlayer::GASInputPressed, 2);
+		EnhancedInputComponent->BindAction(SkillAction, ETriggerEvent::Triggered, this, &AFDGASCharacterPlayer::GASInputPressed, 3);
 	}
 }
 

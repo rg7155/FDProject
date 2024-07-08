@@ -105,6 +105,11 @@ AFDCharacterPlayer::AFDCharacterPlayer()
 	{
 		ZoomOutAction = ZoomOutActionRef.Object;
 	}
+	//static ConstructorHelpers::FObjectFinder<UInputAction> SkillActionRef(TEXT("/Script/EnhancedInput.InputAction'/Game/FDProject/Input/Actions/IA_Skill.IA_Skill'"));
+	//if (nullptr != SkillActionRef.Object)
+	//{
+	//	SkillAction = SkillActionRef.Object;
+	//}
 	
 
 	isShopVisible = false;
