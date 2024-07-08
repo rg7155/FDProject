@@ -37,6 +37,29 @@ void UFDCharacterAttributeSet::PreAttributeChange(const FGameplayAttribute& Attr
 	}
 }
 
+bool UFDCharacterAttributeSet::PreGameplayEffectExecute(FGameplayEffectModCallbackData& Data)
+{
+	if (!Super::PreGameplayEffectExecute(Data))
+	{
+		return false;
+	}
+
+	if (Data.EvaluatedData.Attribute == GetDamageAttribute())
+	{
+		if (Data.EvaluatedData.Magnitude > 0.0f)
+		{
+			//태그를 가지고 있다면 false 리턴
+			if (Data.Target.HasMatchingGameplayTag(FDTAG_CHARACTER_ISSHIELD))
+			{
+				//FDGAS_LOG(LogFDGAS, Log, TEXT("Damage Magnitude : %f"), Data.EvaluatedData.Magnitude);
+				Data.EvaluatedData.Magnitude *= 0.5f;
+			}
+		}
+	}
+
+	return true;
+}
+
 void UFDCharacterAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
 	Super::PostGameplayEffectExecute(Data);
