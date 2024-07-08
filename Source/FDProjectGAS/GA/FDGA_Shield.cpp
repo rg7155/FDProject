@@ -3,6 +3,7 @@
 
 #include "GA/FDGA_Shield.h"
 #include "Character/FDCharacterPlayer.h"
+#include "Animation/FDAnimInstance.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 //#include "ArenaBattleGAS.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -17,28 +18,16 @@ void UFDGA_Shield::ActivateAbility(const FGameplayAbilitySpecHandle Handle, cons
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
 	AFDCharacterPlayer* FDCharacter = CastChecked<AFDCharacterPlayer>(ActorInfo->AvatarActor.Get());
-	//FDCharacter->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
-	
-	UAbilityTask_PlayMontageAndWait* PlayShieldTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, TEXT("PlayShield"), FDCharacter->GetShieldMontage());
-	//PlayShieldTask->OnCompleted.AddDynamic(this, &UFDGA_Shield::OnCompleteCallback);
-	//PlayShieldTask->OnInterrupted.AddDynamic(this, &UFDGA_Shield::OnInterruptedCallback);
 
-	FGameplayEffectSpecHandle EffectSpecHandle = MakeOutgoingGameplayEffectSpec(ShieldOnEffect);
-	if (EffectSpecHandle.IsValid())
-	{
-		ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, EffectSpecHandle);
-	}
+	SetAnimInstanceShield(ActorInfo, true);
+	ApplyGameEffectShield(Handle, ActorInfo, ActivationInfo, true);
+
+	UAbilityTask_PlayMontageAndWait* PlayShieldTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, TEXT("PlayShield"), FDCharacter->GetShieldMontage());
 	PlayShieldTask->ReadyForActivation();
 }
 
 void UFDGA_Shield::InputPressed(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
 {
-	FGameplayEffectSpecHandle EffectSpecHandle = MakeOutgoingGameplayEffectSpec(ShieldOffEffect);
-	if (EffectSpecHandle.IsValid())
-	{
-		ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, EffectSpecHandle);
-	}
-
 	bool bReplicatedEndAbility = true;
 	bool bWasCancelled = false;
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, bReplicatedEndAbility, bWasCancelled);
@@ -52,23 +41,28 @@ void UFDGA_Shield::CancelAbility(const FGameplayAbilitySpecHandle Handle, const 
 
 void UFDGA_Shield::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
+	SetAnimInstanceShield(ActorInfo, false);
+	ApplyGameEffectShield(Handle, ActorInfo, ActivationInfo, false); 
+	
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
-
-	//AFDCharacterBase* FDCharacter = CastChecked<AFDCharacterBase>(ActorInfo->AvatarActor.Get());
-	//FDCharacter->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
 }
 
-void UFDGA_Shield::OnCompleteCallback()
+void UFDGA_Shield::SetAnimInstanceShield(const FGameplayAbilityActorInfo* ActorInfo, bool isOn)
 {
-	bool bReplicatedEndAbility = true;
-	bool bWasCancelled = false;
-	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, bReplicatedEndAbility, bWasCancelled);
+	AFDCharacterPlayer* FDCharacter = CastChecked<AFDCharacterPlayer>(ActorInfo->AvatarActor.Get());
+	UFDAnimInstance* AnimInstance = Cast<UFDAnimInstance>(FDCharacter->GetMesh()->GetAnimInstance());
+	if (AnimInstance)
+	{
+		AnimInstance->SetShield(isOn);
+	}
 }
 
-void UFDGA_Shield::OnInterruptedCallback()
+void UFDGA_Shield::ApplyGameEffectShield(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool isOn)
 {
-	bool bReplicatedEndAbility = true;
-	bool bWasCancelled = true;
-	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, bReplicatedEndAbility, bWasCancelled);
+	FGameplayEffectSpecHandle EffectSpecHandle = MakeOutgoingGameplayEffectSpec(isOn ? ShieldOnEffect : ShieldOffEffect);
+	if (EffectSpecHandle.IsValid())
+	{
+		ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, EffectSpecHandle);
+	}
 }
 

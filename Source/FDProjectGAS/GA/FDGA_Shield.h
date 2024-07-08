@@ -24,11 +24,8 @@ public:
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 
 protected:
-	UFUNCTION()
-	void OnCompleteCallback();
-
-	UFUNCTION()
-	void OnInterruptedCallback();
+	void SetAnimInstanceShield(const FGameplayAbilityActorInfo* ActorInfo, bool isOn);
+	void ApplyGameEffectShield(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool isOn);
 
 protected:
 	UPROPERTY(EditAnywhere, Category = "GAS")
