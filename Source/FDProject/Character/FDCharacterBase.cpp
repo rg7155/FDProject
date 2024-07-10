@@ -116,7 +116,6 @@ void AFDCharacterBase::SetCharacterControlData(const UFDCharacterControlData* Ch
 
 void AFDCharacterBase::ProcessComboCommand()
 {
-	UE_LOG(LogFDProject, Log, TEXT("ProcessComboCommand"));
 	if (CurrentCombo == 0)
 	{
 		ComboActionBegin();
@@ -188,7 +187,7 @@ void AFDCharacterBase::SetComboCheckTimer()
 
 	const float AttackSpeedRate = 1.5f;
 	float ComboEffectiveTime = (ComboActionData->EffectiveFrameCount[ComboIndex] / ComboActionData->FrameRate) / AttackSpeedRate;
-	UE_LOG(LogFDProject, Log, TEXT("Timer : %f"), ComboEffectiveTime);
+	//UE_LOG(LogFDProject, Log, TEXT("Timer : %f"), ComboEffectiveTime);
 	if (ComboEffectiveTime > 0.0f)
 	{
 		GetWorld()->GetTimerManager().SetTimer(ComboTimerHandle, this, &AFDCharacterBase::OnComboCheck, ComboEffectiveTime, false);

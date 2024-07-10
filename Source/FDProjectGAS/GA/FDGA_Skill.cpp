@@ -5,6 +5,7 @@
 #include "Character/FDGASCharacterPlayer.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
+#include "FDProjectGAS.h"
 
 UFDGA_Skill::UFDGA_Skill()
 {
@@ -20,7 +21,7 @@ void UFDGA_Skill::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const
 		return;
 	}
 
-	//ActiveSkillActionMontage = TargetCharacter->GetSkillActionMontage();
+	ActiveSkillActionMontage = TargetCharacter->GetSkillActionMontage();
 	if (!ActiveSkillActionMontage)
 	{
 		return;

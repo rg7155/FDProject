@@ -17,6 +17,7 @@ class FDPROJECTGAS_API AFDGASCharacterPlayer : public AFDCharacterPlayer, public
 
 public:
 	AFDGASCharacterPlayer();
+	FORCEINLINE virtual class UAnimMontage* GetSkillActionMontage() const { return SkillActionMontage; }
 
 	virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	virtual void PossessedBy(AController* NewController) override;

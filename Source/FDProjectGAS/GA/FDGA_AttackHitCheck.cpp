@@ -19,16 +19,19 @@ void UFDGA_AttackHitCheck::ActivateAbility(const FGameplayAbilitySpecHandle Hand
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
 	CurrentLevel = TriggerEventData->EventMagnitude;
+	FDGAS_LOG(LogFDGAS, Log, TEXT("FDGA_AttackHitCheck ActivateAbility "));
 
-	UFDAT_Trace* AttackTraceTask = UFDAT_Trace::CreateTask(this, AFDTA_Trace::StaticClass());
+	UFDAT_Trace* AttackTraceTask = UFDAT_Trace::CreateTask(this, TargetActorClass);
 	AttackTraceTask->OnComplete.AddDynamic(this, &UFDGA_AttackHitCheck::OnTraceResultCallback);
 	AttackTraceTask->ReadyForActivation();
 }
 
 void UFDGA_AttackHitCheck::OnTraceResultCallback(const FGameplayAbilityTargetDataHandle& TargetDataHandle)
 {
-	if (UAbilitySystemBlueprintLibrary::TargetDataHasHitResult(TargetDataHandle, 0))
+	if (UAbilitySystemBlueprintLibrary::TargetDataHasHitResult(TargetDataHandle, 0) || 
+		UAbilitySystemBlueprintLibrary::TargetDataHasActor(TargetDataHandle, 0))
 	{
+		FDGAS_LOG(LogFDGAS, Log, TEXT("FDGA_AttackHitCheck TargetDataHasHitResult "));
 		FHitResult HitResult = UAbilitySystemBlueprintLibrary::GetHitResultFromTargetData(TargetDataHandle, 0);
 
 		UAbilitySystemComponent* SourceASC = GetAbilitySystemComponentFromActorInfo_Checked();

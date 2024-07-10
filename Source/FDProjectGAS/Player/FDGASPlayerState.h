@@ -26,4 +26,7 @@ protected:
 
 	UPROPERTY()
 	TObjectPtr<class UFDCharacterAttributeSet> AttributeSet;
+
+	UPROPERTY()
+	TObjectPtr<class UFDCharacterSkillAttributeSet> SkillAttributeSet;
 };

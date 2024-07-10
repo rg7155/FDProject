@@ -18,11 +18,11 @@ AFDGASCharacterPlayer::AFDGASCharacterPlayer()
 		ComboActionMontage = ComboActionMontageRef.Object;
 	}
 
-	/*static ConstructorHelpers::FObjectFinder<UAnimMontage> SKillActionMontageRef(TEXT("/Script/Engine.AnimMontage'/Game/FDPorjectGAS/Animation/AM_SkillAttack.AM_SkillAttack'"));
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> SKillActionMontageRef(TEXT("/Script/Engine.AnimMontage'/Game/FDPorjectGAS/Animation/AM_GASPlayerSkillAttack.AM_GASPlayerSkillAttack'"));
 	if (SKillActionMontageRef.Object)
 	{
 		SkillActionMontage = SKillActionMontageRef.Object;
-	}*/
+	}
 }
 
 UAbilitySystemComponent* AFDGASCharacterPlayer::GetAbilitySystemComponent() const

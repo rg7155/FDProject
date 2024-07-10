@@ -27,5 +27,8 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "GAS")
 	TSubclassOf<class UGameplayEffect> AttackDamageEffect;
 
+	UPROPERTY(EditAnywhere, Category = "GAS")
+	TSubclassOf<class AFDTA_Trace> TargetActorClass;
+
 	float CurrentLevel;
 };
