@@ -38,6 +38,9 @@ protected:
 	UPROPERTY()
 	TObjectPtr<class UFDComboActionData> CurrentComboData;
 
+	UPROPERTY(EditAnywhere)
+	float AttackSpeedRate;
+
 	uint8 CurrentCombo = 0;
 	FTimerHandle ComboTimerHandle;
 	bool HasNextComboInput = false;

@@ -4,13 +4,14 @@
 #include "GA/FDGA_Attack.h"
 #include "Character/FDCharacterBase.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
-//#include "ArenaBattleGAS.h"
+#include "FDProjectGAS.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Character/FDComboActionData.h"
 
 UFDGA_Attack::UFDGA_Attack()
 {
 	InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
+	AttackSpeedRate = 1.0f;
 }
 
 void UFDGA_Attack::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
@@ -21,7 +22,7 @@ void UFDGA_Attack::ActivateAbility(const FGameplayAbilitySpecHandle Handle, cons
 	CurrentComboData = FDCharacter->GetComboActionData();
 	FDCharacter->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
 
-	UAbilityTask_PlayMontageAndWait* PlayAttackTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, TEXT("PlayAttack"), FDCharacter->GetComboActionMontage());
+	UAbilityTask_PlayMontageAndWait* PlayAttackTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, TEXT("PlayAttack"), FDCharacter->GetComboActionMontage(), AttackSpeedRate);
 	PlayAttackTask->OnCompleted.AddDynamic(this, &UFDGA_Attack::OnCompleteCallback);
 	PlayAttackTask->OnInterrupted.AddDynamic(this, &UFDGA_Attack::OnInterruptedCallback);
 	PlayAttackTask->ReadyForActivation();
@@ -88,7 +89,8 @@ void UFDGA_Attack::StartComboTimer()
 	ensure(CurrentComboData->EffectiveFrameCount.IsValidIndex(ComboIndex));
 
 	//TODO
-	const float ComboEffectiveTime = CurrentComboData->EffectiveFrameCount[ComboIndex] / CurrentComboData->FrameRate;
+	const float ComboEffectiveTime = (CurrentComboData->EffectiveFrameCount[ComboIndex] / CurrentComboData->FrameRate) / AttackSpeedRate;
+	//FDGAS_LOG(LogFDGAS,)
 	if (ComboEffectiveTime > 0.0f)
 	{
 		GetWorld()->GetTimerManager().SetTimer(ComboTimerHandle, this, &UFDGA_Attack::CheckComboInput, ComboEffectiveTime, false);

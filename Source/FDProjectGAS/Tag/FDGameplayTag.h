@@ -7,3 +7,4 @@
 #define FDTAG_CHARACTER_ISDEAD FGameplayTag::RequestGameplayTag(FName("Character.State.IsDead"))
 #define FDTAG_CHARACTER_ISSHIELD FGameplayTag::RequestGameplayTag(FName("Character.State.IsShield"))
 
+#define FDTAG_GAMEPLAYCUE_CHARACTER_ATTACKHIT FGameplayTag::RequestGameplayTag(FName("GameplayCue.Character.AttackHit"))

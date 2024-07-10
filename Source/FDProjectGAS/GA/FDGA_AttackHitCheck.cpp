@@ -27,12 +27,12 @@ void UFDGA_AttackHitCheck::ActivateAbility(const FGameplayAbilitySpecHandle Hand
 
 void UFDGA_AttackHitCheck::OnTraceResultCallback(const FGameplayAbilityTargetDataHandle& TargetDataHandle)
 {
-	if (UAbilitySystemBlueprintLibrary::TargetDataHasHitResult(TargetDataHandle, 0) || 
-		UAbilitySystemBlueprintLibrary::TargetDataHasActor(TargetDataHandle, 0))
+	if (UAbilitySystemBlueprintLibrary::TargetDataHasHitResult(TargetDataHandle, 0))
 	{
 		FHitResult HitResult = UAbilitySystemBlueprintLibrary::GetHitResultFromTargetData(TargetDataHandle, 0);
 
 		UAbilitySystemComponent* SourceASC = GetAbilitySystemComponentFromActorInfo_Checked();
+		UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(HitResult.GetActor());
 		const UFDCharacterAttributeSet* SourceAttribute = SourceASC->GetSet<UFDCharacterAttributeSet>();
 
 		FGameplayEffectSpecHandle EffectSpecHandle = MakeOutgoingGameplayEffectSpec(AttackDamageEffect, CurrentLevel);
@@ -41,16 +41,31 @@ void UFDGA_AttackHitCheck::OnTraceResultCallback(const FGameplayAbilityTargetDat
 			//1.현재 어빌 스펙 핸들 4.이펙트 핸들 5.콜백으로 받은 타겟 데이터 핸들
 			ApplyGameplayEffectSpecToTarget(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, EffectSpecHandle, TargetDataHandle);
 
-
-		/*	FGameplayEffectContextHandle CueContextHandle = UAbilitySystemBlueprintLibrary::GetEffectContext(EffectSpecHandle);
+			FGameplayEffectContextHandle CueContextHandle = UAbilitySystemBlueprintLibrary::GetEffectContext(EffectSpecHandle);
 			CueContextHandle.AddHitResult(HitResult);
 			FGameplayCueParameters CueParam;
-			CueParam.EffectContext = CueContextHandle;*/
+			CueParam.EffectContext = CueContextHandle;
+			//상대에게 CueParam 전달
+			SourceASC->ExecuteGameplayCue(FDTAG_GAMEPLAYCUE_CHARACTER_ATTACKHIT, CueParam);
 		}
-
-		//TArray<AActor*> TargetActors = UAbilitySystemBlueprintLibrary::GetActorsFromTargetData()
 	}
+	else if (UAbilitySystemBlueprintLibrary::TargetDataHasActor(TargetDataHandle, 0))
+	{
+		UAbilitySystemComponent* SourceASC = GetAbilitySystemComponentFromActorInfo_Checked();
 
+		FGameplayEffectSpecHandle EffectSpecHandle = MakeOutgoingGameplayEffectSpec(AttackDamageEffect, CurrentLevel);
+		if (EffectSpecHandle.IsValid())
+		{
+			ApplyGameplayEffectSpecToTarget(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, EffectSpecHandle, TargetDataHandle);
+
+			FGameplayEffectContextHandle CueContextHandle = UAbilitySystemBlueprintLibrary::GetEffectContext(EffectSpecHandle);
+			CueContextHandle.AddActors(TargetDataHandle.Data[0].Get()->GetActors(), false);
+			FGameplayCueParameters CueParam;
+			CueParam.EffectContext = CueContextHandle;
+
+			SourceASC->ExecuteGameplayCue(FDTAG_GAMEPLAYCUE_CHARACTER_ATTACKHIT, CueParam);
+		}
+	}
 
 	bool bReplicatedEndAbility = true;
 	bool bWasCancelled = false;
