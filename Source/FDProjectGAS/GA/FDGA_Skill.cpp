@@ -5,7 +5,6 @@
 #include "Character/FDGASCharacterPlayer.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
-#include "FDProjectGAS.h"
 
 UFDGA_Skill::UFDGA_Skill()
 {

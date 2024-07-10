@@ -28,4 +28,6 @@ protected:
 	UPROPERTY(EditAnywhere)
 	float ComboAttackLevel;
 
+	UPROPERTY(EditAnywhere)
+	uint8 bIsCameraShake : 1;
 };

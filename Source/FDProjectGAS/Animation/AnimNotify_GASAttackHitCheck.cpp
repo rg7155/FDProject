@@ -3,10 +3,12 @@
 
 #include "Animation/AnimNotify_GASAttackHitCheck.h"
 #include "AbilitySystemBlueprintLibrary.h"
+#include "Character/FDCharacterPlayer.h"
 
 UAnimNotify_GASAttackHitCheck::UAnimNotify_GASAttackHitCheck()
 {
 	ComboAttackLevel = 1.0f;
+	bIsCameraShake = false;
 }
 
 FString UAnimNotify_GASAttackHitCheck::GetNotifyName_Implementation() const
@@ -28,6 +30,15 @@ void UAnimNotify_GASAttackHitCheck::Notify(USkeletalMeshComponent* MeshComp, UAn
 			//GA_AttackHitCheck 의 ActivateAbility() 인자인 FGameplayEventData로 넘어감
 			PayloadData.EventMagnitude = ComboAttackLevel;
 			UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(OwnerActor, TriggerGameplayTag, PayloadData);
+		}
+
+		if (bIsCameraShake)
+		{
+			AFDCharacterPlayer* FDCharacterPlayer = Cast<AFDCharacterPlayer>(OwnerActor);
+			if (FDCharacterPlayer)
+			{
+				FDCharacterPlayer->CameraShake();
+			}
 		}
 	}
 }
