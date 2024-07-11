@@ -53,10 +53,8 @@ FGameplayAbilityTargetDataHandle AFDTA_Trace::MakeTargetData() const
 	}
 
 	FHitResult OutHitResult;
-	//const float AttackRange = AttributeSet->GetAttackRange();
-	//const float AttackRadius = AttributeSet->GetAttackRadius();
-	const float AttackRange = 500.f;
-	const float AttackRadius = 500.f;
+	const float AttackRange = AttributeSet->GetAttackRange();
+	const float AttackRadius = AttributeSet->GetAttackRadius();
 	FCollisionQueryParams Params(SCENE_QUERY_STAT(UABTA_Trace), false, Character);
 	const FVector Forward = Character->GetActorForwardVector();
 	const FVector Start = Character->GetActorLocation() + Forward * Character->GetCapsuleComponent()->GetScaledCapsuleRadius();
