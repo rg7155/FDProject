@@ -23,6 +23,9 @@ public:
 	virtual void PossessedBy(AController* NewController) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	void SetupGASHUDWidget(class UFDGASHUDWidget* InHUDWidget);
+
+
 protected:
 	void SetupGASInputComponent();
 	void GASInputPressed(int32 InputId);
@@ -40,4 +43,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
 	TObjectPtr<class UAnimMontage> SkillActionMontage;
+
+protected:
+	UFDGASHUDWidget* GASHUDWidget;
 };

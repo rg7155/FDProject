@@ -7,6 +7,7 @@
 #include "EnhancedInputComponent.h"
 #include "Character/FDCharacterStatComponent.h"
 #include "Attribute/FDCharacterAttributeSet.h"
+#include "UI/FDHUDWidget.h"
 
 AFDGASCharacterPlayer::AFDGASCharacterPlayer()
 {
@@ -72,6 +73,28 @@ void AFDGASCharacterPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInp
 	SetupGASInputComponent();
 }
 
+void AFDGASCharacterPlayer::SetupGASHUDWidget(UFDGASHUDWidget* InHUDWidget)
+{
+
+	GASHUDWidget = InHUDWidget;
+	if (GASHUDWidget)
+	{
+		//GASHUDWidget->UpdateHpBar(Stat->GetCurrentHp());
+		//ASC->GetGameplayAttributeValueChangeDelegate(UFDCharacterAttributeSet::GetHealthAttribute()).AddUObject(this, &UFDGASHpBarUserWidget::OnHealthChanged);
+		//ASC->GetGameplayAttributeValueChangeDelegate(UFDCharacterAttributeSet::GetMaxHealthAttribute()).AddUObject(this, &UFDGASHpBarUserWidget::OnMaxHealthChanged);
+
+
+		////초기 정보 보여주기 위해 업데이트
+		//InHUDWidget->UpdateStat(Stat->GetBaseStat(), Stat->GetModifierStat());
+		//InHUDWidget->UpdateHpBar(Stat->GetCurrentHp());
+		//InHUDWidget->UpdateGold(Stat->GetGold());
+
+		////스텟에 있는 델리게이트에 위젯의 함수 연동
+		//Stat->OnStatChanged.AddUObject(InHUDWidget, &UFDHUDWidget::UpdateStat);
+		//Stat->OnHpChanged.AddUObject(InHUDWidget, &UFDHUDWidget::UpdateHpBar);
+	}
+}
+
 void AFDGASCharacterPlayer::SetupGASInputComponent()
 {
 	if (IsValid(ASC) && IsValid(InputComponent))
@@ -116,3 +139,4 @@ void AFDGASCharacterPlayer::GASInputReleased(int32 InputId)
 		}
 	}
 }
+

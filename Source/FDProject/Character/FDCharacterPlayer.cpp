@@ -321,7 +321,7 @@ void AFDCharacterPlayer::Interaction()
 	{
 		isShopVisible = !isShopVisible;
 		PlayerController->ToggleMouseCursor(isShopVisible);
-		HUDWidget->SetShopVisible(isShopVisible);
+		//HUDWidget->SetShopVisible(isShopVisible);
 	}
 }
 
