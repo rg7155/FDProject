@@ -20,7 +20,7 @@ public:
 	virtual void PossessedBy(AController* NewController) override;
 
 	UFUNCTION()
-	virtual void OnOutOfHealth();
+	virtual void OnOutOfHealth(AActor* MyInstigator);
 
 protected:
 	UPROPERTY(EditAnywhere, Category = GAS)
@@ -34,6 +34,8 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = GAS)
 	TSubclassOf<class UGameplayEffect> InitStatEffect;
+	UPROPERTY(EditAnywhere, Category = GAS)
+	TSubclassOf<class UGameplayEffect> GoldEffect;
 
 	UPROPERTY(EditAnywhere, Category = GAS)
 	float Level;

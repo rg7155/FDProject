@@ -93,7 +93,9 @@ void UFDCharacterAttributeSet::PostGameplayEffectExecute(const FGameplayEffectMo
 	if ((GetHealth() <= 0.0f) && !bOutOfHealth)
 	{
 		Data.Target.AddLooseGameplayTag(FDTAG_CHARACTER_ISDEAD);
-		OnOutOfHealth.Broadcast();
+		
+		AActor* Actor = Data.EffectSpec.GetEffectContext().GetEffectCauser();
+		OnOutOfHealth.Broadcast(Actor);
 	}
 	bOutOfHealth = (GetHealth() <= 0.0f);
 }

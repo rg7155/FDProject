@@ -3,9 +3,11 @@
 
 #include "Character/FDGASCharacterNonPlayer.h"
 #include "AbilitySystemComponent.h"
+#include "AbilitySystemBlueprintLibrary.h"
 #include "Attribute/FDCharacterAttributeSet.h"
 #include "UI/FDGASWidgetComponent.h"
 #include "UI/FDGASUserWidget.h"
+#include "FDProjectGAS.h"
 
 AFDGASCharacterNonPlayer::AFDGASCharacterNonPlayer()
 {
@@ -50,14 +52,27 @@ void AFDGASCharacterNonPlayer::PossessedBy(AController* NewController)
 	EffectContextHandle.AddSourceObject(this);
 	//스펙 핸들 생성(스펙이 컨텍스트를 관리함)
 	FGameplayEffectSpecHandle EffectSpecHandle = ASC->MakeOutgoingSpec(InitStatEffect, Level, EffectContextHandle);
+	//FGameplayEffectSpecHandle EffectSpecHandle = MakeOutgoingGameplayEffectSpec(AttackDamageEffect, CurrentLevel);
 	if (EffectSpecHandle.IsValid())
 	{
 		//GA 없이 스스로 GE를 발동시켜 스텟 변경
 		ASC->BP_ApplyGameplayEffectSpecToSelf(EffectSpecHandle);
 	}
 }
-void AFDGASCharacterNonPlayer::OnOutOfHealth()
+void AFDGASCharacterNonPlayer::OnOutOfHealth(AActor* MyInstigator)
 {
 	SetDead();
+	FDGAS_LOG(LogFDGAS, Log, TEXT("1"));
+	if (MyInstigator)
+	{
+		FDGAS_LOG(LogFDGAS, Log, TEXT("2"));
+		FGameplayEffectContextHandle EffectContextHandle = ASC->MakeEffectContext();
+		EffectContextHandle.AddSourceObject(this);
+		FGameplayEffectSpecHandle EffectSpecHandle = ASC->MakeOutgoingSpec(GoldEffect, Level, EffectContextHandle);
+		if (EffectSpecHandle.IsValid())
+		{
+			ASC->BP_ApplyGameplayEffectSpecToTarget(EffectSpecHandle, UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(MyInstigator));
+		}
+	}
 }
 
