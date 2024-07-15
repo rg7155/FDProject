@@ -9,6 +9,7 @@
 #include "Components/TextBlock.h"
 #include "Tag/FDGameplayTag.h"
 #include "FDProjectGAS.h"
+
 void UFDGASHpBarUserWidget::SetAbilitySystemComponent(AActor* InOwner)
 {
 	Super::SetAbilitySystemComponent(InOwner);

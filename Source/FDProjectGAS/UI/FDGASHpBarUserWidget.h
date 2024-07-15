@@ -15,9 +15,10 @@ class FDPROJECTGAS_API UFDGASHpBarUserWidget : public UFDGASUserWidget
 {
 	GENERATED_BODY()
 
-protected:
+public:
 	virtual void SetAbilitySystemComponent(AActor* InOwner) override;
 
+protected:
 	virtual void OnHealthChanged(const FOnAttributeChangeData& ChangeData);
 	virtual void OnMaxHealthChanged(const FOnAttributeChangeData& ChangeData);
 	virtual void OnInvinsibleTagChanged(const FGameplayTag CallbackTag, int32 NewCount);

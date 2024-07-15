@@ -3,18 +3,10 @@
 
 #include "UI/FDGASHUDWidget.h"
 #include "FDGASHpBarUserWidget.h"
-#include "UI/FDGoldWidget.h"
+#include "FDGASGoldWidget.h"
+#include "UI/FDUserWidget.h"
 #include "Character//FDGASCharacterPlayer.h"
 
-void UFDGASHUDWidget::UpdateHpBar(float NewCurrentHp)
-{
-	//HpBar->UpdateHpBar(NewCurrentHp);
-}
-
-void UFDGASHUDWidget::UpdateGold(int _Gold)
-{
-	Gold->UpdateGoldText(_Gold);
-}
 
 void UFDGASHUDWidget::SetShopVisible(bool isVisible)
 {
@@ -36,9 +28,11 @@ void UFDGASHUDWidget::NativeConstruct()
 
 	//WBP에서 변수들 이름 바꾸고 이걸로 가져옴
 	HpBar = Cast<UFDGASHpBarUserWidget>(GetWidgetFromName(TEXT("WidgetGASHpBar")));
+	HpBar->SetAbilitySystemComponent(GetOwningPlayerPawn());
 	ensure(HpBar);
 
-	Gold = Cast<UFDGoldWidget>(GetWidgetFromName(TEXT("WidgetGold")));
+	Gold = Cast<UFDGASGoldWidget>(GetWidgetFromName(TEXT("WidgetGold")));
+	Gold->SetAbilitySystemComponent(GetOwningPlayerPawn());
 	ensure(Gold);
 
 	Shop = Cast<UFDUserWidget>(GetWidgetFromName(TEXT("WidgetShop")));

@@ -19,7 +19,8 @@ UFDCharacterAttributeSet::UFDCharacterAttributeSet() :
 	MaxHealth(100.0f),
 	Damage(0.0f),
 	MovementSpeed(400.0f),
-	MaxMovementSpeed(600.0f)
+	MaxMovementSpeed(600.0f),
+	Gold(1000)
 {
 	InitHealth(GetMaxHealth());
 	InitMovementSpeed(GetMaxMovementSpeed());

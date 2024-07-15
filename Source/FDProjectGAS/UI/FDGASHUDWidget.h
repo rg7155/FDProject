@@ -14,10 +14,6 @@ class FDPROJECTGAS_API UFDGASHUDWidget : public UUserWidget
 {
 	GENERATED_BODY()
 public:
-	//ABHpBar와 동일함
-	void UpdateHpBar(float NewCurrentHp);
-	void UpdateGold(int Gold);
-
 	void SetShopVisible(bool isVisible);
 
 protected:
@@ -28,7 +24,7 @@ protected:
 	TObjectPtr<class UFDGASHpBarUserWidget> HpBar;
 
 	UPROPERTY()
-	TObjectPtr<class UFDGoldWidget> Gold;
+	TObjectPtr<class UFDGASGoldWidget> Gold;
 
 	UPROPERTY()
 	TObjectPtr<class UFDUserWidget> Shop;
