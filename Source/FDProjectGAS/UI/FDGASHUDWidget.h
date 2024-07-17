@@ -14,7 +14,7 @@ class FDPROJECTGAS_API UFDGASHUDWidget : public UUserWidget
 {
 	GENERATED_BODY()
 public:
-	void SetShopVisible(bool isVisible);
+	void ToggleShopVisible();
 
 protected:
 	virtual void NativeConstruct() override;
@@ -28,4 +28,6 @@ protected:
 
 	UPROPERTY()
 	TObjectPtr<class UFDUserWidget> Shop;
+
+	bool isShopVisible = false;
 };

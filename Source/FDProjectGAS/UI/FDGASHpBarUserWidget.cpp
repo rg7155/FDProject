@@ -13,11 +13,8 @@
 void UFDGASHpBarUserWidget::SetAbilitySystemComponent(AActor* InOwner)
 {
 	Super::SetAbilitySystemComponent(InOwner);
-	FDGAS_LOG(LogFDGAS, Log, TEXT("UFDGASHpBarUserWidget 1"));
-
 	if (ASC)
 	{
-		FDGAS_LOG(LogFDGAS, Log, TEXT("UFDGASHpBarUserWidget 2"));
 		ASC->GetGameplayAttributeValueChangeDelegate(UFDCharacterAttributeSet::GetHealthAttribute()).AddUObject(this, &UFDGASHpBarUserWidget::OnHealthChanged);
 		ASC->GetGameplayAttributeValueChangeDelegate(UFDCharacterAttributeSet::GetMaxHealthAttribute()).AddUObject(this, &UFDGASHpBarUserWidget::OnMaxHealthChanged);
 		//ASC->RegisterGameplayTagEvent(FDTAG_CHARACTER_INVINSIBLE, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &UFDGASHpBarUserWidget::OnInvinsibleTagChanged);

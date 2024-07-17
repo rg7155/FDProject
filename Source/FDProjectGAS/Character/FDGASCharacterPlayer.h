@@ -5,13 +5,14 @@
 #include "CoreMinimal.h"
 #include "Character/FDCharacterPlayer.h"
 #include "AbilitySystemInterface.h"
+#include "Interface/FDGASCharacterItemInterface.h"
 #include "FDGASCharacterPlayer.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class FDPROJECTGAS_API AFDGASCharacterPlayer : public AFDCharacterPlayer, public IAbilitySystemInterface
+class FDPROJECTGAS_API AFDGASCharacterPlayer : public AFDCharacterPlayer, public IAbilitySystemInterface, public IFDGASCharacterItemInterface
 {
 	GENERATED_BODY()
 
@@ -22,8 +23,12 @@ public:
 	virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	virtual void PossessedBy(AController* NewController) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual void Interaction() override;
+
+	virtual void TakeGASItem(class UFDGASItemData* InItemData) override;
 
 	void SetupGASHUDWidget(class UFDGASHUDWidget* InHUDWidget);
+
 
 
 protected:

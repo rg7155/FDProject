@@ -21,6 +21,7 @@ public:
 
 	UFUNCTION()
 	virtual void OnOutOfHealth(AActor* MyInstigator);
+	void ApplyGoldEffect(UAbilitySystemComponent* Target);
 
 protected:
 	UPROPERTY(EditAnywhere, Category = GAS)

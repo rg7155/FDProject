@@ -8,9 +8,10 @@
 #include "Character//FDGASCharacterPlayer.h"
 
 
-void UFDGASHUDWidget::SetShopVisible(bool isVisible)
+void UFDGASHUDWidget::ToggleShopVisible()
 {
-	if (isVisible)
+	isShopVisible = !isShopVisible;
+	if (isShopVisible)
 	{
 		Shop->SetVisibility(ESlateVisibility::Visible);
 	}
@@ -37,7 +38,6 @@ void UFDGASHUDWidget::NativeConstruct()
 
 	Shop = Cast<UFDUserWidget>(GetWidgetFromName(TEXT("WidgetShop")));
 	ensure(Shop);
-	SetShopVisible(false);
 
 	AFDGASCharacterPlayer* HUDPawn = Cast<AFDGASCharacterPlayer>(GetOwningPlayerPawn());
 	if (HUDPawn)

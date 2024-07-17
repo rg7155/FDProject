@@ -7,7 +7,8 @@
 #include "EnhancedInputComponent.h"
 #include "Character/FDCharacterStatComponent.h"
 #include "Attribute/FDCharacterAttributeSet.h"
-#include "UI/FDHUDWidget.h"
+#include "UI/FDGASHUDWidget.h"
+#include "Item/FDGASItemData.h"
 
 AFDGASCharacterPlayer::AFDGASCharacterPlayer()
 {
@@ -60,7 +61,7 @@ void AFDGASCharacterPlayer::PossessedBy(AController* NewController)
 		PlayerController->ConsoleCommand(TEXT("showdebug abilitysystem"));
 
 		//Stat
-		const UFDCharacterAttributeSet* AS = ASC->GetSet<UFDCharacterAttributeSet>();
+		//const UFDCharacterAttributeSet* AS = ASC->GetSet<UFDCharacterAttributeSet>();
 		//Stat->GetBaseStat().
 		//Stat->
 	}
@@ -71,6 +72,28 @@ void AFDGASCharacterPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInp
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	SetupGASInputComponent();
+}
+
+void AFDGASCharacterPlayer::Interaction()
+{
+	Super::Interaction();
+
+	GASHUDWidget->ToggleShopVisible();
+}
+
+void AFDGASCharacterPlayer::TakeGASItem(UFDGASItemData* InItemData)
+{
+	const UFDCharacterAttributeSet* AS = ASC->GetSet<UFDCharacterAttributeSet>();
+	if (InItemData && AS->GetGold() >= InItemData->Gold)
+	{
+		FGameplayEffectContextHandle EffectContextHandle = ASC->MakeEffectContext();
+		EffectContextHandle.AddSourceObject(this);
+		FGameplayEffectSpecHandle EffectSpecHandle = ASC->MakeOutgoingSpec(InItemData->ItemEffect, InItemData->Level, EffectContextHandle);
+		if (EffectSpecHandle.IsValid())
+		{
+			ASC->BP_ApplyGameplayEffectSpecToSelf(EffectSpecHandle);
+		}
+	}
 }
 
 void AFDGASCharacterPlayer::SetupGASHUDWidget(UFDGASHUDWidget* InHUDWidget)

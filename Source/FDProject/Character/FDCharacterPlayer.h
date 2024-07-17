@@ -114,7 +114,7 @@ protected:
 	void ShoulderLook(const FInputActionValue& Value);
 	void QuaterMove(const FInputActionValue& Value);
 	void Attack();
-	void Interaction();
+	virtual void Interaction();
 	void Shield();
 	
 

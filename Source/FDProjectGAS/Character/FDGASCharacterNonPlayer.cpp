@@ -62,17 +62,20 @@ void AFDGASCharacterNonPlayer::PossessedBy(AController* NewController)
 void AFDGASCharacterNonPlayer::OnOutOfHealth(AActor* MyInstigator)
 {
 	SetDead();
-	FDGAS_LOG(LogFDGAS, Log, TEXT("1"));
 	if (MyInstigator)
 	{
-		FDGAS_LOG(LogFDGAS, Log, TEXT("2"));
-		FGameplayEffectContextHandle EffectContextHandle = ASC->MakeEffectContext();
-		EffectContextHandle.AddSourceObject(this);
-		FGameplayEffectSpecHandle EffectSpecHandle = ASC->MakeOutgoingSpec(GoldEffect, Level, EffectContextHandle);
-		if (EffectSpecHandle.IsValid())
-		{
-			ASC->BP_ApplyGameplayEffectSpecToTarget(EffectSpecHandle, UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(MyInstigator));
-		}
+		ApplyGoldEffect(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(MyInstigator));
+	}
+}
+
+void AFDGASCharacterNonPlayer::ApplyGoldEffect(UAbilitySystemComponent* Target)
+{
+	FGameplayEffectContextHandle EffectContextHandle = ASC->MakeEffectContext();
+	EffectContextHandle.AddSourceObject(this);
+	FGameplayEffectSpecHandle EffectSpecHandle = ASC->MakeOutgoingSpec(GoldEffect, Level, EffectContextHandle);
+	if (EffectSpecHandle.IsValid())
+	{
+		ASC->BP_ApplyGameplayEffectSpecToTarget(EffectSpecHandle, Target);
 	}
 }
 
