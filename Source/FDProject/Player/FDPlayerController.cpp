@@ -6,7 +6,7 @@
 
 AFDPlayerController::AFDPlayerController()
 {
-
+	bShowMouseCursor = false;
 }
 
 void AFDPlayerController::BeginPlay()
@@ -17,16 +17,7 @@ void AFDPlayerController::BeginPlay()
 	SetInputMode(GameOnlyInputMode);
 }
 
-void AFDPlayerController::ToggleMouseCursor(bool isShowCursor)
+void AFDPlayerController::ToggleMouseCursor()
 {
-	if (isShowCursor)
-	{
-		bShowMouseCursor = true;
-		//SetInputMode(FInputModeGameAndUI());
-	}
-	else
-	{
-		bShowMouseCursor = false;
-		//SetInputMode(FInputModeGameOnly());
-	}
+	bShowMouseCursor = !bShowMouseCursor;
 }

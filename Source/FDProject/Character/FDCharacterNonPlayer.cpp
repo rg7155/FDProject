@@ -3,7 +3,6 @@
 
 #include "Character/FDCharacterNonPlayer.h"
 #include "AI/FDAIController.h"
-#include "Character/FDCharacterStatComponent.h"
 
 AFDCharacterNonPlayer::AFDCharacterNonPlayer()
 {
@@ -56,18 +55,8 @@ void AFDCharacterNonPlayer::SetAIAttackDelegate(const FAICharacterAttackFinished
 void AFDCharacterNonPlayer::AttackByAI()
 {
 	//플레이어에서 입력 들어왔을때와 동일하게 함수 호출함
-	ProcessComboCommand();
+	//ProcessComboCommand();
 }
 
-void AFDCharacterNonPlayer::NotifyComboActionEnd()
-{
-	Super::NotifyComboActionEnd();
-	OnAttackFinished.ExecuteIfBound();
-}
 
-float AFDCharacterNonPlayer::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
-{
-	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
-	return DamageAmount;
-}

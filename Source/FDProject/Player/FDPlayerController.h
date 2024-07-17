@@ -19,6 +19,6 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	void ToggleMouseCursor(bool isShowCursor);
+	void ToggleMouseCursor();
 
 };

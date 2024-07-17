@@ -5,27 +5,13 @@
 #include "CoreMinimal.h"
 #include "Character/FDCharacterBase.h"
 #include "InputActionValue.h"
-#include "Interface/FDCharacterHUDInterface.h"
-#include "Interface/FDCharacterItemInterface.h"
 #include "FDCharacterPlayer.generated.h"
-
-
-//인자를 배열로 관리하기 위해 구조체 선언
-DECLARE_DELEGATE_OneParam(FOnTakeItemDelegate, class UFDItemData* /*InItemData*/);
-USTRUCT(BlueprintType)
-struct FTakeItemDelegateWrapper
-{
-	GENERATED_BODY()
-	FTakeItemDelegateWrapper() {}
-	FTakeItemDelegateWrapper(const FOnTakeItemDelegate& InItemDelegate) : ItemDelegate(InItemDelegate) {}
-	FOnTakeItemDelegate ItemDelegate;
-};
 
 /**
  * 
  */
 UCLASS()
-class FDPROJECT_API AFDCharacterPlayer : public AFDCharacterBase, public IFDCharacterHUDInterface, public IFDCharacterItemInterface
+class FDPROJECT_API AFDCharacterPlayer : public AFDCharacterBase
 {
 	GENERATED_BODY()
 	
@@ -109,41 +95,18 @@ protected:
 
 	//void SetInputActionByObjectFinder(TObjectPtr<class UInputAction>& action, const TCHAR* ref);
 
-	virtual void Jump() override;
 	void ShoulderMove(const FInputActionValue& Value);
 	void ShoulderLook(const FInputActionValue& Value);
 	void QuaterMove(const FInputActionValue& Value);
-	void Attack();
 	virtual void Interaction();
-	void Shield();
 	
 
 	ECharacterControlType CurrentCharacterControlType;
-	bool isShopVisible = false;
-
-	// UI Section
-protected:
-	virtual void SetupHUDWidget(class UFDHUDWidget* InHUDWidget) override;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Widget, Meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class UFDHUDWidget> HUDWidget;
-
-	// Item Section
-protected:
-	UPROPERTY()
-	TArray<FTakeItemDelegateWrapper> TakeItemActions;
-
-	virtual void TakeItem(class UFDItemData* InItemData) override;
-	virtual void DrinkPotion(class UFDItemData* InItemData);
-	virtual void EquipWeapon(class UFDItemData* InItemData);
-	virtual void ReadScroll(class UFDItemData* InItemData);
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation, Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UAnimMontage> ShieldMontage;
-	bool isShield = false;
 
-	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
 public:
 	virtual void CameraShake() override;
