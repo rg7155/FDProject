@@ -9,6 +9,7 @@
 #include "Attribute/FDCharacterAttributeSet.h"
 #include "UI/FDGASHUDWidget.h"
 #include "Item/FDGASItemData.h"
+#include "Tag/FDGameplayTag.h"
 
 AFDGASCharacterPlayer::AFDGASCharacterPlayer()
 {
@@ -91,7 +92,16 @@ void AFDGASCharacterPlayer::TakeGASItem(UFDGASItemData* InItemData)
 		FGameplayEffectSpecHandle EffectSpecHandle = ASC->MakeOutgoingSpec(InItemData->ItemEffect, InItemData->Level, EffectContextHandle);
 		if (EffectSpecHandle.IsValid())
 		{
+			EffectSpecHandle.Data->SetSetByCallerMagnitude(FDTAG_DATA_GOLD, -InItemData->Gold);
 			ASC->BP_ApplyGameplayEffectSpecToSelf(EffectSpecHandle);
+
+			//FGameplayEffectSpec* EffectSpec = EffectSpecHandle.Data.Get();
+			//if (EffectSpec)
+			//{
+			//	EffectSpec->SetSetByCallerMagnitude(FDTAG_DATA_GOLD, InItemData->Gold);
+
+			//	ASC->BP_ApplyGameplayEffectSpecToSelf(EffectSpecHandle);
+			//}
 		}
 	}
 }

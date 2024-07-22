@@ -19,6 +19,8 @@ public:
 	virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	virtual void PossessedBy(AController* NewController) override;
 
+	virtual void AttackByAI() override;
+
 	UFUNCTION()
 	virtual void OnOutOfHealth(AActor* MyInstigator);
 	void ApplyGoldEffect(UAbilitySystemComponent* Target);

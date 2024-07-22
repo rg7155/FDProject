@@ -59,6 +59,11 @@ void AFDGASCharacterNonPlayer::PossessedBy(AController* NewController)
 		ASC->BP_ApplyGameplayEffectSpecToSelf(EffectSpecHandle);
 	}
 }
+void AFDGASCharacterNonPlayer::AttackByAI()
+{
+	//FGameplayAbilitySpec* AttackSpec = ASC->FindAbilitySpecFromClass();
+	//ASC->TryActivateAbility(Spec->Handle);
+}
 void AFDGASCharacterNonPlayer::OnOutOfHealth(AActor* MyInstigator)
 {
 	SetDead();
