@@ -7,6 +7,8 @@
 #include "AbilitySystemInterface.h"
 #include "FDGASCharacterNonPlayer.generated.h"
 
+DECLARE_DELEGATE_OneParam(FOnAbilityEndedDelegate, const UGameplayAbility*);
+
 /**
  * 
  */
@@ -25,12 +27,23 @@ public:
 	virtual void OnOutOfHealth(AActor* MyInstigator);
 	void ApplyGoldEffect(UAbilitySystemComponent* Target);
 
+	UFUNCTION()
+	void OnAbilityEnded(UGameplayAbility* Ability);
+protected:
+	void GASInputPressed(int32 InputId);
+	void GASInputReleased(int32 InputId);
+
+
+
 protected:
 	UPROPERTY(EditAnywhere, Category = GAS)
 	TObjectPtr<class UAbilitySystemComponent> ASC;
 
 	UPROPERTY(EditAnywhere, Category = GAS)
 	TArray<TSubclassOf<class UGameplayAbility>> StartAbilities;
+
+	UPROPERTY(EditAnywhere, Category = GAS)
+	TMap<int32, TSubclassOf<class UGameplayAbility>> StartInputAbilities;
 
 	UPROPERTY()
 	TObjectPtr<class UFDCharacterAttributeSet> AttributeSet;

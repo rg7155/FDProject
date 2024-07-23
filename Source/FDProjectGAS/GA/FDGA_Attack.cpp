@@ -3,6 +3,7 @@
 
 #include "GA/FDGA_Attack.h"
 #include "Character/FDCharacterBase.h"
+#include "Character/FDGASCharacterNonPlayer.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "FDProjectGAS.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -60,6 +61,12 @@ void UFDGA_Attack::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGa
 	CurrentComboData = nullptr;
 	CurrentCombo = 0;
 	HasNextComboInput = false;
+
+	AFDGASCharacterNonPlayer* FDGASCharacterNonPlayer = Cast<AFDGASCharacterNonPlayer>(ActorInfo->AvatarActor.Get());
+	if (FDGASCharacterNonPlayer)
+	{
+		FDGASCharacterNonPlayer->OnAbilityEnded(this);
+	}
 }
 
 void UFDGA_Attack::OnCompleteCallback()

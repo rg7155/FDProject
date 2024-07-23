@@ -4,6 +4,7 @@
 #include "Character/FDGASCharacterNonPlayer.h"
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemBlueprintLibrary.h"
+#include "GameplayAbilitySpec.h"
 #include "Attribute/FDCharacterAttributeSet.h"
 #include "UI/FDGASWidgetComponent.h"
 #include "UI/FDGASUserWidget.h"
@@ -47,6 +48,13 @@ void AFDGASCharacterNonPlayer::PossessedBy(AController* NewController)
 		ASC->GiveAbility(StartSpec);
 	}
 
+	for (const auto& StartInputAbility : StartInputAbilities)
+	{
+		FGameplayAbilitySpec StartSpec(StartInputAbility.Value);
+		StartSpec.InputID = StartInputAbility.Key;
+		ASC->GiveAbility(StartSpec);
+	}
+
 	//컨텍스트 핸들 생성(가해자, 가해수단, 판정정보)
 	FGameplayEffectContextHandle EffectContextHandle = ASC->MakeEffectContext();
 	EffectContextHandle.AddSourceObject(this);
@@ -61,8 +69,7 @@ void AFDGASCharacterNonPlayer::PossessedBy(AController* NewController)
 }
 void AFDGASCharacterNonPlayer::AttackByAI()
 {
-	//FGameplayAbilitySpec* AttackSpec = ASC->FindAbilitySpecFromClass();
-	//ASC->TryActivateAbility(Spec->Handle);
+	GASInputPressed(0);
 }
 void AFDGASCharacterNonPlayer::OnOutOfHealth(AActor* MyInstigator)
 {
@@ -84,3 +91,51 @@ void AFDGASCharacterNonPlayer::ApplyGoldEffect(UAbilitySystemComponent* Target)
 	}
 }
 
+
+void AFDGASCharacterNonPlayer::GASInputPressed(int32 InputId)
+{
+	FGameplayAbilitySpec* Spec = ASC->FindAbilitySpecFromInputID(InputId);
+	if (Spec)
+	{
+		Spec->InputPressed = true;
+		if (Spec->IsActive())
+		{
+			FDGAS_LOG(LogFDGAS, Log, TEXT("IsActive"));
+			ASC->AbilitySpecInputPressed(*Spec);
+		}
+		else
+		{
+			FDGAS_LOG(LogFDGAS, Log, TEXT("TryActivate"));
+			ASC->TryActivateAbility(Spec->Handle);
+
+			//이거 왜 어빌리티 종료 시점에는 델리게이트가 사라짐??!?!?!?!
+			//Spec->Ability->OnGameplayAbilityEnded.AddUObject(this, &AFDGASCharacterNonPlayer::OnAbilityEnded);
+		}
+
+	}
+}
+
+void AFDGASCharacterNonPlayer::GASInputReleased(int32 InputId)
+{
+	FGameplayAbilitySpec* Spec = ASC->FindAbilitySpecFromInputID(InputId);
+	if (Spec)
+	{
+		Spec->InputPressed = false;
+		if (Spec->IsActive())
+		{
+			ASC->AbilitySpecInputReleased(*Spec);
+		}
+	}
+}
+
+void AFDGASCharacterNonPlayer::OnAbilityEnded(UGameplayAbility* Ability)
+{
+	int32 AbilityInputID = Ability->GetCurrentAbilitySpec()->InputID;
+	//TODO 추후 enum 등 교체
+	FDGAS_LOG(LogFDGAS, Log, TEXT("AbilityInputID"));
+	if (AbilityInputID == 0)
+	{
+		FDGAS_LOG(LogFDGAS, Log, TEXT("OnAttackFinished"));
+		OnAttackFinished.ExecuteIfBound();
+	}
+}
