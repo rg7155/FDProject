@@ -9,7 +9,8 @@ UFDCharacterSkillAttributeSet::UFDCharacterSkillAttributeSet() :
 	SkillAttackRate(150.0f),
 	MaxSkillAttackRate(300.0f),
 	SkillEnergy(100.0f),
-	MaxSkillEnergy(100.0f)
+	MaxSkillEnergy(100.0f),
+	SkillCooldown(3.0f)
 {
 }
 

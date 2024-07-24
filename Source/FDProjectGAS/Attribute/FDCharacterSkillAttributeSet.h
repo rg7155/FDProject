@@ -30,6 +30,7 @@ public:
 	ATTRIBUTE_ACCESSORS(UFDCharacterSkillAttributeSet, MaxSkillAttackRate);
 	ATTRIBUTE_ACCESSORS(UFDCharacterSkillAttributeSet, SkillEnergy);
 	ATTRIBUTE_ACCESSORS(UFDCharacterSkillAttributeSet, MaxSkillEnergy);
+	ATTRIBUTE_ACCESSORS(UFDCharacterSkillAttributeSet, SkillCooldown);
 
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
 
@@ -51,4 +52,8 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Attack", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxSkillEnergy;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Attack", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData SkillCooldown;
+	
 };

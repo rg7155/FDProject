@@ -49,7 +49,6 @@ bool UFDCharacterAttributeSet::PreGameplayEffectExecute(FGameplayEffectModCallba
 	{
 		if (Data.EvaluatedData.Magnitude > 0.0f)
 		{
-			//태그를 가지고 있다면 false 리턴
 			if (Data.Target.HasMatchingGameplayTag(FDTAG_CHARACTER_ISSHIELD))
 			{
 				//FDGAS_LOG(LogFDGAS, Log, TEXT("Damage Magnitude : %f"), Data.EvaluatedData.Magnitude);

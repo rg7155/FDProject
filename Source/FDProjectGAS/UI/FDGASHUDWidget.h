@@ -20,14 +20,17 @@ protected:
 	virtual void NativeConstruct() override;
 
 protected:
-	UPROPERTY()
-	TObjectPtr<class UFDGASHpBarUserWidget> HpBar;
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<class UFDGASHpBarUserWidget> WidgetGASHpBar;
 
-	UPROPERTY()
-	TObjectPtr<class UFDGASGoldWidget> Gold;
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<class UFDGASGoldWidget> WidgetGold;
 
-	UPROPERTY()
-	TObjectPtr<class UFDUserWidget> Shop;
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<class UFDUserWidget> WidgetShop;
+
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<class UFDGASSkillIconWidget> WidgetSkillIcon;
 
 	bool isShopVisible = false;
 };
