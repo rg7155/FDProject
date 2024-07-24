@@ -31,6 +31,9 @@ protected:
 	void OnInterruptedCallback();
 	
 	FName GetNextSection();
+	FName GetRandomSection();
+	FName GetSection(uint8 Index);
+
 	void StartComboTimer();
 	void CheckComboInput();
 

@@ -28,9 +28,17 @@ void UFDGA_Attack::ActivateAbility(const FGameplayAbilitySpecHandle Handle, cons
 	PlayAttackTask->OnInterrupted.AddDynamic(this, &UFDGA_Attack::OnInterruptedCallback);
 	PlayAttackTask->ReadyForActivation();
 
-	CurrentCombo = 1;
-
-	StartComboTimer();
+	AFDGASCharacterNonPlayer* FDGASCharacterNonPlayer = Cast<AFDGASCharacterNonPlayer>(ActorInfo->AvatarActor.Get());
+	if (FDGASCharacterNonPlayer)
+	{
+		MontageJumpToSection(GetRandomSection());
+	}
+	else
+	{
+		CurrentCombo = 1;
+		StartComboTimer();
+	}
+	//FDGAS_LOG(LogFDGAS, Log, TEXT("%d"), CurrentCombo);
 }
 
 void UFDGA_Attack::InputPressed(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
@@ -86,7 +94,18 @@ void UFDGA_Attack::OnInterruptedCallback()
 FName UFDGA_Attack::GetNextSection()
 {
 	CurrentCombo = FMath::Clamp(CurrentCombo + 1, 1, CurrentComboData->MaxComboCount);
-	FName NextSection = *FString::Printf(TEXT("%s%d"), *CurrentComboData->MontageSectionNamePrefix, CurrentCombo);
+	return GetSection(CurrentCombo);
+}
+
+FName UFDGA_Attack::GetRandomSection()
+{
+	CurrentCombo = FMath::RandRange(1, CurrentComboData->MaxComboCount);
+	return GetSection(CurrentCombo);
+}
+
+FName UFDGA_Attack::GetSection(uint8 Index)
+{
+	FName NextSection = *FString::Printf(TEXT("%s%d"), *CurrentComboData->MontageSectionNamePrefix, Index);
 	return NextSection;
 }
 
@@ -97,7 +116,6 @@ void UFDGA_Attack::StartComboTimer()
 
 	//TODO
 	const float ComboEffectiveTime = (CurrentComboData->EffectiveFrameCount[ComboIndex] / CurrentComboData->FrameRate) / AttackSpeedRate;
-	//FDGAS_LOG(LogFDGAS,)
 	if (ComboEffectiveTime > 0.0f)
 	{
 		GetWorld()->GetTimerManager().SetTimer(ComboTimerHandle, this, &UFDGA_Attack::CheckComboInput, ComboEffectiveTime, false);
