@@ -23,9 +23,15 @@ protected:
 	virtual void OnMaxHealthChanged(const FOnAttributeChangeData& ChangeData);
 	virtual void OnInvinsibleTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
 
-	void UpdateHpBar();
+	void UpdateHpBarBack();
+	void SetHpBar();
+	void SetHpBarBack();
+	void SetHpTxt();
 
 protected:
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<class UProgressBar> PbHpBarBack;
+
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<class UProgressBar> PbHpBar;
 
@@ -37,4 +43,9 @@ protected:
 
 	FLinearColor HealthColor = FLinearColor::Red;
 	FLinearColor InvinsibleColor = FLinearColor::Blue;
+
+	float TargetHealth = 0.0f;
+	float CurrentBackHealth = 0.0f;
+	float HealthChangePerTick = 0.0f;
+	FTimerHandle HpBarUpdateTimerHandle;
 };

@@ -28,7 +28,9 @@ void UFDGASHpBarUserWidget::SetAbilitySystemComponent(AActor* InOwner)
 
 			if (CurrentMaxHealth > 0.0f)
 			{
-				UpdateHpBar();
+				SetHpBar();
+				SetHpBarBack();
+				SetHpTxt();
 			}
 		}
 	}
@@ -36,14 +38,29 @@ void UFDGASHpBarUserWidget::SetAbilitySystemComponent(AActor* InOwner)
 
 void UFDGASHpBarUserWidget::OnHealthChanged(const FOnAttributeChangeData& ChangeData)
 {
-	CurrentHealth = ChangeData.NewValue;
-	UpdateHpBar();
+	CurrentBackHealth = CurrentHealth; //prev
+	CurrentHealth = ChangeData.NewValue; // curr
+	TargetHealth = ChangeData.NewValue;
+
+	const float HpBarUpdateInterval = 0.01f;
+	const float HpBarUpdateDuration = 1.f;
+
+	float TotalTicks = HpBarUpdateDuration / HpBarUpdateInterval; //전체 시간/틱 시간
+	HealthChangePerTick = (TargetHealth - CurrentBackHealth) / TotalTicks;
+
+	GetWorld()->GetTimerManager().ClearTimer(HpBarUpdateTimerHandle);
+	GetWorld()->GetTimerManager().SetTimer(HpBarUpdateTimerHandle, this, &UFDGASHpBarUserWidget::UpdateHpBarBack, HpBarUpdateInterval, true);
+
+	SetHpBar();
+	SetHpTxt();
 }
 
 void UFDGASHpBarUserWidget::OnMaxHealthChanged(const FOnAttributeChangeData& ChangeData)
 {
 	CurrentMaxHealth = ChangeData.NewValue;
-	UpdateHpBar();
+
+	SetHpBar();
+	SetHpTxt();
 }
 
 void UFDGASHpBarUserWidget::OnInvinsibleTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
@@ -56,17 +73,43 @@ void UFDGASHpBarUserWidget::OnInvinsibleTagChanged(const FGameplayTag CallbackTa
 	else
 	{
 		PbHpBar->SetFillColorAndOpacity(HealthColor);
-		UpdateHpBar();
+		SetHpBar();
 	}
 }
 
-void UFDGASHpBarUserWidget::UpdateHpBar()
+void UFDGASHpBarUserWidget::UpdateHpBarBack()
+{
+	CurrentBackHealth += HealthChangePerTick;
+
+	if ((HealthChangePerTick < 0 && CurrentBackHealth <= TargetHealth) ||
+		(HealthChangePerTick > 0 && CurrentBackHealth >= TargetHealth))
+	{
+		CurrentBackHealth = TargetHealth;
+		GetWorld()->GetTimerManager().ClearTimer(HpBarUpdateTimerHandle);
+	}
+
+	SetHpBarBack();
+	//SetHpTxt();
+}
+
+void UFDGASHpBarUserWidget::SetHpBar()
 {
 	if (PbHpBar)
 	{
 		PbHpBar->SetPercent(CurrentHealth / CurrentMaxHealth);
 	}
+}
 
+void UFDGASHpBarUserWidget::SetHpBarBack()
+{
+	if (PbHpBarBack)
+	{
+		PbHpBarBack->SetPercent(CurrentBackHealth / CurrentMaxHealth);
+	}
+}
+
+void UFDGASHpBarUserWidget::SetHpTxt()
+{
 	if (TxtHpStat)
 	{
 		TxtHpStat->SetText(FText::FromString(FString::Printf(TEXT("%.0f/%0.f"), CurrentHealth, CurrentMaxHealth)));
