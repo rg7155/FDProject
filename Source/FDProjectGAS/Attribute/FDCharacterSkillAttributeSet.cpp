@@ -26,4 +26,8 @@ void UFDCharacterSkillAttributeSet::PreAttributeChange(const FGameplayAttribute&
 	{
 		NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxSkillAttackRate());
 	}
+	else if (Attribute == GetSkillEnergyAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxSkillEnergy());
+	}
 }

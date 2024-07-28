@@ -23,6 +23,7 @@ protected:
 	void UpdateGoldText();
 
 protected:
+
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<class UTextBlock> TxtGold;
 

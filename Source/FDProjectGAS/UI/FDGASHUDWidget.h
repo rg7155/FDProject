@@ -32,5 +32,9 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<class UFDGASSkillIconWidget> WidgetSkillIcon;
 
+
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<class UFDGASCostBarWidget> WidgetGASCostBar;
+
 	bool isShopVisible = false;
 };
