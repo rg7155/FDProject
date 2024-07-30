@@ -14,6 +14,7 @@
 	GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOutOfHealthDelegate, AActor*, Instigator);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDataChangedDelegate);
 
 /**
  * 
@@ -50,7 +51,7 @@ public:
 	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
 
 	mutable FOutOfHealthDelegate OnOutOfHealth;
-
+	mutable FDataChangedDelegate OnChanged;
 protected:
 	void CreateDamageFont(const AActor* TargetActor);
 

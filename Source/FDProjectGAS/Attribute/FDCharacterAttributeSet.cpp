@@ -64,6 +64,8 @@ void UFDCharacterAttributeSet::PostGameplayEffectExecute(const FGameplayEffectMo
 {
 	Super::PostGameplayEffectExecute(Data);
 
+	OnChanged.Broadcast();
+
 	float MinimumHealth = 0.0f;
 
 	if (Data.EvaluatedData.Attribute == GetHealthAttribute())

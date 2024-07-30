@@ -14,7 +14,7 @@ void UFDGASCostBarWidget::SetAbilitySystemComponent(AActor* InOwner)
 	if (ASC)
 	{
 		ASC->GetGameplayAttributeValueChangeDelegate(UFDCharacterSkillAttributeSet::GetSkillEnergyAttribute()).AddUObject(this, &UFDGASCostBarWidget::OnCostChanged);
-		ASC->GetGameplayAttributeValueChangeDelegate(UFDCharacterSkillAttributeSet::GetMaxSkillEnergyAttribute()).AddUObject(this, &UFDGASCostBarWidget::OnCostChanged);
+		ASC->GetGameplayAttributeValueChangeDelegate(UFDCharacterSkillAttributeSet::GetMaxSkillEnergyAttribute()).AddUObject(this, &UFDGASCostBarWidget::OnMaxCostChanged);
 
 		const UFDCharacterSkillAttributeSet* CurrentAttributeSet = ASC->GetSet<UFDCharacterSkillAttributeSet>();
 
@@ -34,7 +34,6 @@ void UFDGASCostBarWidget::OnCostChanged(const FOnAttributeChangeData& ChangeData
 
 	if (CurrentCost < MaxCost)
 	{
-		FDGAS_LOG(LogFDGAS, Log, TEXT("1"));
 		if (!SkillCostRecoveryEffectHandle.IsValid())
 		{
 			FGameplayEffectContextHandle EffectContextHandle = ASC->MakeEffectContext();
