@@ -139,6 +139,8 @@ void AFDCharacterPlayer::SetupPlayerInputComponent(class UInputComponent* Player
 
 	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent);
 
+	CachedEnhancedInputComponent = EnhancedInputComponent;
+
 	//EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);
 	//EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
 
@@ -293,6 +295,8 @@ void AFDCharacterPlayer::Interaction()
 	{
 		PlayerController->ToggleMouseCursor();
 	}
+
+	CachedEnhancedInputComponent->ToggleActive();
 }
 
 

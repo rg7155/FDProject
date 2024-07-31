@@ -64,8 +64,6 @@ void UFDCharacterAttributeSet::PostGameplayEffectExecute(const FGameplayEffectMo
 {
 	Super::PostGameplayEffectExecute(Data);
 
-	OnChanged.Broadcast();
-
 	float MinimumHealth = 0.0f;
 
 	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
@@ -99,6 +97,8 @@ void UFDCharacterAttributeSet::PostGameplayEffectExecute(const FGameplayEffectMo
 		OnOutOfHealth.Broadcast(Actor);
 	}
 	bOutOfHealth = (GetHealth() <= 0.0f);
+
+	OnChanged.Broadcast();
 }
 
 void UFDCharacterAttributeSet::CreateDamageFont(const AActor* TargetActor)

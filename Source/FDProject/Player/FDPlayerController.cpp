@@ -20,4 +20,12 @@ void AFDPlayerController::BeginPlay()
 void AFDPlayerController::ToggleMouseCursor()
 {
 	bShowMouseCursor = !bShowMouseCursor;
+	if (bShowMouseCursor)
+	{
+		SetInputMode(FInputModeUIOnly());
+	}
+	else
+	{
+		SetInputMode(FInputModeGameOnly());
+	}
 }

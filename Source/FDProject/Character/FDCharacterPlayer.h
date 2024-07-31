@@ -26,7 +26,7 @@ protected:
 
 public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
+	UEnhancedInputComponent* CachedEnhancedInputComponent;
 	// Character Control Section
 protected:
 	void ChangeCharacterControl();

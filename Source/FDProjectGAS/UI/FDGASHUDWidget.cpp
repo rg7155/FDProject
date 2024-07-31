@@ -11,16 +11,16 @@
 void UFDGASHUDWidget::ToggleShopVisible()
 {
 	//TODO GA로 바꾸기
-	isShopVisible = !isShopVisible;
-	if (isShopVisible)
-	{
-		WidgetShop->SetVisibility(ESlateVisibility::Visible);
-	}
-	else
-	{
-		WidgetShop->SetVisibility(ESlateVisibility::Hidden);
-	}
-	//Shop->SetVisibility(Shop->GetVisibility() == ESlateVisibility::Visible ? ESlateVisibility::Hidden : ESlateVisibility::Visible);
+	//isShopVisible = !isShopVisible;
+	//if (isShopVisible)
+	//{
+	//	WidgetShop->SetVisibility(ESlateVisibility::Visible);
+	//}
+	//else
+	//{
+	//	WidgetShop->SetVisibility(ESlateVisibility::Hidden);
+	//}
+	WidgetShop->SetVisibility(WidgetShop->GetVisibility() == ESlateVisibility::Visible ? ESlateVisibility::Hidden : ESlateVisibility::Visible);
 }
 
 void UFDGASHUDWidget::NativeConstruct()
