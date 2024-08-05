@@ -26,13 +26,13 @@ void UFDGASStatWidget::SetAbilitySystemComponent(AActor* InOwner)
 		{
 			BaseLookup.Add(PropKey, BaseTextBlock);
 		}
-		//FDGAS_LOG(LogFDGAS, Log, TEXT("Count : %d"), BaseLookup.Num());
 
-		/*UTextBlock* ModifierTextBlock = Cast<UTextBlock>(GetWidgetFromName(TextModifierControlName));
+		const FName TextModifierControlName = *FString::Printf(TEXT("Txt%sModifier"), *PropIt->GetName());
+		UTextBlock* ModifierTextBlock = Cast<UTextBlock>(GetWidgetFromName(TextModifierControlName));
 		if (ModifierTextBlock)
 		{
 			ModifierLookup.Add(PropKey, ModifierTextBlock);
-		}*/
+		}
 
 	}
 	UpdateStat();
@@ -58,6 +58,13 @@ void UFDGASStatWidget::UpdateStat()
 		if (BaseTextBlockPtr)
 		{
 			(*BaseTextBlockPtr)->SetText(FText::FromString(FString::SanitizeFloat(BaseData.GetBaseValue())));
+		}
+
+		UTextBlock** ModifierTextBlockPtr = ModifierLookup.Find(PropKey);
+		if (ModifierTextBlockPtr)
+		{
+			float ModifierValue = BaseData.GetCurrentValue() - BaseData.GetBaseValue();
+			(*ModifierTextBlockPtr)->SetText(FText::FromString(FString::SanitizeFloat(ModifierValue)));
 		}
 	}
 }

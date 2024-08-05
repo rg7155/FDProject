@@ -97,6 +97,11 @@ void UFDCharacterAttributeSet::PostGameplayEffectExecute(const FGameplayEffectMo
 		OnOutOfHealth.Broadcast(Actor);
 	}
 	bOutOfHealth = (GetHealth() <= 0.0f);
+}
+
+void UFDCharacterAttributeSet::PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue)
+{
+	Super::PostAttributeChange(Attribute, OldValue, NewValue);
 
 	OnChanged.Broadcast();
 }

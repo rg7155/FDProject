@@ -23,4 +23,5 @@ public:
 private:
 	UPROPERTY()
 	TMap<FName, class UTextBlock*> BaseLookup;
+	TMap<FName, class UTextBlock*> ModifierLookup;
 };

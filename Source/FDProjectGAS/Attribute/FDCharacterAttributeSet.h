@@ -49,6 +49,8 @@ public:
 
 	//이펙트로부터 어트리뷰트 변경될 때
 	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
+	virtual void PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue) override;
+
 
 	mutable FOutOfHealthDelegate OnOutOfHealth;
 	mutable FDataChangedDelegate OnChanged;
