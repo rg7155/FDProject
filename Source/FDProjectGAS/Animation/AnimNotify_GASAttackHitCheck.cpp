@@ -9,6 +9,7 @@ UAnimNotify_GASAttackHitCheck::UAnimNotify_GASAttackHitCheck()
 {
 	ComboAttackLevel = 1.0f;
 	bIsCameraShake = false;
+	//UAnimNotify_GameplayCue
 }
 
 FString UAnimNotify_GASAttackHitCheck::GetNotifyName_Implementation() const

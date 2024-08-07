@@ -23,16 +23,32 @@ UFDCharacterAttributeSet::UFDCharacterAttributeSet() :
 	Gold(1000)
 {
 	InitHealth(GetMaxHealth());
-	InitMovementSpeed(GetMaxMovementSpeed());
+	InitMovementSpeed(GetMovementSpeed());
 }
 
 void UFDCharacterAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
 {
-	//if (Attribute == GetHealthAttribute())
-	//{
-	//	NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxHealth());
-	//}
-	if (Attribute == GetDamageAttribute())
+	if (Attribute == GetHealthAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxHealth());
+	}
+	else if (Attribute == GetMovementSpeedAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxMovementSpeed());
+	}
+	else if (Attribute == GetAttackRangeAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxAttackRange());
+	}
+	else if (Attribute == GetAttackRadiusAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxAttackRadius());
+	}
+	else if (Attribute == GetAttackRateAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxAttackRate());
+	}
+	else if (Attribute == GetDamageAttribute())
 	{
 		NewValue = NewValue < 0.0f ? 0.0f : NewValue;
 	}
