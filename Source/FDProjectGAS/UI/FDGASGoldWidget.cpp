@@ -26,7 +26,8 @@ void UFDGASGoldWidget::SetAbilitySystemComponent(AActor* InOwner)
 
 void UFDGASGoldWidget::OnGoldChanged(const FOnAttributeChangeData& ChangeData)
 {
-	//헤더에서 함수 매개변수 헤더 추가해줘야함
+	K2_OnGoldChangedAnim(ChangeData.NewValue - Gold);
+
 	Gold = ChangeData.NewValue;
 	UpdateGoldText();
 }

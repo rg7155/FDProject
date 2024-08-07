@@ -16,6 +16,9 @@ class FDPROJECTGAS_API UFDGASGoldWidget : public UFDGASUserWidget
 	GENERATED_BODY()
 public:
 	virtual void SetAbilitySystemComponent(AActor* InOwner) override;
+public:
+	UFUNCTION(BlueprintImplementableEvent, Category = UI, Meta = (DisplayName = "OnGoldChanged"))
+	void K2_OnGoldChangedAnim(int ChangedGold);
 
 protected:
 	virtual void OnGoldChanged(const FOnAttributeChangeData& ChangeData);
