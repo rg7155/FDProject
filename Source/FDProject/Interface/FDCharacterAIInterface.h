@@ -32,4 +32,6 @@ public:
 	//델리게이트 넘기기
 	virtual void SetAIAttackDelegate(const FAICharacterAttackFinished& InOnAttackFinished) = 0;
 	virtual void AttackByAI() = 0;
+	virtual void Deteced(bool isDeteced) =0;
+
 };

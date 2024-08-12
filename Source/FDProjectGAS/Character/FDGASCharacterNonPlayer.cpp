@@ -18,6 +18,7 @@ AFDGASCharacterNonPlayer::AFDGASCharacterNonPlayer()
 	HpBar = CreateDefaultSubobject<UFDGASWidgetComponent>(TEXT("Widget"));
 	HpBar->SetupAttachment(GetMesh());
 	HpBar->SetRelativeLocation(FVector(0.0f, 0.0f, 180.0f));
+	HpBar->SetVisibility(false);
 	static ConstructorHelpers::FClassFinder<UUserWidget> HpBarWidgetRef(TEXT("/Game/FDPorjectGAS/UI/WBP_HpBar.WBP_HpBar_C"));
 	if (HpBarWidgetRef.Class)
 	{
@@ -41,6 +42,9 @@ void AFDGASCharacterNonPlayer::PossessedBy(AController* NewController)
 
 	ASC->InitAbilityActorInfo(this, this);
 	AttributeSet->OnOutOfHealth.AddDynamic(this, &ThisClass::OnOutOfHealth);
+
+	ASC->GetGameplayAttributeValueChangeDelegate(UFDCharacterAttributeSet::GetHealthAttribute()).AddUObject(this, &AFDGASCharacterNonPlayer::OnHealthChanged);
+
 
 	for (const auto& StartAbility : StartAbilities)
 	{
@@ -70,6 +74,20 @@ void AFDGASCharacterNonPlayer::PossessedBy(AController* NewController)
 void AFDGASCharacterNonPlayer::AttackByAI()
 {
 	GASInputPressed(0);
+}
+void AFDGASCharacterNonPlayer::Deteced(bool isDeteced)
+{
+	if (!HpBar)
+		return;
+
+	if (isDeteced && !HpBar->IsVisible())
+	{
+		HpBar->SetVisibility(true);
+	}
+	else if (!isDeteced && HpBar->IsVisible())
+	{
+		HpBar->SetVisibility(false);
+	}
 }
 void AFDGASCharacterNonPlayer::OnOutOfHealth(AActor* MyInstigator)
 {
@@ -137,5 +155,13 @@ void AFDGASCharacterNonPlayer::OnAbilityEnded(UGameplayAbility* Ability)
 	{
 		FDGAS_LOG(LogFDGAS, Log, TEXT("OnAttackFinished"));
 		OnAttackFinished.ExecuteIfBound();
+	}
+}
+
+void AFDGASCharacterNonPlayer::OnHealthChanged(const FOnAttributeChangeData& ChangeData)
+{
+	if (HpBar && !HpBar->IsVisible())
+	{
+		HpBar->SetVisibility(true);
 	}
 }

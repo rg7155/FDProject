@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Character/FDCharacterNonPlayer.h"
 #include "AbilitySystemInterface.h"
+#include "GameplayEffectTypes.h"
 #include "FDGASCharacterNonPlayer.generated.h"
 
 DECLARE_DELEGATE_OneParam(FOnAbilityEndedDelegate, const UGameplayAbility*);
@@ -22,6 +23,7 @@ public:
 	virtual void PossessedBy(AController* NewController) override;
 
 	virtual void AttackByAI() override;
+	virtual void Deteced(bool isDeteced) override;
 
 	UFUNCTION()
 	virtual void OnOutOfHealth(AActor* MyInstigator);
@@ -29,6 +31,9 @@ public:
 
 	UFUNCTION()
 	void OnAbilityEnded(UGameplayAbility* Ability);
+
+	void OnHealthChanged(const FOnAttributeChangeData& ChangeData);
+
 protected:
 	void GASInputPressed(int32 InputId);
 	void GASInputReleased(int32 InputId);
@@ -56,6 +61,6 @@ protected:
 	UPROPERTY(EditAnywhere, Category = GAS)
 	float Level;
 
-	UPROPERTY(VisibleAnywhere)
+	//UPROPERTY(VisibleAnywhere)
 	TObjectPtr<class UFDGASWidgetComponent> HpBar;
 };

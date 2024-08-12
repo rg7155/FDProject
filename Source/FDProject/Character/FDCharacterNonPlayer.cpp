@@ -58,5 +58,9 @@ void AFDCharacterNonPlayer::AttackByAI()
 	//ProcessComboCommand();
 }
 
+void AFDCharacterNonPlayer::Deteced(bool isDeteced)
+{
+}
+
 
 

@@ -29,6 +29,7 @@ protected:
 
 	virtual void SetAIAttackDelegate(const FAICharacterAttackFinished& InOnAttackFinished) override;
 	virtual void AttackByAI() override;
+	virtual void Deteced(bool isDeteced) override;
 
 	FAICharacterAttackFinished OnAttackFinished;
 };
