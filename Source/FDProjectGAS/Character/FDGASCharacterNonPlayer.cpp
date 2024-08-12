@@ -150,10 +150,10 @@ void AFDGASCharacterNonPlayer::OnAbilityEnded(UGameplayAbility* Ability)
 {
 	int32 AbilityInputID = Ability->GetCurrentAbilitySpec()->InputID;
 	//TODO 추후 enum 등 교체
-	FDGAS_LOG(LogFDGAS, Log, TEXT("AbilityInputID"));
+	//FDGAS_LOG(LogFDGAS, Log, TEXT("AbilityInputID"));
 	if (AbilityInputID == 0)
 	{
-		FDGAS_LOG(LogFDGAS, Log, TEXT("OnAttackFinished"));
+		//FDGAS_LOG(LogFDGAS, Log, TEXT("OnAttackFinished"));
 		OnAttackFinished.ExecuteIfBound();
 	}
 }

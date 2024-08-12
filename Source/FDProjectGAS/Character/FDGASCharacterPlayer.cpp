@@ -44,6 +44,12 @@ void AFDGASCharacterPlayer::PossessedBy(AController* NewController)
 		ASC = GASPS->GetAbilitySystemComponent();
 		ASC->InitAbilityActorInfo(GASPS, this);
 
+		const UFDCharacterAttributeSet* AS = ASC->GetSet<UFDCharacterAttributeSet>();
+		if (AS)
+		{
+			AS->OnOutOfHealth.AddDynamic(this, &ThisClass::OnOutOfHealth);
+		}
+
 		for (const auto& StartAbility : StartAbilities)
 		{
 			FGameplayAbilitySpec StartSpec(StartAbility);
@@ -67,6 +73,11 @@ void AFDGASCharacterPlayer::PossessedBy(AController* NewController)
 		//Stat->GetBaseStat().
 		//Stat->
 	}
+}
+
+void AFDGASCharacterPlayer::OnOutOfHealth(AActor* MyInstigator)
+{
+	SetDead();
 }
 
 void AFDGASCharacterPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

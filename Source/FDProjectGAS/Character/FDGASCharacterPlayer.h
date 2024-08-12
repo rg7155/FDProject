@@ -18,6 +18,9 @@ class FDPROJECTGAS_API AFDGASCharacterPlayer : public AFDCharacterPlayer, public
 
 public:
 	AFDGASCharacterPlayer();
+	UFUNCTION()
+	virtual void OnOutOfHealth(AActor* MyInstigator);
+
 	FORCEINLINE virtual class UAnimMontage* GetSkillActionMontage() const { return SkillActionMontage; }
 
 	virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override;
