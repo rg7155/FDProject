@@ -21,6 +21,9 @@ public:
 	UFUNCTION()
 	virtual void OnOutOfHealth(AActor* MyInstigator);
 
+	virtual void Respawn() override;
+	 
+
 	FORCEINLINE virtual class UAnimMontage* GetSkillActionMontage() const { return SkillActionMontage; }
 
 	virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override;

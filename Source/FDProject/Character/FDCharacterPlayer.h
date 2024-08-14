@@ -24,6 +24,10 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void SetDead() override;
 
+	UFUNCTION(BlueprintCallable)
+	virtual void Respawn();
+
+
 public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	UEnhancedInputComponent* CachedEnhancedInputComponent;

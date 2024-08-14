@@ -9,6 +9,7 @@
 #include "UI/FDGASWidgetComponent.h"
 #include "UI/FDGASUserWidget.h"
 #include "FDProjectGAS.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 AFDGASCharacterNonPlayer::AFDGASCharacterNonPlayer()
 {
@@ -45,6 +46,7 @@ void AFDGASCharacterNonPlayer::PossessedBy(AController* NewController)
 
 	ASC->GetGameplayAttributeValueChangeDelegate(UFDCharacterAttributeSet::GetHealthAttribute()).AddUObject(this, &AFDGASCharacterNonPlayer::OnHealthChanged);
 
+	GetCharacterMovement()->MaxWalkSpeed = AttributeSet->GetMovementSpeed();
 
 	for (const auto& StartAbility : StartAbilities)
 	{

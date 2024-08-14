@@ -29,3 +29,8 @@ void AFDPlayerController::ToggleMouseCursor()
 		SetInputMode(FInputModeGameOnly());
 	}
 }
+
+void AFDPlayerController::GameOver()
+{
+	K2_OnGameOver();
+}

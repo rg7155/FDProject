@@ -22,4 +22,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ToggleMouseCursor();
 
+	UFUNCTION(BlueprintImplementableEvent, Category = Game, Meta = (DisplayName = "OnGameOverCpp"))
+	void K2_OnGameOver(); 
+	
+	void GameOver();
+
+
 };

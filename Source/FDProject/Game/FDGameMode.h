@@ -16,4 +16,6 @@ class FDPROJECT_API AFDGameMode : public AGameModeBase
 	
 public:
 	AFDGameMode();
+
+	void OnPlayerDead();
 };

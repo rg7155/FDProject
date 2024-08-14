@@ -11,6 +11,8 @@
 #include "Item/FDGASItemData.h"
 #include "Tag/FDGameplayTag.h"
 #include "FDProjectGAS.h"
+#include "Game/FDGameMode.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 AFDGASCharacterPlayer::AFDGASCharacterPlayer()
 {
@@ -68,16 +70,26 @@ void AFDGASCharacterPlayer::PossessedBy(AController* NewController)
 		APlayerController* PlayerController = CastChecked<APlayerController>(NewController);
 		PlayerController->ConsoleCommand(TEXT("showdebug abilitysystem"));
 
-		//Stat
-		//const UFDCharacterAttributeSet* AS = ASC->GetSet<UFDCharacterAttributeSet>();
-		//Stat->GetBaseStat().
-		//Stat->
+		GetCharacterMovement()->MaxWalkSpeed = AS->GetMovementSpeed();
 	}
 }
 
 void AFDGASCharacterPlayer::OnOutOfHealth(AActor* MyInstigator)
 {
 	SetDead();
+
+	AFDGameMode* FDGameMode = Cast<AFDGameMode>(GetWorld()->GetAuthGameMode());
+	if (FDGameMode)
+	{
+		FDGameMode->OnPlayerDead();
+	}
+}
+
+void AFDGASCharacterPlayer::Respawn()
+{
+	Super::Respawn();
+
+	ASC->RemoveLooseGameplayTag(FDTAG_CHARACTER_ISDEAD);
 }
 
 void AFDGASCharacterPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

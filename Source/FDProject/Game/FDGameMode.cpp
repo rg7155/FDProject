@@ -25,3 +25,12 @@ AFDGameMode::AFDGameMode()
 		PlayerControllerClass = PlayerControllerClassRef.Class;
 	}
 }
+
+void AFDGameMode::OnPlayerDead()
+{
+	AFDPlayerController* FDPlayerController = Cast<AFDPlayerController>(GetWorld()->GetFirstPlayerController());
+	if (FDPlayerController)
+	{
+		FDPlayerController->GameOver();
+	}
+}
