@@ -64,6 +64,8 @@ void UFDGASStatWidget::UpdateStat()
 		if (ModifierTextBlockPtr)
 		{
 			float ModifierValue = BaseData.GetCurrentValue() - BaseData.GetBaseValue();
+			FLinearColor LinearColor = FMath::IsNearlyZero(ModifierValue) ? FLinearColor::White : FLinearColor::Red;
+			(*ModifierTextBlockPtr)->SetColorAndOpacity(LinearColor);
 			(*ModifierTextBlockPtr)->SetText(FText::FromString(FString::SanitizeFloat(ModifierValue)));
 		}
 	}
