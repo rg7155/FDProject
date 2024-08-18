@@ -10,7 +10,8 @@ UFDCharacterSkillAttributeSet::UFDCharacterSkillAttributeSet() :
 	MaxSkillAttackRate(300.0f),
 	SkillEnergy(100.0f),
 	MaxSkillEnergy(100.0f),
-	SkillCooldown(3.0f)
+	SkillCooldown(3.0f),
+	SkillRecovery(1.0f)
 {
 }
 
@@ -30,4 +31,11 @@ void UFDCharacterSkillAttributeSet::PreAttributeChange(const FGameplayAttribute&
 	{
 		NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxSkillEnergy());
 	}
+}
+
+void UFDCharacterSkillAttributeSet::PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue)
+{
+	Super::PostAttributeChange(Attribute, OldValue, NewValue);
+
+	OnChanged.Broadcast();
 }

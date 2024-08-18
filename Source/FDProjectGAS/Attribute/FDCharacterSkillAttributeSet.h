@@ -13,6 +13,8 @@
 	GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
 	GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FSkillDataChangedDelegate);
+
 /**
  * 
  */
@@ -31,8 +33,12 @@ public:
 	ATTRIBUTE_ACCESSORS(UFDCharacterSkillAttributeSet, SkillEnergy);
 	ATTRIBUTE_ACCESSORS(UFDCharacterSkillAttributeSet, MaxSkillEnergy);
 	ATTRIBUTE_ACCESSORS(UFDCharacterSkillAttributeSet, SkillCooldown);
+	ATTRIBUTE_ACCESSORS(UFDCharacterSkillAttributeSet, SkillRecovery);
 
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
+	virtual void PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue) override;
+
+	mutable FSkillDataChangedDelegate OnChanged;
 
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Attack", Meta = (AllowPrivateAccess = true))
@@ -56,4 +62,6 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Attack", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData SkillCooldown;
 	
+	UPROPERTY(BlueprintReadOnly, Category = "Attack", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData SkillRecovery;
 };
