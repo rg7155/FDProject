@@ -42,6 +42,7 @@ public:
 
 	//바꾸기 전 Value 인자값을 변경할 수 있는
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
+	virtual void PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const override;
 	//바꾸고 난 후 로그용 
 	//virtual void PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue) override;
 public:
@@ -55,6 +56,7 @@ public:
 	mutable FOutOfHealthDelegate OnOutOfHealth;
 	mutable FDataChangedDelegate OnChanged;
 protected:
+	void SetClampData(const FGameplayAttribute& Attribute, float& NewValue) const;
 	void CreateDamageFont(const AActor* TargetActor);
 
 protected:

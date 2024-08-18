@@ -28,30 +28,12 @@ UFDCharacterAttributeSet::UFDCharacterAttributeSet() :
 
 void UFDCharacterAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
 {
-	if (Attribute == GetHealthAttribute())
-	{
-		NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxHealth());
-	}
-	else if (Attribute == GetMovementSpeedAttribute())
-	{
-		NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxMovementSpeed());
-	}
-	else if (Attribute == GetAttackRangeAttribute())
-	{
-		NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxAttackRange());
-	}
-	else if (Attribute == GetAttackRadiusAttribute())
-	{
-		NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxAttackRadius());
-	}
-	else if (Attribute == GetAttackRateAttribute())
-	{
-		NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxAttackRate());
-	}
-	else if (Attribute == GetDamageAttribute())
-	{
-		NewValue = NewValue < 0.0f ? 0.0f : NewValue;
-	}
+	SetClampData(Attribute, NewValue);
+}
+
+void UFDCharacterAttributeSet::PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const
+{
+	SetClampData(Attribute, NewValue);
 }
 
 bool UFDCharacterAttributeSet::PreGameplayEffectExecute(FGameplayEffectModCallbackData& Data)
@@ -120,6 +102,34 @@ void UFDCharacterAttributeSet::PostAttributeChange(const FGameplayAttribute& Att
 	Super::PostAttributeChange(Attribute, OldValue, NewValue);
 
 	OnChanged.Broadcast();
+}
+
+void UFDCharacterAttributeSet::SetClampData(const FGameplayAttribute& Attribute, float& NewValue) const
+{
+	if (Attribute == GetHealthAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxHealth());
+	}
+	else if (Attribute == GetMovementSpeedAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxMovementSpeed());
+	}
+	else if (Attribute == GetAttackRangeAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxAttackRange());
+	}
+	else if (Attribute == GetAttackRadiusAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxAttackRadius());
+	}
+	else if (Attribute == GetAttackRateAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxAttackRate());
+	}
+	else if (Attribute == GetDamageAttribute())
+	{
+		NewValue = NewValue < 0.0f ? 0.0f : NewValue;
+	}
 }
 
 void UFDCharacterAttributeSet::CreateDamageFont(const AActor* TargetActor)

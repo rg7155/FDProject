@@ -19,6 +19,23 @@ void UFDCharacterSkillAttributeSet::PreAttributeChange(const FGameplayAttribute&
 {
 	Super::PreAttributeChange(Attribute, NewValue);
 
+	SetClampData(Attribute, NewValue);
+}
+
+void UFDCharacterSkillAttributeSet::PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const
+{
+	SetClampData(Attribute, NewValue);
+}
+
+void UFDCharacterSkillAttributeSet::PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue)
+{
+	Super::PostAttributeChange(Attribute, OldValue, NewValue);
+
+	OnChanged.Broadcast();
+}
+
+void UFDCharacterSkillAttributeSet::SetClampData(const FGameplayAttribute& Attribute, float& NewValue) const
+{
 	if (Attribute == GetSkillRangeAttribute())
 	{
 		NewValue = FMath::Clamp(NewValue, 0.1f, GetMaxSkillRange());
@@ -31,11 +48,4 @@ void UFDCharacterSkillAttributeSet::PreAttributeChange(const FGameplayAttribute&
 	{
 		NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxSkillEnergy());
 	}
-}
-
-void UFDCharacterSkillAttributeSet::PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue)
-{
-	Super::PostAttributeChange(Attribute, OldValue, NewValue);
-
-	OnChanged.Broadcast();
 }

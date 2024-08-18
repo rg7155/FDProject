@@ -36,9 +36,14 @@ public:
 	ATTRIBUTE_ACCESSORS(UFDCharacterSkillAttributeSet, SkillRecovery);
 
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
+	virtual void PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const override;
+
 	virtual void PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue) override;
 
 	mutable FSkillDataChangedDelegate OnChanged;
+
+protected:
+	void SetClampData(const FGameplayAttribute& Attribute, float& NewValue) const;
 
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Attack", Meta = (AllowPrivateAccess = true))
