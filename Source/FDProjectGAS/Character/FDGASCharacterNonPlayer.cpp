@@ -32,6 +32,14 @@ AFDGASCharacterNonPlayer::AFDGASCharacterNonPlayer()
 	Level = 1;
 }
 
+void AFDGASCharacterNonPlayer::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	/*ASC = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("ASC"));
+	AttributeSet = CreateDefaultSubobject<UFDCharacterAttributeSet>(TEXT("AttributeSet"));*/
+}
+
 UAbilitySystemComponent* AFDGASCharacterNonPlayer::GetAbilitySystemComponent() const
 {
 	return ASC;

@@ -19,6 +19,9 @@ class FDPROJECTGAS_API AFDGASCharacterNonPlayer : public AFDCharacterNonPlayer, 
 	GENERATED_BODY()
 public:
 	AFDGASCharacterNonPlayer();
+
+	virtual void PostInitializeComponents() override;
+
 	virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	virtual void PossessedBy(AController* NewController) override;
 
@@ -50,7 +53,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category = GAS)
 	TMap<int32, TSubclassOf<class UGameplayAbility>> StartInputAbilities;
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, Category = GAS)
 	TObjectPtr<class UFDCharacterAttributeSet> AttributeSet;
 
 	UPROPERTY(EditAnywhere, Category = GAS)
