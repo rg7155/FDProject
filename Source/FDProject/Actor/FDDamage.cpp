@@ -20,7 +20,7 @@ AFDDamage::AFDDamage()
 	//DamageWidget->SetHiddenInGame(true);
 
 	RandomUpOffset = FMath::RandRange(80, 100);
-	RandomRightOffset = FMath::RandRange(50, 100);
+	RandomRightOffset = FMath::RandRange(-50, 100);
 
 	PrimaryActorTick.bCanEverTick = true;
 }
