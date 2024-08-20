@@ -67,8 +67,8 @@ void AFDGASCharacterPlayer::PossessedBy(AController* NewController)
 
 		SetupGASInputComponent();
 
-		APlayerController* PlayerController = CastChecked<APlayerController>(NewController);
-		PlayerController->ConsoleCommand(TEXT("showdebug abilitysystem"));
+		//APlayerController* PlayerController = CastChecked<APlayerController>(NewController);
+		//PlayerController->ConsoleCommand(TEXT("showdebug abilitysystem"));
 
 		GetCharacterMovement()->MaxWalkSpeed = AS->GetMovementSpeed();
 	}
