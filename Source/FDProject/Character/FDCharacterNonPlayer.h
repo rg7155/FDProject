@@ -32,4 +32,11 @@ protected:
 	virtual void Deteced(bool isDeteced) override;
 
 	FAICharacterAttackFinished OnAttackFinished;
+
+	UPROPERTY(EditAnywhere, Category = AI)
+	float PatrolRadius;
+	UPROPERTY(EditAnywhere, Category = AI)
+	float DetectRange;
+	UPROPERTY(EditAnywhere, Category = AI)
+	float AttackRange;
 };

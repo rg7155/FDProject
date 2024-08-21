@@ -8,6 +8,10 @@ AFDCharacterNonPlayer::AFDCharacterNonPlayer()
 {
 	AIControllerClass = AFDAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+
+	PatrolRadius = 800.f;
+	DetectRange = 400.f;
+	AttackRange = 200.f;
 }
 
 void AFDCharacterNonPlayer::SetDead()
@@ -30,16 +34,15 @@ void AFDCharacterNonPlayer::SetDead()
 }
 float AFDCharacterNonPlayer::GetAIPatrolRadius() 
 { 
-	return 800.0f; 
+	return PatrolRadius;
 }
 float AFDCharacterNonPlayer::GetAIDetectRange() 
 { 
-	return 400.0f; 
+	return DetectRange;
 }
 float AFDCharacterNonPlayer::GetAIAttackRange()
 {
-	//이를 위해 추후 Stat에 추가
-	return 200.0f;
+	return AttackRange;
 	//return Stat->GetTotalStat().AttackRange + Stat->GetAttackRadius() * 2;
 }
 float AFDCharacterNonPlayer::GetAITurnSpeed()

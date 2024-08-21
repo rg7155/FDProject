@@ -36,6 +36,7 @@ void AFDGASCharacterNonPlayer::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
+	HpBar->SetVisibility(false);
 	/*ASC = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("ASC"));
 	AttributeSet = CreateDefaultSubobject<UFDCharacterAttributeSet>(TEXT("AttributeSet"));*/
 }
