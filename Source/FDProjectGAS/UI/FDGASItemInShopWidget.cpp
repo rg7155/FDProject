@@ -23,10 +23,7 @@ void UFDGASItemInShopWidget::NativeConstruct()
 
 void UFDGASItemInShopWidget::OnButtonPressed()
 {
-	//FDGAS_LOG(LogFDGAS, Log, TEXT("OnButtonPressed - %s"), ItemData->ItemName);
 	IFDGASCharacterItemInterface* Pawn = Cast<IFDGASCharacterItemInterface>(GetOwningPlayerPawn());
 	if (Pawn)
-	{
 		Pawn->TakeGASItem(ItemData);
-	}
 }

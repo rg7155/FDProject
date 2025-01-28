@@ -27,7 +27,7 @@ protected:
 	TObjectPtr<class UFDGASGoldWidget> WidgetGold;
 
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<class UFDUserWidget> WidgetShop;
+	TObjectPtr<class UFDGASUserWidget> WidgetShop;
 
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<class UFDGASSkillIconWidget> WidgetSkillIcon;
