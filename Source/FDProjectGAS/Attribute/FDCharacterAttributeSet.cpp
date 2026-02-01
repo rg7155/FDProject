@@ -49,7 +49,18 @@ void UFDCharacterAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProper
 
 void UFDCharacterAttributeSet::OnRep_Health(const FGameplayAttributeData& OldValue)				{ GAMEPLAYATTRIBUTE_REPNOTIFY(UFDCharacterAttributeSet, Health, OldValue); }
 void UFDCharacterAttributeSet::OnRep_MaxHealth(const FGameplayAttributeData& OldValue)			{ GAMEPLAYATTRIBUTE_REPNOTIFY(UFDCharacterAttributeSet, MaxHealth, OldValue); }
-void UFDCharacterAttributeSet::OnRep_MovementSpeed(const FGameplayAttributeData& OldValue)		{ GAMEPLAYATTRIBUTE_REPNOTIFY(UFDCharacterAttributeSet, MovementSpeed, OldValue); }
+void UFDCharacterAttributeSet::OnRep_MovementSpeed(const FGameplayAttributeData& OldValue)		{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UFDCharacterAttributeSet, MovementSpeed, OldValue); 
+	// 클라이언트에서도 실제 이동 컴포넌트의 속도를 맞춰줘야 렉이 안 걸림!
+	if (UAbilitySystemComponent* ASC = GetOwningAbilitySystemComponent())
+	{
+		ACharacter* Character = Cast<ACharacter>(ASC->GetAvatarActor());
+		if (Character && Character->GetCharacterMovement())
+		{
+			Character->GetCharacterMovement()->MaxWalkSpeed = GetMovementSpeed();
+		}
+	}
+}
 void UFDCharacterAttributeSet::OnRep_MaxMovementSpeed(const FGameplayAttributeData& OldValue)	{ GAMEPLAYATTRIBUTE_REPNOTIFY(UFDCharacterAttributeSet, MaxMovementSpeed, OldValue); }
 void UFDCharacterAttributeSet::OnRep_AttackRange(const FGameplayAttributeData& OldValue)		{ GAMEPLAYATTRIBUTE_REPNOTIFY(UFDCharacterAttributeSet, AttackRange, OldValue); }
 void UFDCharacterAttributeSet::OnRep_MaxAttackRange(const FGameplayAttributeData& OldValue)		{ GAMEPLAYATTRIBUTE_REPNOTIFY(UFDCharacterAttributeSet, MaxAttackRange, OldValue); }

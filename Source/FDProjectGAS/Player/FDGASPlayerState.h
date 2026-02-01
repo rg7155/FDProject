@@ -10,6 +10,8 @@
 /**
  * 
  */
+class UFDCharacterAttributeSet;
+
 UCLASS()
 class FDPROJECTGAS_API AFDGASPlayerState : public APlayerState, public IAbilitySystemInterface
 {
@@ -19,6 +21,7 @@ public:
 	AFDGASPlayerState();
 
 	virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	UFDCharacterAttributeSet* GetAttributeSet() const { return AttributeSet; }
 
 protected:
 	UPROPERTY(EditAnywhere, Category = GAS)

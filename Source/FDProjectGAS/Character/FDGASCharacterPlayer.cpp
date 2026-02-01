@@ -72,7 +72,8 @@ void AFDGASCharacterPlayer::PossessedBy(AController* NewController)
 		//APlayerController* PlayerController = CastChecked<APlayerController>(NewController);
 		//PlayerController->ConsoleCommand(TEXT("showdebug abilitysystem"));
 
-		GetCharacterMovement()->MaxWalkSpeed = AS->GetMovementSpeed();
+		//GetCharacterMovement()->MaxWalkSpeed = AS->GetMovementSpeed();
+		InitializeGASParameters();
 	}
 }
 
@@ -102,6 +103,8 @@ void AFDGASCharacterPlayer::OnRep_PlayerState()
 			}
 		}
 	}
+
+	InitializeGASParameters();
 }
 
 void AFDGASCharacterPlayer::OnOutOfHealth(AActor* MyInstigator)
@@ -160,9 +163,38 @@ void AFDGASCharacterPlayer::TakeGASItem(UFDGASItemData* InItemData)
 	}
 }
 
+float AFDGASCharacterPlayer::GetMaxSpeed() const
+{
+	AFDGASPlayerState* PS = GetPlayerState<AFDGASPlayerState>();
+	if (!PS) return Super::GetMaxSpeed();
+
+	UFDCharacterAttributeSet* AS = PS->GetAttributeSet();
+	if (!AS) return Super::GetMaxSpeed();
+
+	// GAS의 현재(Current) 값을 리턴
+	// 스킬을 쓰자마자 즉시 줄어든 값을 리턴
+	return AS->GetMovementSpeed();
+}
+
 void AFDGASCharacterPlayer::SetupGASHUDWidget(UFDGASHUDWidget* InHUDWidget)
 {
 	GASHUDWidget = InHUDWidget;
+}
+
+void AFDGASCharacterPlayer::OnMovementSpeedChanged(const FOnAttributeChangeData& Data)
+{
+	GetCharacterMovement()->MaxWalkSpeed = Data.NewValue;
+}
+
+void AFDGASCharacterPlayer::InitializeGASParameters()
+{
+	AFDGASPlayerState* PS = GetPlayerState<AFDGASPlayerState>();
+	if (!PS || !PS->GetAttributeSet()) return;
+
+	UFDCharacterAttributeSet* AS = PS->GetAttributeSet();
+
+	// [이속 동기화] GAS 값 -> 무브먼트 컴포넌트
+	GetCharacterMovement()->MaxWalkSpeed = AS->GetMovementSpeed();
 }
 
 void AFDGASCharacterPlayer::SetupGASInputComponent()
