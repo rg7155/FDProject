@@ -8,6 +8,7 @@
 #include "Actor/FDDamage.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Character.h"
+#include "Net/UnrealNetwork.h" // 필수
 
 UFDCharacterAttributeSet::UFDCharacterAttributeSet() :
 	AttackRange(100.0f),
@@ -25,6 +26,38 @@ UFDCharacterAttributeSet::UFDCharacterAttributeSet() :
 	InitHealth(GetMaxHealth());
 	InitMovementSpeed(GetMovementSpeed());
 }
+
+void UFDCharacterAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	// 모두에게 전송 (체력, 속도, 공격 범위 등)
+	DOREPLIFETIME(UFDCharacterAttributeSet, Health);
+	DOREPLIFETIME(UFDCharacterAttributeSet, MaxHealth);
+	DOREPLIFETIME(UFDCharacterAttributeSet, MovementSpeed);
+	DOREPLIFETIME(UFDCharacterAttributeSet, MaxMovementSpeed);
+	DOREPLIFETIME(UFDCharacterAttributeSet, AttackRange);
+	DOREPLIFETIME(UFDCharacterAttributeSet, MaxAttackRange);
+	DOREPLIFETIME(UFDCharacterAttributeSet, AttackRadius);
+	DOREPLIFETIME(UFDCharacterAttributeSet, MaxAttackRadius);
+	DOREPLIFETIME(UFDCharacterAttributeSet, AttackRate);
+	DOREPLIFETIME(UFDCharacterAttributeSet, MaxAttackRate);
+
+	// 주인에게만 전송 (골드)
+	DOREPLIFETIME_CONDITION(UFDCharacterAttributeSet, Gold, COND_OwnerOnly);
+}
+
+void UFDCharacterAttributeSet::OnRep_Health(const FGameplayAttributeData& OldValue)				{ GAMEPLAYATTRIBUTE_REPNOTIFY(UFDCharacterAttributeSet, Health, OldValue); }
+void UFDCharacterAttributeSet::OnRep_MaxHealth(const FGameplayAttributeData& OldValue)			{ GAMEPLAYATTRIBUTE_REPNOTIFY(UFDCharacterAttributeSet, MaxHealth, OldValue); }
+void UFDCharacterAttributeSet::OnRep_MovementSpeed(const FGameplayAttributeData& OldValue)		{ GAMEPLAYATTRIBUTE_REPNOTIFY(UFDCharacterAttributeSet, MovementSpeed, OldValue); }
+void UFDCharacterAttributeSet::OnRep_MaxMovementSpeed(const FGameplayAttributeData& OldValue)	{ GAMEPLAYATTRIBUTE_REPNOTIFY(UFDCharacterAttributeSet, MaxMovementSpeed, OldValue); }
+void UFDCharacterAttributeSet::OnRep_AttackRange(const FGameplayAttributeData& OldValue)		{ GAMEPLAYATTRIBUTE_REPNOTIFY(UFDCharacterAttributeSet, AttackRange, OldValue); }
+void UFDCharacterAttributeSet::OnRep_MaxAttackRange(const FGameplayAttributeData& OldValue)		{ GAMEPLAYATTRIBUTE_REPNOTIFY(UFDCharacterAttributeSet, MaxAttackRange, OldValue); }
+void UFDCharacterAttributeSet::OnRep_AttackRadius(const FGameplayAttributeData& OldValue)		{ GAMEPLAYATTRIBUTE_REPNOTIFY(UFDCharacterAttributeSet, AttackRadius, OldValue); }
+void UFDCharacterAttributeSet::OnRep_MaxAttackRadius(const FGameplayAttributeData& OldValue)	{ GAMEPLAYATTRIBUTE_REPNOTIFY(UFDCharacterAttributeSet, MaxAttackRadius, OldValue); }
+void UFDCharacterAttributeSet::OnRep_AttackRate(const FGameplayAttributeData& OldValue)			{ GAMEPLAYATTRIBUTE_REPNOTIFY(UFDCharacterAttributeSet, AttackRate, OldValue); }
+void UFDCharacterAttributeSet::OnRep_MaxAttackRate(const FGameplayAttributeData& OldValue)		{ GAMEPLAYATTRIBUTE_REPNOTIFY(UFDCharacterAttributeSet, MaxAttackRate, OldValue); }
+void UFDCharacterAttributeSet::OnRep_Gold(const FGameplayAttributeData& OldValue)				{ GAMEPLAYATTRIBUTE_REPNOTIFY(UFDCharacterAttributeSet, Gold, OldValue); }
 
 void UFDCharacterAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
 {
@@ -82,6 +115,7 @@ void UFDCharacterAttributeSet::PostGameplayEffectExecute(const FGameplayEffectMo
 		//FDGAS_LOG(LogFDGAS, Log, TEXT("Damage : %f"), GetDamage());
 		SetHealth(FMath::Clamp(GetHealth() - GetDamage(), MinimumHealth, GetMaxHealth()));
 
+		// [참고] 현재는 서버에서만 폰트 생성됨 (클라에도 띄우려면 GameplayCue 필요)
 		CreateDamageFont(Data.Target.GetAvatarActor());
 
 		SetDamage(0.0f);

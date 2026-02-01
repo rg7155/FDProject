@@ -9,12 +9,17 @@
 /**
  * 
  */
+
+class UAbilitySystemComponent;
+
 UCLASS()
 class FDPROJECTGAS_API AFDGASPlayerController : public AFDPlayerController
 {
 	GENERATED_BODY()
 public:
 	AFDGASPlayerController();
+
+	void InitGASHUD(UAbilitySystemComponent* InASC);
 protected:
 	virtual void BeginPlay() override;
 

@@ -3,6 +3,7 @@
 
 #include "Player/FDGASPlayerController.h"
 #include "UI/FDGASHUDWidget.h"
+#include "AbilitySystemComponent.h"
 
 AFDGASPlayerController::AFDGASPlayerController()
 {
@@ -10,6 +11,17 @@ AFDGASPlayerController::AFDGASPlayerController()
 	if (FDGASHUDWidgetRef.Class)
 	{
 		FDGASHUDWidgetClass = FDGASHUDWidgetRef.Class;
+	}
+}
+
+void AFDGASPlayerController::InitGASHUD(UAbilitySystemComponent* InASC)
+{
+	if (FDGASHUDWidget && InASC)
+	{
+		// [핵심] 이제 안전하게 위젯에 ASC를 주입
+		// (참고: 위젯 클래스에 SetAbilitySystemComponent 같은 함수가 있어야 함)
+		// 만약 위젯 함수 이름이 다르면 그에 맞게 수정하세요.
+		FDGASHUDWidget->SetAbilitySystemComponent(InASC->GetAvatarActor());
 	}
 }
 

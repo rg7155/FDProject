@@ -27,18 +27,7 @@ class FDPROJECTGAS_API UFDCharacterAttributeSet : public UAttributeSet
 public:
 	UFDCharacterAttributeSet();
 
-	ATTRIBUTE_ACCESSORS(UFDCharacterAttributeSet, AttackRange);
-	ATTRIBUTE_ACCESSORS(UFDCharacterAttributeSet, MaxAttackRange);
-	ATTRIBUTE_ACCESSORS(UFDCharacterAttributeSet, AttackRadius);
-	ATTRIBUTE_ACCESSORS(UFDCharacterAttributeSet, MaxAttackRadius);
-	ATTRIBUTE_ACCESSORS(UFDCharacterAttributeSet, AttackRate);
-	ATTRIBUTE_ACCESSORS(UFDCharacterAttributeSet, MaxAttackRate);
-	ATTRIBUTE_ACCESSORS(UFDCharacterAttributeSet, Health);
-	ATTRIBUTE_ACCESSORS(UFDCharacterAttributeSet, MaxHealth);
-	ATTRIBUTE_ACCESSORS(UFDCharacterAttributeSet, Damage);
-	ATTRIBUTE_ACCESSORS(UFDCharacterAttributeSet, MovementSpeed);
-	ATTRIBUTE_ACCESSORS(UFDCharacterAttributeSet, MaxMovementSpeed);
-	ATTRIBUTE_ACCESSORS(UFDCharacterAttributeSet, Gold);
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	//바꾸기 전 Value 인자값을 변경할 수 있는
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
@@ -59,31 +48,69 @@ protected:
 	void SetClampData(const FGameplayAttribute& Attribute, float& NewValue) const;
 	void CreateDamageFont(const AActor* TargetActor);
 
-protected:
-	UPROPERTY(BlueprintReadOnly, Category = "Attack", Meta = (AllowPrivateAccess = true))
-	FGameplayAttributeData AttackRange;
-	UPROPERTY(BlueprintReadOnly, Category = "Attack", Meta = (AllowPrivateAccess = true))
-	FGameplayAttributeData MaxAttackRange;
-	UPROPERTY(BlueprintReadOnly, Category = "Attack", Meta = (AllowPrivateAccess = true))
-	FGameplayAttributeData AttackRadius;
-	UPROPERTY(BlueprintReadOnly, Category = "Attack", Meta = (AllowPrivateAccess = true))
-	FGameplayAttributeData MaxAttackRadius;
-	UPROPERTY(BlueprintReadOnly, Category = "Attack", Meta = (AllowPrivateAccess = true))
-	FGameplayAttributeData AttackRate;
-	UPROPERTY(BlueprintReadOnly, Category = "Attack", Meta = (AllowPrivateAccess = true))
-	FGameplayAttributeData MaxAttackRate;
-	UPROPERTY(BlueprintReadOnly, Category = "Health", Meta = (AllowPrivateAccess = true))
+public:
+	UPROPERTY(BlueprintReadOnly, Category = "Health", ReplicatedUsing = OnRep_Health)
 	FGameplayAttributeData Health;
-	UPROPERTY(BlueprintReadOnly, Category = "Health", Meta = (AllowPrivateAccess = true))
+	ATTRIBUTE_ACCESSORS(UFDCharacterAttributeSet, Health);
+
+	UPROPERTY(BlueprintReadOnly, Category = "Health", ReplicatedUsing = OnRep_MaxHealth)
 	FGameplayAttributeData MaxHealth;
-	UPROPERTY(BlueprintReadOnly, Category = "Attack", Meta = (AllowPrivateAccess = true))
-	FGameplayAttributeData Damage;
-	UPROPERTY(BlueprintReadOnly, Category = "Attack", Meta = (AllowPrivateAccess = true))
+	ATTRIBUTE_ACCESSORS(UFDCharacterAttributeSet, MaxHealth);
+
+	UPROPERTY(BlueprintReadOnly, Category = "Movement", ReplicatedUsing = OnRep_MovementSpeed)
 	FGameplayAttributeData MovementSpeed;
-	UPROPERTY(BlueprintReadOnly, Category = "Attack", Meta = (AllowPrivateAccess = true))
+	ATTRIBUTE_ACCESSORS(UFDCharacterAttributeSet, MovementSpeed);
+
+	UPROPERTY(BlueprintReadOnly, Category = "Movement", ReplicatedUsing = OnRep_MaxMovementSpeed)
 	FGameplayAttributeData MaxMovementSpeed;
-	UPROPERTY(BlueprintReadOnly, Category = "Attack", Meta = (AllowPrivateAccess = true))
+	ATTRIBUTE_ACCESSORS(UFDCharacterAttributeSet, MaxMovementSpeed);
+
+	// --- Attack Info (Everyone - 애니메이션 동기화 위해) ---
+	UPROPERTY(BlueprintReadOnly, Category = "Attack", ReplicatedUsing = OnRep_AttackRange)
+	FGameplayAttributeData AttackRange;
+	ATTRIBUTE_ACCESSORS(UFDCharacterAttributeSet, AttackRange);
+
+	UPROPERTY(BlueprintReadOnly, Category = "Attack", ReplicatedUsing = OnRep_MaxAttackRange)
+	FGameplayAttributeData MaxAttackRange;
+	ATTRIBUTE_ACCESSORS(UFDCharacterAttributeSet, MaxAttackRange);
+
+	UPROPERTY(BlueprintReadOnly, Category = "Attack", ReplicatedUsing = OnRep_AttackRadius)
+	FGameplayAttributeData AttackRadius;
+	ATTRIBUTE_ACCESSORS(UFDCharacterAttributeSet, AttackRadius);
+
+	UPROPERTY(BlueprintReadOnly, Category = "Attack", ReplicatedUsing = OnRep_MaxAttackRadius)
+	FGameplayAttributeData MaxAttackRadius;
+	ATTRIBUTE_ACCESSORS(UFDCharacterAttributeSet, MaxAttackRadius);
+
+	UPROPERTY(BlueprintReadOnly, Category = "Attack", ReplicatedUsing = OnRep_AttackRate)
+	FGameplayAttributeData AttackRate;
+	ATTRIBUTE_ACCESSORS(UFDCharacterAttributeSet, AttackRate);
+
+	UPROPERTY(BlueprintReadOnly, Category = "Attack", ReplicatedUsing = OnRep_MaxAttackRate)
+	FGameplayAttributeData MaxAttackRate;
+	ATTRIBUTE_ACCESSORS(UFDCharacterAttributeSet, MaxAttackRate);
+
+	UPROPERTY(BlueprintReadOnly, Category = "Gold", ReplicatedUsing = OnRep_Gold)
 	FGameplayAttributeData Gold;
+	ATTRIBUTE_ACCESSORS(UFDCharacterAttributeSet, Gold);
+
+	UPROPERTY(BlueprintReadOnly, Category = "Damage")
+	FGameplayAttributeData Damage;
+	ATTRIBUTE_ACCESSORS(UFDCharacterAttributeSet, Damage);
 
 	bool bOutOfHealth = false;
+
+public:
+	// OnRep Functions
+	UFUNCTION() virtual void OnRep_Health(const FGameplayAttributeData& OldValue);
+	UFUNCTION() virtual void OnRep_MaxHealth(const FGameplayAttributeData& OldValue);
+	UFUNCTION() virtual void OnRep_MovementSpeed(const FGameplayAttributeData& OldValue);
+	UFUNCTION() virtual void OnRep_MaxMovementSpeed(const FGameplayAttributeData& OldValue);
+	UFUNCTION() virtual void OnRep_AttackRange(const FGameplayAttributeData& OldValue);
+	UFUNCTION() virtual void OnRep_MaxAttackRange(const FGameplayAttributeData& OldValue);
+	UFUNCTION() virtual void OnRep_AttackRadius(const FGameplayAttributeData& OldValue);
+	UFUNCTION() virtual void OnRep_MaxAttackRadius(const FGameplayAttributeData& OldValue);
+	UFUNCTION() virtual void OnRep_AttackRate(const FGameplayAttributeData& OldValue);
+	UFUNCTION() virtual void OnRep_MaxAttackRate(const FGameplayAttributeData& OldValue);
+	UFUNCTION() virtual void OnRep_Gold(const FGameplayAttributeData& OldValue);
 };

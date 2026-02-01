@@ -3,17 +3,19 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
+#include "UI/FDGASUserWidget.h"
 #include "FDGASHUDWidget.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class FDPROJECTGAS_API UFDGASHUDWidget : public UUserWidget
+class FDPROJECTGAS_API UFDGASHUDWidget : public UFDGASUserWidget
 {
 	GENERATED_BODY()
 public:
+	virtual void SetAbilitySystemComponent(AActor* InOwner) override;
+
 	void ToggleShopVisible();
 
 protected:

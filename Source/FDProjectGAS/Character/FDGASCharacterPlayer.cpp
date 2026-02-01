@@ -13,6 +13,7 @@
 #include "FDProjectGAS.h"
 #include "Game/FDGameMode.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Player/FDGASPlayerController.h"
 
 AFDGASCharacterPlayer::AFDGASCharacterPlayer()
 {
@@ -38,6 +39,7 @@ UAbilitySystemComponent* AFDGASCharacterPlayer::GetAbilitySystemComponent() cons
 
 void AFDGASCharacterPlayer::PossessedBy(AController* NewController)
 {
+	//(Server Only)
 	Super::PossessedBy(NewController);
 
 	AFDGASPlayerState* GASPS = GetPlayerState<AFDGASPlayerState>();
@@ -71,6 +73,34 @@ void AFDGASCharacterPlayer::PossessedBy(AController* NewController)
 		//PlayerController->ConsoleCommand(TEXT("showdebug abilitysystem"));
 
 		GetCharacterMovement()->MaxWalkSpeed = AS->GetMovementSpeed();
+	}
+}
+
+void AFDGASCharacterPlayer::OnRep_PlayerState()
+{
+	Super::OnRep_PlayerState();
+
+	AFDGASPlayerState* GASPS = GetPlayerState<AFDGASPlayerState>();
+	if (GASPS)
+	{
+		// 1. ASC 정보 갱신
+		ASC = GASPS->GetAbilitySystemComponent();
+		ASC->InitAbilityActorInfo(GASPS, this);
+
+		// 2. 입력 바인딩
+		SetupGASInputComponent();
+
+		// 3. UI 초기화
+		APlayerController* PC = Cast<APlayerController>(GetController());
+		if (PC)
+		{
+			AFDGASPlayerController* GASPC = Cast<AFDGASPlayerController>(PC);
+			if (GASPC)
+			{
+				// 방금 만든 함수 호출!
+				GASPC->InitGASHUD(ASC);
+			}
+		}
 	}
 }
 

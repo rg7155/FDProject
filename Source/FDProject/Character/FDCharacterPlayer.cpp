@@ -195,14 +195,17 @@ void AFDCharacterPlayer::SetCharacterControl(ECharacterControlType NewCharacterC
 
 	SetCharacterControlData(NewCharacterControl);
 
-	APlayerController* PlayerController = CastChecked<APlayerController>(GetController());
-	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+	APlayerController* PlayerController = Cast<APlayerController>(GetController());
+	if (PlayerController)
 	{
-		Subsystem->ClearAllMappings();
-		UInputMappingContext* NewMappingContext = NewCharacterControl->InputMappingContext;
-		if (NewMappingContext)
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
-			Subsystem->AddMappingContext(NewMappingContext, 0);
+			Subsystem->ClearAllMappings();
+			UInputMappingContext* NewMappingContext = NewCharacterControl->InputMappingContext;
+			if (NewMappingContext)
+			{
+				Subsystem->AddMappingContext(NewMappingContext, 0);
+			}
 		}
 	}
 
