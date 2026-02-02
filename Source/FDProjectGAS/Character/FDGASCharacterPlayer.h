@@ -7,6 +7,7 @@
 #include "AbilitySystemInterface.h"
 #include "Interface/FDGASCharacterItemInterface.h"
 #include "GameplayEffectTypes.h"
+
 #include "FDGASCharacterPlayer.generated.h"
 /**
  * 
@@ -33,7 +34,6 @@ public:
 	virtual void Interaction() override;
 
 	virtual void TakeGASItem(class UFDGASItemData* InItemData) override;
-	virtual float GetMaxSpeed() const override;
 
 	void SetupGASHUDWidget(class UFDGASHUDWidget* InHUDWidget);
 	virtual void OnMovementSpeedChanged(const FOnAttributeChangeData& Data);

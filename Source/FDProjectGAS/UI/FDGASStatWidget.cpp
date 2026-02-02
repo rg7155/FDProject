@@ -10,14 +10,6 @@
 void UFDGASStatWidget::SetAbilitySystemComponent(AActor* InOwner)
 {
 	Super::SetAbilitySystemComponent(InOwner);
-	if (ASC)
-	{
-		const UFDCharacterAttributeSet* AS = ASC->GetSet<UFDCharacterAttributeSet>();
-		AS->OnChanged.AddDynamic(this, &ThisClass::OnUpdateStat);
-
-		const UFDCharacterSkillAttributeSet* SkillAS = ASC->GetSet<UFDCharacterSkillAttributeSet>();
-		SkillAS->OnChanged.AddDynamic(this, &ThisClass::OnUpdateSkillStat);
-	}
 
 	for (TFieldIterator<FProperty> PropIt(UFDCharacterAttributeSet::StaticClass()); PropIt; ++PropIt)
 	{
@@ -28,6 +20,29 @@ void UFDGASStatWidget::SetAbilitySystemComponent(AActor* InOwner)
 	{
 		AddLockUp(PropIt->GetName());
 	}
+
+	// 기본 스탯 감지 연결
+	for (TFieldIterator<FProperty> PropIt(UFDCharacterAttributeSet::StaticClass()); PropIt; ++PropIt)
+	{
+		FGameplayAttribute Attribute(*PropIt);
+
+		if (Attribute.IsValid())
+		{
+			// 이 속성이 변하면 UpdateStat 함수를 실행
+			ASC->GetGameplayAttributeValueChangeDelegate(Attribute).AddUObject(this, &ThisClass::OnAnyAttributeChanged);
+		}
+	}
+
+	// 스킬 스탯 감지 연결
+	for (TFieldIterator<FProperty> PropIt(UFDCharacterSkillAttributeSet::StaticClass()); PropIt; ++PropIt)
+	{
+		FGameplayAttribute Attribute(*PropIt);
+		if (Attribute.IsValid())
+		{
+			ASC->GetGameplayAttributeValueChangeDelegate(Attribute).AddUObject(this, &ThisClass::OnAnyAttributeChanged);
+		}
+	}
+
 	UpdateStat();
 	UpdateSkillStat();
 }
@@ -50,13 +65,9 @@ void UFDGASStatWidget::AddLockUp(const FString& PropName)
 	}
 }
 
-void UFDGASStatWidget::OnUpdateStat()
+void UFDGASStatWidget::OnAnyAttributeChanged(const FOnAttributeChangeData& Data)
 {
 	UpdateStat();
-}
-
-void UFDGASStatWidget::OnUpdateSkillStat()
-{
 	UpdateSkillStat();
 }
 
@@ -66,11 +77,15 @@ void UFDGASStatWidget::UpdateStat()
 	for (TFieldIterator<FProperty> PropIt(UFDCharacterAttributeSet::StaticClass()); PropIt; ++PropIt)
 	{
 		const FName PropKey(PropIt->GetName());
-		FGameplayAttributeData BaseData(0.f);
+		// 현재 값 (Modifiers 포함)
+		FGameplayAttribute Attribute(*PropIt);
+		float CurrentVal = ASC->GetNumericAttribute(Attribute);
 
-		PropIt->GetValue_InContainer(AS, &BaseData);
+		// 베이스 값 (순수 값)
+		FGameplayAttributeData* AttributeData = PropIt->ContainerPtrToValuePtr<FGameplayAttributeData>(const_cast<UFDCharacterAttributeSet*>(AS));
+		float BaseVal = AttributeData ? AttributeData->GetBaseValue() : 0.f;
 
-		UpdateStatText(PropKey, BaseData.GetBaseValue(), BaseData.GetCurrentValue());
+		UpdateStatText(PropKey, BaseVal, CurrentVal);
 	}
 }
 

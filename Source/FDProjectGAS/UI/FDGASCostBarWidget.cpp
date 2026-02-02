@@ -32,6 +32,7 @@ void UFDGASCostBarWidget::OnCostChanged(const FOnAttributeChangeData& ChangeData
 	CurrentCost = ChangeData.NewValue;
 	SetCostBar();
 
+	//TODO UI에서 게임로직 GE를 실행?
 	if (CurrentCost < MaxCost)
 	{
 		if (!SkillCostRecoveryEffectHandle.IsValid())

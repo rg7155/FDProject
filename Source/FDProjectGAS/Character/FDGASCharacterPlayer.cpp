@@ -163,19 +163,6 @@ void AFDGASCharacterPlayer::TakeGASItem(UFDGASItemData* InItemData)
 	}
 }
 
-float AFDGASCharacterPlayer::GetMaxSpeed() const
-{
-	AFDGASPlayerState* PS = GetPlayerState<AFDGASPlayerState>();
-	if (!PS) return Super::GetMaxSpeed();
-
-	UFDCharacterAttributeSet* AS = PS->GetAttributeSet();
-	if (!AS) return Super::GetMaxSpeed();
-
-	// GAS의 현재(Current) 값을 리턴
-	// 스킬을 쓰자마자 즉시 줄어든 값을 리턴
-	return AS->GetMovementSpeed();
-}
-
 void AFDGASCharacterPlayer::SetupGASHUDWidget(UFDGASHUDWidget* InHUDWidget)
 {
 	GASHUDWidget = InHUDWidget;
@@ -195,6 +182,13 @@ void AFDGASCharacterPlayer::InitializeGASParameters()
 
 	// [이속 동기화] GAS 값 -> 무브먼트 컴포넌트
 	GetCharacterMovement()->MaxWalkSpeed = AS->GetMovementSpeed();
+
+	//GE Duration은 PostGameplayEffectExecute호출 되지 않아 별도의 델리게이트 달아줌
+	if (ASC)
+	{
+		ASC->GetGameplayAttributeValueChangeDelegate(AS->GetMovementSpeedAttribute())
+			.AddUObject(this, &AFDGASCharacterPlayer::OnMovementSpeedChanged);
+	}
 }
 
 void AFDGASCharacterPlayer::SetupGASInputComponent()

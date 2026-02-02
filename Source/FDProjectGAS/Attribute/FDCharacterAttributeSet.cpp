@@ -144,6 +144,7 @@ void UFDCharacterAttributeSet::PostGameplayEffectExecute(const FGameplayEffectMo
 
 void UFDCharacterAttributeSet::PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue)
 {
+	//리플리케이션 때 호출되지 않는다.
 	Super::PostAttributeChange(Attribute, OldValue, NewValue);
 
 	OnChanged.Broadcast();

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UI/FDGASUserWidget.h"
+#include "GameplayEffectTypes.h"
 #include "FDGASStatWidget.generated.h"
 
 /**
@@ -18,11 +19,7 @@ public:
 
 	void AddLockUp(const FString& PropName);
 
-	UFUNCTION()
-	void OnUpdateStat();
-
-	UFUNCTION()
-	void OnUpdateSkillStat();
+	void OnAnyAttributeChanged(const FOnAttributeChangeData& Data);
 
 	void UpdateStat();
 	void UpdateSkillStat();
