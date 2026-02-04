@@ -189,6 +189,21 @@ void AFDGASCharacterPlayer::InitializeGASParameters()
 		ASC->GetGameplayAttributeValueChangeDelegate(AS->GetMovementSpeedAttribute())
 			.AddUObject(this, &AFDGASCharacterPlayer::OnMovementSpeedChanged);
 	}
+
+	if (HasAuthority() && DefaultStatusEffect)
+	{
+		// 이펙트 컨텍스트 생성 (누가, 어디서 적용했는지 정보)
+		FGameplayEffectContextHandle EffectContext = ASC->MakeEffectContext();
+		EffectContext.AddSourceObject(this);
+
+		// 스펙 생성 (어떤 GE를 적용할지)
+		FGameplayEffectSpecHandle SpecHandle = ASC->MakeOutgoingSpec(DefaultStatusEffect, 1.0f, EffectContext);
+
+		if (SpecHandle.IsValid())
+		{
+			ASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+		}
+	}
 }
 
 void AFDGASCharacterPlayer::SetupGASInputComponent()

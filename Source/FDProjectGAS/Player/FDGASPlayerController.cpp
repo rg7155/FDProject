@@ -29,12 +29,15 @@ void AFDGASPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	FInputModeGameOnly GameOnlyInputMode;
-	SetInputMode(GameOnlyInputMode);
-
-	FDGASHUDWidget = CreateWidget<UFDGASHUDWidget>(this, FDGASHUDWidgetClass);
-	if (FDGASHUDWidget)
+	if (IsLocalPlayerController())
 	{
-		FDGASHUDWidget->AddToViewport();
+		FInputModeGameOnly GameOnlyInputMode;
+		SetInputMode(GameOnlyInputMode);
+
+		FDGASHUDWidget = CreateWidget<UFDGASHUDWidget>(this, FDGASHUDWidgetClass);
+		if (FDGASHUDWidget)
+		{
+			FDGASHUDWidget->AddToViewport();
+		}
 	}
 }

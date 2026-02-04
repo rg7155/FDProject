@@ -58,6 +58,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
 	TObjectPtr<class UAnimMontage> SkillActionMontage;
 
+	// 에디터에서 BP_GE_PlayerStatus를 넣을 변수
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = GAS)
+	TSubclassOf<class UGameplayEffect> DefaultStatusEffect;
+
 protected:
 	UFDGASHUDWidget* GASHUDWidget;
 };

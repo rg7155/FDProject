@@ -23,7 +23,9 @@ void UFDGA_Attack::ActivateAbility(const FGameplayAbilitySpecHandle Handle, cons
 	CurrentComboData = FDCharacter->GetComboActionData();
 	FDCharacter->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
 
-	UAbilityTask_PlayMontageAndWait* PlayAttackTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, TEXT("PlayAttack"), FDCharacter->GetComboActionMontage(), AttackSpeedRate);
+	// 첫 번째 섹션 이름을 가져옵니다 (ComboAttack1)
+	FName StartSectionName = GetSection(CurrentCombo);
+	UAbilityTask_PlayMontageAndWait* PlayAttackTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, StartSectionName, FDCharacter->GetComboActionMontage(), AttackSpeedRate);
 	PlayAttackTask->OnCompleted.AddDynamic(this, &UFDGA_Attack::OnCompleteCallback);
 	PlayAttackTask->OnInterrupted.AddDynamic(this, &UFDGA_Attack::OnInterruptedCallback);
 	PlayAttackTask->ReadyForActivation();
