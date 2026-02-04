@@ -30,6 +30,21 @@ AFDGASCharacterPlayer::AFDGASCharacterPlayer()
 	{
 		SkillActionMontage = SKillActionMontageRef.Object;
 	}
+
+	//TEST
+	// 기본값이 낮으면 몽타주 재생 패킷이 늦게 도착해서 씹힙니다.
+	NetUpdateFrequency = 100.0f;
+	MinNetUpdateFrequency = 66.0f;
+
+	// 네트워크 우선순위 상향
+	// 기본값(1.0) -> 3.0 이상으로 설정.
+	NetPriority = 3.0f;
+
+	// "움직임 없으면 패킷 안 보냄" 기능을 꺼서 항상 깨어있게 함	
+	SetNetDormancy(DORM_Never);
+
+	// 움직임 보정 임계값도 조금 널널하게 (선택사항)
+	GetCharacterMovement()->NetworkSmoothingMode = ENetworkSmoothingMode::Linear;
 }
 
 UAbilitySystemComponent* AFDGASCharacterPlayer::GetAbilitySystemComponent() const

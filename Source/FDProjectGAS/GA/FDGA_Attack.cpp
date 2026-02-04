@@ -8,6 +8,7 @@
 #include "FDProjectGAS.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Character/FDComboActionData.h"
+#include "AbilitySystemComponent.h"
 
 UFDGA_Attack::UFDGA_Attack()
 {
@@ -41,6 +42,18 @@ void UFDGA_Attack::ActivateAbility(const FGameplayAbilitySpecHandle Handle, cons
 		StartComboTimer();
 	}
 	//FDGAS_LOG(LogFDGAS, Log, TEXT("%d"), CurrentCombo);
+
+	if (FDCharacter)
+	{
+		// 다음 틱 기다리지 말고 지금 당장 상태값(몽타주, 태그) 쏴라
+		// 이걸 호출하면 대기열 무시하고 즉시 리플리케이션 수행함
+		if (FDCharacter->HasAuthority())
+		{
+			FDCharacter->ForceNetUpdate();
+		}
+	}
+
+	ExecuteComboGameplayCue();
 }
 
 void UFDGA_Attack::InputPressed(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
@@ -93,6 +106,23 @@ void UFDGA_Attack::OnInterruptedCallback()
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, bReplicatedEndAbility, bWasCancelled);
 }
 
+void UFDGA_Attack::ServerRPC_ComboNextSection_Implementation(int32 NextComboIndex)
+{
+	//TODO 여전히 콤보 2,3 은 동기화 문제 있다.
+	//콤보 방식 WaitGameplayEvent  으로 수정할 것..
+	
+	// 서버의 콤보 카운트를 클라와 강제로 맞춤
+	CurrentCombo = NextComboIndex;
+
+	// 서버도 몽타주 섹션을 이동 (HitBox 충돌 판정을 위해 필수)
+	MontageJumpToSection(GetSection(CurrentCombo));
+
+	ExecuteComboGameplayCue();
+
+	StartComboTimer();
+	HasNextComboInput = false;
+}
+
 FName UFDGA_Attack::GetNextSection()
 {
 	CurrentCombo = FMath::Clamp(CurrentCombo + 1, 1, CurrentComboData->MaxComboCount);
@@ -127,10 +157,50 @@ void UFDGA_Attack::StartComboTimer()
 void UFDGA_Attack::CheckComboInput()
 {
 	ComboTimerHandle.Invalidate();
+	FString NetMode = GetOwningActorFromActorInfo()->HasAuthority() ? TEXT("Server") : TEXT("Client"); 
 	if (HasNextComboInput)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("[%s] Combo Success! Count: %d"), *NetMode, CurrentCombo + 1);
 		MontageJumpToSection(GetNextSection());
+
+		if (!GetOwningActorFromActorInfo()->HasAuthority())
+		{
+			// 클라이언트(Client): "나 성공했어! 서버야 너도 실행해!" (RPC 전송)
+			ServerRPC_ComboNextSection(CurrentCombo);
+		}
+		else
+		{
+			// 서버(Server): (만약 운 좋게 타이밍이 맞았다면) GC 발사
+			ExecuteComboGameplayCue();
+		}
+
 		StartComboTimer();
 		HasNextComboInput = false;
+	}
+	else
+	{
+		// [실패 로그] 만약 서버에서 이게 찍히면, 입력이 늦게 와서 씹힌 것임
+		UE_LOG(LogTemp, Error, TEXT("[%s] Combo Failed! Input False"), *NetMode);
+	}
+}
+
+void UFDGA_Attack::ExecuteComboGameplayCue()
+{
+	// 반드시 서버(Authority)에서만 실행해야 함 (NetMulticast로 전파됨)
+	if (GetOwningActorFromActorInfo()->HasAuthority())
+	{
+		FGameplayCueParameters CueParams;
+		CueParams.Location = GetOwningActorFromActorInfo()->GetActorLocation();
+
+		// [수정] 태그 이름에 숫자를 붙이는 게 아니라,
+		// 파라미터(RawMagnitude)에 콤보 숫자를 담습니다!
+		CueParams.RawMagnitude = (float)CurrentCombo;
+
+		FGameplayTag CueTag = FGameplayTag::RequestGameplayTag(FName("GameplayCue.Attack.Combo"));
+
+		if (CueTag.IsValid())
+		{
+			GetAbilitySystemComponentFromActorInfo()->ExecuteGameplayCue(CueTag, CueParams);
+		}
 	}
 }

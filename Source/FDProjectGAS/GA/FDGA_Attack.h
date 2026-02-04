@@ -29,6 +29,10 @@ protected:
 
 	UFUNCTION()
 	void OnInterruptedCallback();
+
+	// 클라이언트가 콤보 성공 시, 서버에게 강제로 실행을 요청하는 함수
+	UFUNCTION(Server, Reliable)
+	void ServerRPC_ComboNextSection(int32 NextComboIndex);
 	
 	FName GetNextSection();
 	FName GetRandomSection();
@@ -36,6 +40,9 @@ protected:
 
 	void StartComboTimer();
 	void CheckComboInput();
+
+	// 현재 콤보에 맞는 GC를 서버에서 발사하는 함수
+	void ExecuteComboGameplayCue();
 
 protected:
 	UPROPERTY()
